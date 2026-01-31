@@ -1,10 +1,8 @@
 [build]
-  base = "lepondy-cheese-site"
-  publish = ".next"
+  publish = "dist"
   command = "npm run build"
 
-[build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
