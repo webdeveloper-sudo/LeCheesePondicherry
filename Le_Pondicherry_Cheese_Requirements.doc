@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>Le Pondicherry Cheese - Website Content & Technical Requirements</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; }
+        h1 { color: #2C5530; border-bottom: 2px solid #C9A961; padding-bottom: 10px; }
+        h2 { color: #2C5530; margin-top: 30px; border-left: 5px solid #C9A961; padding-left: 10px; }
+        h3 { color: #1A1A1A; margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f9f4e8; color: #2C5530; }
+        .highlight { background-color: #fff9e6; padding: 15px; border-radius: 5px; border: 1px dashed #C9A961; }
+        .tech-box { background-color: #e8f4f8; padding: 15px; border-radius: 5px; border: 1px solid #2980b9; }
+        .note { font-size: 0.9em; color: #666; font-style: italic; }
+        .product-box { border: 1px solid #eee; padding: 15px; margin-bottom: 10px; background: #fafafa; }
+    </style>
+</head>
+<body>
+    <h1>Website Content & Technical Requirements Guide</h1>
+    <p>Dear Client,</p>
+    <p>We are currently in the final stages of building your website. This document outlines the <strong>Content</strong> we need for the design and the <strong>Technical Access</strong> we need to make the site live.</p>
+
+    <h2>1. Photos and Visual Assets</h2>
+    <p>To give your website a premium feel, the photos should look professional and uniform.</p>
+    <ul>
+        <li><strong>Factory & Facility:</strong> Shots of production areas and aging caves.</li>
+        <li><strong>The Artisans:</strong> Photos of workers in action. This builds trust!</li>
+        <li><strong>Product Shots:</strong> High-quality photos of each cheese (Package views and close-up textures).</li>
+    </ul>
+
+    <div class="highlight">
+        <strong>SEO Naming Rule:</strong> Please do <strong>not</strong> send files named "IMG_1234.jpg".<br>
+        <strong>Correct Way:</strong> <code>le-pondicherry-halloumi-cheese.jpg</code>
+    </div>
+
+    <h2>2. Complete Product Details</h2>
+    <p>We need the exact details for <strong>each product</strong> (Price, Weight, Ingredients, and Tasting Notes). Please use the following as a template:</p>
+    <div class="product-box">
+        <strong>Example: Halloumi</strong><br>
+        <strong>Short Line:</strong> The Grilling Cheese - High Melting Point<br>
+        <strong>Price:</strong> ₹300 (Offer) | ₹350 (Original) | <strong>Weight:</strong> 200g<br>
+        <strong>Tasting Notes:</strong> Appearance (Off-white), Texture (Squeaky), Flavor (Salty/Rich).
+    </div>
+
+    <h2>3. Delivery & Pricing</h2>
+    <p>Please confirm delivery charges for: 1. Pondicherry, 2. Tamil Nadu, and 3. Rest of India.</p>
+
+    <h2>4. Server & Hosting Request (For Bala Sir)</h2>
+    <p>To put the website online, we need a <strong>VPS Server</strong>. Please forward this request to your IT Manager, <strong>Bala Sir</strong>:</p>
+    <div class="tech-box">
+        <strong>Request for IT Manager:</strong><br>
+        "Please provide the VPS server details for the Le Pondicherry Cheese project, including:<br>
+        1. Server IP Address<br>
+        2. SSH Login Credentials (Username & Password/Key)<br>
+        3. Recommended OS: Ubuntu 22.04 LTS"
+    </div>
+
+    <h2>5. Payment Gateway Setup (Immediate Action)</h2>
+    <p>To accept online payments (UPI, Cards, Net Banking), we need a payment gateway account.</p>
+    <ul>
+        <li><strong>Step 1:</strong> Register a business account on <strong>Razorpay.com</strong> or <strong>Cashfree.com</strong>.</li>
+        <li><strong>Step 2:</strong> Complete the KYC verification (usually requires GST and Bank details).</li>
+        <li><strong>Step 3:</strong> Once approved, please provide us with the <strong>API Keys</strong> from the dashboard.</li>
+    </ul>
+    <p class="note">Note: Verification can take 2-4 days, so please start this process today.</p>
+
+    <h2>6. Summary Checklist</h2>
+    <ul>
+        <li>[ ] <strong>Photos:</strong> Professional shots named correctly.</li>
+        <li>[ ] <strong>Product List:</strong> Full spreadsheet of prices and descriptions.</li>
+        <li>[ ] <strong>VPS Details:</strong> Ask Bala Sir for server access.</li>
+        <li>[ ] <strong>Payment Gateway:</strong> Sign up for Razorpay/Cashfree ASAP.</li>
+        <li>[ ] <strong>Testimonials:</strong> 3-5 real customer reviews.</li>
+    </ul>
+
+    <p align="center" style="margin-top: 50px;">
+        <em>Thank you for helping us make Le Pondicherry Cheese live and successful!</em>
+    </p>
+</body>
+</html>
