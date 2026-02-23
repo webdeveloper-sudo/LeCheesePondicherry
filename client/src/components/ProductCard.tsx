@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
+import { motion } from "framer-motion";
+import { fadeUp } from "@/animations/variants";
+
 interface ProductCardProps {
   id: string;
   name: string;
@@ -47,7 +50,11 @@ export default function ProductCard({
   };
 
   return (
-    <div className="product-card group bg-white rounded-lg overflow-hidden border border-gray-100 flex flex-col h-full relative">
+    <motion.div
+      className="product-card group bg-white rounded-lg overflow-hidden border border-gray-100 flex flex-col h-full relative"
+      variants={fadeUp}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
       {/* Wishlist Heart Button */}
       <button
         onClick={handleWishlistToggle}
@@ -143,11 +150,11 @@ export default function ProductCard({
           className="block w-full mt-auto"
           onClick={handleProductClick}
         >
-          <button className="w-full btn btn-secondary text-sm py-2 group-hover:bg-[#C9A961] group-hover:text-white group-hover:border-[#C9A961]">
+          <button className="w-full btn btn-secondary text-sm py-2 group-hover:bg-[#C9A961] group-hover:text-black group-hover:border-[#C9A961]">
             View Details
           </button>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }

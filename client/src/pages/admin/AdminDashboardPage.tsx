@@ -5,12 +5,13 @@ import AdminSidebar from "@/pages/admin/AdminSidebar";
 import UserManagement from "@/pages/admin/UserManagement";
 import ProductManagement from "@/pages/admin/ProductManagement";
 import OrderManagement from "@/pages/admin/OrderManagement";
+import BlogManagement from "@/pages/admin/BlogManagement";
 import { LogOut } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { role, logout } = useUserStore();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab,  ] = useState("products");
+  const [activeTab, setActiveTab] = useState("products");
 
   useEffect(() => {
     // Check if user is admin, if not redirect
@@ -51,6 +52,8 @@ export default function AdminDashboardPage() {
         return <UserManagement />;
       case "products":
         return <ProductManagement />;
+      case "blogs":
+        return <BlogManagement />;
       default:
         return <ProductManagement />;
     }
@@ -87,7 +90,6 @@ export default function AdminDashboardPage() {
                 className="w-full flex items-center space-x-3 px-3 py-3 text-[#FFFF] hover:text-red-400 transition-colors"
               >
                 <LogOut size={20} />
-             
               </button>
             </div>
           </div>

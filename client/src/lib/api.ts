@@ -36,7 +36,8 @@ async function apiRequest<T>(
       return {
         success: false,
         message: data.message || "Something went wrong",
-        error: data.message,
+        error: data.error || data.message || "Unknown error",
+        data: data,
       };
     }
 
@@ -346,6 +347,43 @@ export const userAPI = {
   },
 };
 
+// ============ ORDER API ============
+export const orderAPI = {
+  createOrder: async (orderData: any) => {
+    return apiRequest<{
+      success: boolean;
+      message?: string;
+      data: {
+        payment_session_id: string;
+        order_id: string;
+      };
+    }>("/api/orders/session", {
+      method: "POST",
+      body: JSON.stringify(orderData),
+    });
+  },
+
+  verifyPayment: async (orderId: string, orderData: any) => {
+    return apiRequest<{
+      success: boolean;
+      message?: string;
+      data: any;
+    }>("/api/orders/verify", {
+      method: "POST",
+      body: JSON.stringify({ orderId, orderData }),
+    });
+  },
+
+  getMyOrders: async () => {
+    return apiRequest<{
+      success: boolean;
+      data: any[];
+    }>("/api/orders/my-orders", {
+      method: "GET",
+    });
+  },
+};
+
 // ============ ADMIN API ============
 export const adminAPI = {
   // Authentication
@@ -406,17 +444,17 @@ export const adminAPI = {
   // Order Management
   getOrders: async () => {
     return apiRequest<{ success: boolean; count: number; data: any[] }>(
-      "/api/orders",
+      "/api/orders/all",
       {
         method: "GET",
       },
     );
   },
 
-  updateOrderStatus: async (orderId: string, status: string) => {
-    return apiRequest(`/api/orders/${orderId}/status`, {
+  updateOrder: async (orderId: string, orderData: any) => {
+    return apiRequest(`/api/orders/${orderId}`, {
       method: "PUT",
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(orderData),
     });
   },
 };

@@ -170,7 +170,7 @@ Action Required: Please reply to ${text} as soon as possible.
                     {/* Header */}
                     <div className="bg-[#2C5530] p-4 text-white flex justify-between items-center shadow-lg">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-[#C9A961] rounded-full flex items-center justify-center text-[10px] font-bold text-white border border-white/20">
+                            <div className="w-8 h-8 bg-[#FAB519] rounded-full flex items-center justify-center text-[10px] font-bold text-white border border-white/20">
                                 LPC
                             </div>
                             <div>
@@ -207,7 +207,7 @@ Action Required: Please reply to ${text} as soon as possible.
                             <div key={i} className="space-y-2">
                                 <div className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${m.sender === 'user'
-                                        ? 'bg-[#C9A961] text-white rounded-tr-none'
+                                        ? 'bg-[#FAB519] text-[#1D161A] rounded-tr-none'
                                         : 'bg-white text-[#1A1A1A] rounded-tl-none border border-gray-100'
                                         }`}>
                                         {m.text.split(/(\[.*?\]\(.*?\))/g).map((part, idx) => {
@@ -219,7 +219,7 @@ Action Required: Please reply to ${text} as soon as possible.
                                                         href={match[2]}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-[#2C5530] font-bold underline hover:text-[#C9A961] transition-colors"
+                                                        className="text-[#2C5530] font-bold underline hover:text-[#FAB519] transition-colors"
                                                     >
                                                         {match[1]}
                                                     </a>
@@ -237,7 +237,7 @@ Action Required: Please reply to ${text} as soon as possible.
                                             <button
                                                 key={idx}
                                                 onClick={() => handleSend(s)}
-                                                className="text-[11px] px-3 py-1.5 bg-white border border-[#C9A961]/30 text-[#2C5530] rounded-full hover:bg-[#C9A961] hover:text-white transition-all shadow-sm font-medium"
+                                                className="text-[11px] px-3 py-1.5 bg-white border border-[#FAB519]/30 text-[#2C5530] rounded-full hover:bg-[#FAB519] hover:text-white transition-all shadow-sm font-medium"
                                             >
                                                 {s}
                                             </button>

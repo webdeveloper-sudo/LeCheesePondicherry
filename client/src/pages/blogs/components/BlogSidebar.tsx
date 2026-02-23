@@ -1,8 +1,23 @@
 import { Search, ChevronRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
-import { blogs } from "@/data/blogs";
 
-export default function BlogSidebar() {
+interface Blog {
+  _id?: string;
+  id?: string;
+  title: string;
+  slug?: string;
+  image: string;
+  category: string;
+  date: string;
+  tags: string[];
+  gallery?: string[];
+}
+
+interface BlogSidebarProps {
+  blogs?: Blog[];
+}
+
+export default function BlogSidebar({ blogs = [] }: BlogSidebarProps) {
   const categories = Array.from(new Set(blogs.map((b) => b.category)));
   const allTags = Array.from(new Set(blogs.flatMap((b) => b.tags)));
   const recentPosts = blogs.slice(0, 3);
@@ -47,7 +62,7 @@ export default function BlogSidebar() {
         </ul>
       </div>
 
-      {/* Archives */}
+      {/* Archives - Static for now as usually requires date parsing aggregation */}
       <div>
         <h3 className="text-xl font-bold mb-6 pb-2 border-b-2 border-gray-100 text-[#1A1A1A] font-heading">
           Archives
@@ -75,8 +90,8 @@ export default function BlogSidebar() {
         <div className="space-y-6">
           {recentPosts.map((post) => (
             <Link
-              key={post.id}
-              to={`/stories/${post.id}`}
+              key={post._id || post.id}
+              to={`/stories/${post.slug || post.id}`}
               className="flex gap-4 group"
             >
               <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
@@ -84,6 +99,8 @@ export default function BlogSidebar() {
                   src={post.image}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
               </div>
               <div className="flex-1">
@@ -114,6 +131,8 @@ export default function BlogSidebar() {
                 src={item}
                 alt="Gallery"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                referrerPolicy="no-referrer"
+                loading="lazy"
               />
             </div>
           ))}

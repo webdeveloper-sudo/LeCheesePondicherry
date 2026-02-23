@@ -19,10 +19,10 @@ const addressSchema = new mongoose.Schema({
 
 const orderItemSchema = new mongoose.Schema({
   productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
+    type: String,
     required: true,
   },
+  productImage: String,
   productName: String,
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
@@ -54,7 +54,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMode: {
       type: String,
-      enum: ["card", "upi", "netbanking", "cod", "wallet"],
+      enum: ["card", "upi", "netbanking", "cod", "wallet", "online", "unknown"],
     },
     paymentOn: Date,
     transactionId: String,

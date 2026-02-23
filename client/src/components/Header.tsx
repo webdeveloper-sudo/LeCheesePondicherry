@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { products, Product } from "@/data/products";
 import { User, LogOut, Heart } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import FlashSaleBanner from "./FlashSaleBanner";
+import logo from "@/assets/images/logo.jpg";
+import { motion } from "framer-motion";
+import { staggerContainer, fadeUp, imageVariant } from "@/animations/variants";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -19,6 +22,28 @@ export default function Header() {
   const { name, isAuthenticated, wishlistCount, role } = useUserStore();
   const userName = name ? name.split(" ")[0] : "User"; // Get first name
   const [isClient, setIsClient] = useState(false);
+  const location = useLocation(); // Add this import
+  const isHomeRoute = location.pathname === "/";
+  const logoVariants = {
+    initial: { rotate: 0, scale: 0.9, opacity: 0 },
+    animate: isHomeRoute
+      ? {
+          rotate: 360,
+          scale: 1,
+          opacity: 1,
+          transition: {
+            rotate: { duration: 1.2, ease: "easeInOut" },
+            scale: { duration: 0.8, ease: "easeOut" },
+            opacity: { duration: 0.6 },
+          },
+        }
+      : { scale: 1, opacity: 1, transition: { duration: 0.6 } },
+    hover: {
+      scale: 1.05,
+      rotate: 5,
+      transition: { duration: 0.3 },
+    },
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -74,15 +99,7 @@ export default function Header() {
       <FlashSaleBanner />
       <div className="mx-12  px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo & Brand Name */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 overflow-hidden rounded-full border border-gray-100 shadow-sm">
-              <img
-                src="/images/logo.jpg"
-                alt="Le Pondicherry Cheese Logo"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              />
-            </div>
+          <Link to="/">
             <span
               className="text-xl md:text-2xl font-semibold text-[#2C5530]"
               style={{ fontFamily: "var(--font-heading)" }}
@@ -90,11 +107,39 @@ export default function Header() {
               Le Pondicherry Cheese
             </span>
           </Link>
-
+          {/* Desktop Navigation */}
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center">
             <ul className="flex items-center gap-8">
-              {navLinks.map((link) => (
+              {navLinks.slice(0, 3).map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
+                    className="nav-link text-sm uppercase tracking-wider"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            {/* Logo & Brand Name */}
+            <Link to="/" className="flex items-center gap-3 group">
+              <motion.div
+                className="relative w-32 h-32 mx-4 overflow-hidden top-6 rounded-full border p-1 bg-white border-gray-100 shadow-sm"
+                variants={logoVariants}
+                initial="initial"
+                animate="animate"
+                whileHover="hover"
+              >
+                <img
+                  src={logo}
+                  alt="Le Pondicherry Cheese Logo"
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            </Link>
+            <ul className="flex items-center gap-8">
+              {navLinks.slice(3, 6).map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
@@ -232,7 +277,7 @@ export default function Header() {
                     />
                   </svg>
                   {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#C9A961] text-white text-xs rounded-full flex items-center justify-center font-medium">
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#FAB519] text-[#1D161A] text-xs rounded-full flex items-center justify-center font-medium">
                       {totalItems}
                     </span>
                   )}

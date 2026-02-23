@@ -7,6 +7,8 @@ import ProductCard from "./ProductCard";
 import { Link } from "react-router-dom";
 import { Star, ShoppingBag, Heart } from "lucide-react";
 
+import { MotionContainer } from "./ui/MotionPrimitives";
+
 interface YourPicksProps {
   title?: string;
   showAllRows?: boolean;
@@ -42,6 +44,8 @@ export default function YourPicks({
     .filter(Boolean)
     .slice(0, 4);
 
+  const combinedProducts = [...cartProducts, ...wishlistProducts];
+
   const Section = ({
     title,
     icon: Icon,
@@ -71,7 +75,10 @@ export default function YourPicks({
       </div>
 
       {items.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <MotionContainer
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          stagger
+        >
           {items.map((product: any) => (
             <ProductCard
               key={product.id}
@@ -85,7 +92,7 @@ export default function YourPicks({
               reviews={product.reviews}
             />
           ))}
-        </div>
+        </MotionContainer>
       ) : (
         <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
           <p className="text-gray-400">{emptyText}</p>
@@ -103,7 +110,7 @@ export default function YourPicks({
   );
 
   return (
-    <section className="py-12 bg-[#FAF7F2]">
+    <section className="py-12 ">
       <div className="container mx-auto px-4">
         {title && (
           <h1 className="text-3xl font-bold mb-10 text-center font-heading">
@@ -124,24 +131,41 @@ export default function YourPicks({
         {showAllRows && (
           <>
             {/* Row 2: From Your Cart */}
-            <Section
-              title="From Your Cart"
-              icon={ShoppingBag}
-              items={cartProducts}
-              emptyText="Your cart is waiting for some delicious cheese."
-              linkTo="/cart"
-              linkText="View Full Cart"
-            />
+            {cartProducts.length > 3 && (
+              <Section
+                title="From Your Cart"
+                icon={ShoppingBag}
+                items={cartProducts}
+                emptyText="Your cart is waiting for some delicious cheese."
+                linkTo="/cart"
+                linkText="View Full Cart"
+              />
+            )}
 
             {/* Row 3: Your Wishlist */}
-            <Section
-              title="Your Wishlist"
-              icon={Heart}
-              items={wishlistProducts}
-              emptyText="Save your favorites here for later."
-              linkTo="/wishlist"
-              linkText="View Wishlist"
-            />
+            {wishlistProducts.length > 3 && (
+              <Section
+                title="Your Wishlist"
+                icon={Heart}
+                items={wishlistProducts}
+                emptyText="Save your favorites here for later."
+                linkTo="/wishlist"
+                linkText="View Wishlist"
+              />
+            )}
+            {/* combined one from wish list and cart list */}
+            {combinedProducts.length > 0 &&
+              cartProducts.length <= 3 &&
+              wishlistProducts.length <= 3 && (
+                <Section
+                  title="More from Your Cart and Wishlist"
+                  icon={Heart}
+                  items={combinedProducts}
+                  emptyText="Save your favorites here for later."
+                  linkTo="/cart"
+                  linkText="View Full Cart"
+                />
+              )}
           </>
         )}
       </div>

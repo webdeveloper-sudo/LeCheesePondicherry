@@ -156,11 +156,124 @@ const sendWelcomeEmail = async (email, name) => {
   }
 };
 
+/**
+ * Send order confirmation email to user
+ * @param {Object} order - Order details
+ * @param {Object} user - User details
+ */
+const sendOrderConfirmationEmail = async (order, user) => {
+  if (!transporter) return;
+
+  const itemsHtml = order.items
+    .map(
+      (item) => `
+    <tr>
+      <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.productName} (x${item.quantity})</td>
+      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${item.price * item.quantity}</td>
+    </tr>
+  `,
+    )
+    .join("");
+
+  try {
+    await transporter.sendMail({
+      from:
+        process.env.SMTP_FROM ||
+        `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
+      to: user.email,
+      cc: "samdev0418@gmail.com", // Keeping admin in the loop
+      subject: `Order Confirmed: ${order.orderId} - Le Pondicherry Cheese`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #2C5530;">Order Confirmation</h2>
+          <p>Hi ${user.name || "Customer"},</p>
+          <p>Thank you for your order! We've received your payment and are preparing your delicious cheese.</p>
+          
+          <div style="background: #FAF7F2; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Order ID:</strong> ${order.orderId}</p>
+            <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+          </div>
+
+          <h3>Order Summary</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8f8f8;">
+                <th style="padding: 10px; text-align: left;">Item</th>
+                <th style="padding: 10px; text-align: right;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td style="padding: 10px; font-weight: bold;">Total</td>
+                <td style="padding: 10px; font-weight: bold; text-align: right;">₹${order.finalAmount}</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div style="margin-top: 30px;">
+            <p><strong>Shipping to:</strong></p>
+            <p>${order.deliveryAddress.addressLine1}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state} - ${order.deliveryAddress.pincode}</p>
+          </div>
+
+          <p style="margin-top: 30px;">We'll notify you once your order is shipped!</p>
+        </div>
+      `,
+    });
+    console.log(`✅ Order confirmation email sent to ${user.email}`);
+  } catch (error) {
+    console.error("❌ Order confirmation email failed:", error.message);
+  }
+};
+
+/**
+ * Send shipping update email to user
+ */
+const sendShippingUpdateEmail = async (order, user) => {
+  if (!transporter) return;
+
+  try {
+    await transporter.sendMail({
+      from:
+        process.env.SMTP_FROM ||
+        `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
+      to: user.email,
+      subject: `Your cheese is on its way! 🚚 - Order ${order.orderId}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #2C5530;">Order Dispatched!</h2>
+          <p>Hi ${user.name || "Customer"},</p>
+          <p>Good news! Your order <strong>${order.orderId}</strong> has been shipped and is on its way to you.</p>
+          
+          <div style="background: #FAF7F2; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Courier:</strong> ${order.courierPartner}</p>
+            <p><strong>Tracking Number:</strong> <span style="font-size: 18px; font-weight: bold; color: #C9A961;">${order.trackingNumber}</span></p>
+            ${order.estimatedDeliveryDate ? `<p><strong>Estimated Delivery:</strong> ${new Date(order.estimatedDeliveryDate).toLocaleDateString()}</p>` : ""}
+          </div>
+
+          <p>You can track your order on the ${order.courierPartner} website.</p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+             <a href="${process.env.FRONTEND_URL}/user" style="background: #2C5530; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Order Details</a>
+          </div>
+        </div>
+      `,
+    });
+    console.log(`✅ Shipping update email sent to ${user.email}`);
+  } catch (error) {
+    console.error("❌ Shipping update email failed:", error.message);
+  }
+};
+
 // Initialize on module load
 initializeTransporter();
 
 module.exports = {
   sendOTPEmail,
   sendWelcomeEmail,
+  sendOrderConfirmationEmail,
+  sendShippingUpdateEmail,
   initializeTransporter,
 };

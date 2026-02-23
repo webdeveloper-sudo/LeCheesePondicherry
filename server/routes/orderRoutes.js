@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const {
+  createPaymentSession,
+  verifyPayment,
+  getMyOrders,
   getOrders,
-  updateOrderStatus,
+  updateOrder,
 } = require("../controllers/orderController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-// All order routes are admin only
-router.use(protect);
-router.use(adminOnly);
+// User Routes
+router.post("/session", protect, createPaymentSession);
+router.post("/verify", protect, verifyPayment);
+router.get("/my-orders", protect, getMyOrders);
 
-router.get("/", getOrders);
-router.put("/:id/status", updateOrderStatus);
+// Admin Routes
+router.get("/all", protect, adminOnly, getOrders);
+router.put("/:id", protect, adminOnly, updateOrder);
 
 module.exports = router;

@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { Search, X, ChevronDown, Check, ArrowUpDown } from "lucide-react";
 import { products, categories, Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
+import heroImage from "@/assets/images/hero-cheese-board.jpg";
 
 export default function ShopClient() {
   const { addToCart } = useCart();
@@ -109,15 +110,14 @@ export default function ShopClient() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-pattern">
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url("/images/shop-hero-new.jpg")' }}
-        />
+      <section
+        className="relative h-[40vh] min-h-[400px] flex items-center justify-center bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImage})` }}
+      >
         <div className="absolute inset-0 hero-overlay" />
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="relative z-10 text-center text-white max-w-3xl mx-auto px-4">
           <h1
             className="text-4xl md:text-5xl font-bold mb-4 text-white-prominent"
             style={{ fontFamily: "var(--font-heading)" }}
@@ -328,7 +328,7 @@ export default function ShopClient() {
                 className={`bg-white p-8 rounded-2xl shadow-lg border-2 transition-transform duration-300 hover:-translate-y-2 ${plan.featured ? "border-[#C9A961] scale-105 relative" : "border-transparent"}`}
               >
                 {plan.featured && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C9A961] text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FAB519] text-[#1D161A] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
                     Popular
                   </span>
                 )}
@@ -374,7 +374,7 @@ export default function ShopClient() {
                     successId === plan.id
                       ? "bg-green-600 text-white"
                       : plan.featured
-                        ? "bg-[#C9A961] text-white hover:bg-[#B8942F]"
+                        ? "bg-[#FAB519] text-[#1D161A] hover:bg-[#FAB519]"
                         : "bg-[#F5E6D3] text-[#2C5530] hover:bg-[#E8D5B8]"
                   } ${subscribingId === plan.id ? "opacity-70 cursor-wait" : ""}`}
                   disabled={subscribingId !== null}

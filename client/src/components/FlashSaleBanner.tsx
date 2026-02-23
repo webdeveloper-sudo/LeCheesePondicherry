@@ -34,11 +34,11 @@ export default function FlashSaleBanner() {
   const formatTime = (val: number) => val.toString().padStart(2, "0");
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-[#C9A961] py-3 via-[#F3E5AB] to-[#C9A961] bg-[length:200%_100%] animate-shimmer shadow-md text-[#2C5530]">
+    <div className="relative overflow-hidden bg-gradient-to-r from-[#FAB519] py-3 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-md text-[#1D161A]">
       {/* Sparkle/Glitter Effects using pseudo-elements in CSS or simple divs */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay pointer-events-none"></div>
 
-      <div className="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-8 relative z-10">
+      <div className="px-16 mx-auto py-1 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-8 relative z-10">
         {/* Left: Text & Timer */}
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
@@ -81,7 +81,7 @@ export default function FlashSaleBanner() {
       </div>
 
       {/* CSS Animation for Gradient Shimmer */}
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           0% {
             background-position: 100% 0;

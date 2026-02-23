@@ -15,13 +15,20 @@ export interface CartItem {
   productId: string;
   quantity: number;
   weight: string;
+  price: number; // Added price to store weight-based price
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (productId: string, quantity: number, weight: string) => void;
+  addToCart: (
+    productId: string,
+    quantity: number,
+    weight: string,
+    price: number,
+  ) => void;
   removeFromCart: (index: number) => void;
   updateQuantity: (index: number, quantity: number) => void;
+  updateWeight: (index: number, weight: string, price: number) => void;
   clearCart: () => void;
   getProduct: (id: string) => Product | undefined;
   totalItems: number;
@@ -95,11 +102,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.log("CartProvider: Backend sync result", result);
 
       if (result.success && result.data) {
-        const backendItems = result.data.cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          weight: "250g", // Default weight
-        }));
+        const backendItems = result.data.cart.map((item: any) => {
+          const product = products.find((p) => p.id === item.productId);
+          return {
+            productId: item.productId,
+            quantity: item.quantity,
+            weight: "200g", // Default weight for legacy backend data
+            price: product ? product.price : 0,
+          };
+        });
 
         console.log("CartProvider: Backend cart items", backendItems);
 
@@ -142,6 +153,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     productId: string,
     quantity: number,
     weight: string,
+    price: number, // Added price parameter
   ) => {
     // Update local state immediately
     setItems((prev) => {
@@ -154,11 +166,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updated[existingIndex] = {
           ...updated[existingIndex],
           quantity: updated[existingIndex].quantity + quantity,
+          price: price, // Update price if it changed (though weight being same usually means price same)
         };
         return updated;
       }
 
-      return [...prev, { productId, quantity, weight }];
+      return [...prev, { productId, quantity, weight, price }];
     });
 
     // Sync with backend if authenticated
@@ -209,6 +222,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = async () => {
+    console.log("🛒 CartContext: clearCart called");
     setItems([]);
 
     // Sync with backend if authenticated
@@ -221,11 +235,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateWeight = async (index: number, weight: string, price: number) => {
+    setItems((prev) => {
+      const updated = [...prev];
+      if (updated[index]) {
+        updated[index] = { ...updated[index], weight, price };
+      }
+      return updated;
+    });
+  };
+
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const subtotal = items.reduce((sum, item) => {
-    const product = getProduct(item.productId);
-    return sum + (product?.price || 0) * item.quantity;
+    return sum + (item.price || 0) * item.quantity;
   }, 0);
 
   return (
@@ -235,6 +258,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        updateWeight,
         clearCart,
         getProduct,
         totalItems,

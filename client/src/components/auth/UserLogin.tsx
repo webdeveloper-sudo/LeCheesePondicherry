@@ -409,9 +409,9 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="min-h-[90vh] flex flex-col lg:flex-row bg-[#FAF7F2]">
+    <div className="min-h-[90vh]  flex flex-col lg:flex-row ">
       {/* LEFT SIDE - FORM */}
-      <div className="w-full lg:w-2/5 flex flex-col justify-start items-center p-8 lg:p-12 relative z-10 bg-white lg:bg-[#FAF7F2]">
+      <div className="w-full lg:w-2/5 flex flex-col justify-start items-center p-8 lg:p-12 relative z-10 bg-pattern">
         <div className="max-w-md w-full">
           {/* Mobile Header (Only visible on small screens) */}
           <div className="lg:hidden mb-8 text-center">
@@ -423,7 +423,7 @@ export default function UserLogin() {
             </p>
           </div>
 
-          <div className="bg-white p-8 lg:p-10 rounded-2xl shadow-xl lg:shadow-none lg:bg-transparent lg:border-none border border-[#E8D5B8] lg:border-0">
+          <div className="bg-pattern p-8 lg:p-10 rounded-2xl shadow-xl lg:shadow-none lg:bg-transparent lg:border-none border border-[#E8D5B8] lg:border-0">
             <div className="mb-8">
               <h2 className="text-3xl font-bold font-heading text-[#2C5530] mb-2">
                 {step === "login" ? "Welcome Back" : "Join the Family"}

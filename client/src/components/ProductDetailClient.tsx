@@ -22,7 +22,7 @@ export default function ProductDetailClient({
 
   const [quantity, setQuantity] = useState(1);
   const [selectedWeight, setSelectedWeight] = useState(
-    product.weight || "250g",
+    product.weight || "200g",
   );
   const [activeTab, setActiveTab] = useState("description");
   const [addedToCart, setAddedToCart] = useState(false);
@@ -37,9 +37,11 @@ export default function ProductDetailClient({
   }, [product.id, trackProductView]);
 
   const weightOptions = [
-    { label: "250g", price: product.price },
-    { label: "500g", price: Math.round(product.price * 1.85) },
-    { label: "1kg", price: Math.round(product.price * 3.5) },
+    { label: "200g", price: product.price },
+    { label: "400g", price: Math.round(product.price * 1.85) },
+    { label: "600g", price: Math.round(product.price * 2.65) },
+    { label: "800g", price: Math.round(product.price * 3.4) },
+    { label: "1kg", price: Math.round(product.price * 4.1) },
   ];
 
   const selectedPrice =
@@ -47,13 +49,13 @@ export default function ProductDetailClient({
     product.price;
 
   const handleAddToCart = () => {
-    addToCart(product.id, quantity, selectedWeight);
+    addToCart(product.id, quantity, selectedWeight, selectedPrice);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
   const handleBuyNow = () => {
-    addToCart(product.id, quantity, selectedWeight);
+    addToCart(product.id, quantity, selectedWeight, selectedPrice);
     navigate("/checkout");
   };
 
@@ -197,10 +199,10 @@ export default function ProductDetailClient({
                     <button
                       key={option.label}
                       onClick={() => setSelectedWeight(option.label)}
-                      className={`px-4 py-2 rounded-md border-2 text-sm font-medium transition-all ${
+                      className={`px-4 py-2 rounded-md border-2 text-sm font-bold transition-all ${
                         selectedWeight === option.label
                           ? "border-[#2C5530] bg-[#2C5530] text-white"
-                          : "border-gray-300 hover:border-[#C9A961]"
+                          : "border-[#2C5530] bg-white text-[#2C5530] hover:bg-green-50"
                       }`}
                     >
                       {option.label}

@@ -1,3 +1,11 @@
+// Import images
+import agedCheddar from "@/assets/images/products/aged-cheddar.jpg";
+import classicBrie from "@/assets/images/products/classic-brie.jpg";
+import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
+import babySwissTexture from "@/assets/images/products/baby-swiss-texture.png";
+import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.png";
+import granaCherryTexture from "@/assets/images/products/grana-chery-texture.png";
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -27,17 +35,17 @@ export const blogs: BlogPost[] = [
     authorRole: "Master Cheesemaker",
     authorImage: "/images/team/chef-1.jpg",
     category: "Tradition",
-    image: "/images/products/aged-cheddar.jpg",
+    image: agedCheddar,
     excerpt:
       "Deep within our temperature-controlled caves in Pondicherry, thousands of cheese wheels are quietly transforming...",
     tags: ["Aging", "Artisan", "Pondicherry", "Tradition"],
     gallery: [
-      "/images/products/aged-cheddar.jpg",
-      "/images/products/classic-brie.jpg",
-      "/images/products/kombucha-rind.jpg",
-      "/images/products/baby-swiss-texture.png",
-      "/images/products/daddy-swiss-texture.png",
-      "/images/products/grana-chery-texture.png",
+      agedCheddar,
+      classicBrie,
+      kombuchaRind,
+      babySwissTexture,
+      daddySwissTexture,
+      granaCherryTexture,
     ],
     quote: {
       text: "The process of cheesemaking is a dialogue between the milk and the clock. Patience is not just a virtue; it is the primary ingredient.",
@@ -64,7 +72,7 @@ The affineur is the guardian of the cheese during its long slumber. Every wheel 
     date: "April 28, 2024",
     author: "Admin",
     category: "Heritage",
-    image: "/images/products/classic-brie.jpg",
+    image: classicBrie,
     excerpt:
       "How our master cheesemakers blended centuries-old European techniques with the unique flavors of local Indian dairy...",
     tags: ["French", "Heritage", "Fusion", "Local"],
@@ -89,7 +97,7 @@ The foundation of any great cheese is the milk. We work closely with local farme
     date: "April 15, 2024",
     author: "Admin",
     category: "Lifestyle",
-    image: "/images/products/kombucha-rind.jpg",
+    image: kombuchaRind,
     excerpt:
       "Discover why our signature sharp cheddar is the perfect companion for locally crafted kombuchas and fruit infusions...",
     tags: ["Pairing", "Kombucha", "Lifestyle", "Local"],

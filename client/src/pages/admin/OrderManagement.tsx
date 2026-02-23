@@ -10,28 +10,17 @@ import {
 } from "lucide-react";
 
 const OrderManagement: React.FC = () => {
-  const { orders, fetchOrders, updateOrderStatus, isLoading } = useAdminStore();
+  const { orders, fetchOrders, updateOrder, isLoading } = useAdminStore();
+  const [editingOrder, setEditingOrder] = React.useState<string | null>(null);
+  const [trackingData, setTrackingData] = React.useState({
+    trackingNumber: "",
+    courierPartner: "",
+    estimatedDeliveryDate: "",
+  });
 
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "placed":
-        return <Clock className="text-blue-500" size={18} />;
-      case "confirmed":
-        return <CheckCircle className="text-cyan-500" size={18} />;
-      case "shipped":
-        return <Truck className="text-purple-500" size={18} />;
-      case "delivered":
-        return <CheckCircle className="text-green-500" size={18} />;
-      case "cancelled":
-        return <XCircle className="text-red-500" size={18} />;
-      default:
-        return <ShoppingBag className="text-gray-500" size={18} />;
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -51,7 +40,26 @@ const OrderManagement: React.FC = () => {
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    await updateOrderStatus(orderId, newStatus);
+    await updateOrder(orderId, { orderStatus: newStatus });
+  };
+
+  const handleSaveTracking = async (orderId: string) => {
+    await updateOrder(orderId, {
+      ...trackingData,
+      orderStatus: "shipped",
+    });
+    setEditingOrder(null);
+  };
+
+  const startEditing = (order: any) => {
+    setEditingOrder(order._id);
+    setTrackingData({
+      trackingNumber: order.trackingNumber || "",
+      courierPartner: order.courierPartner || "Delhivery",
+      estimatedDeliveryDate: order.estimatedDeliveryDate
+        ? new Date(order.estimatedDeliveryDate).toISOString().split("T")[0]
+        : "",
+    });
   };
 
   if (isLoading && orders.length === 0)
@@ -87,13 +95,18 @@ const OrderManagement: React.FC = () => {
                     >
                       {order.orderStatus}
                     </span>
+                    <span
+                      className={`px-2 py-0.5 text-[10px] uppercase font-black rounded-full border ${order.paymentStatus === "completed" ? "bg-green-100 text-green-700 border-green-200" : "bg-orange-100 text-orange-700 border-orange-200"}`}
+                    >
+                      {order.paymentStatus}
+                    </span>
                   </div>
                   <div className="text-xs text-gray-500 font-medium">
                     Placed by{" "}
                     <span className="text-gray-900 font-bold">
                       {order.user?.name || "Guest User"}
                     </span>{" "}
-                    • {new Date(order.orderPlacedOn).toLocaleString()}
+                    • {new Date(order.createdAt).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -122,31 +135,101 @@ const OrderManagement: React.FC = () => {
                     <option value="delivered">Delivered</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
-                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
-                    <ChevronRight size={20} />
-                  </button>
+
+                  {order.orderStatus === "confirmed" && (
+                    <button
+                      onClick={() => startEditing(order)}
+                      className="text-xs font-bold text-[#2C5530] hover:underline"
+                    >
+                      Ship Order
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Collapsible details preview could go here */}
-            <div className="px-5 py-3 bg-gray-50/50 border-t border-gray-100 flex items-center gap-4 overflow-x-auto">
-              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                Items:
-              </span>
-              {order.items?.map((item: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-2 bg-white px-2 py-1 rounded-md border border-gray-100"
-                >
-                  <span className="text-xs font-bold text-gray-800">
-                    {item.productName}
-                  </span>
-                  <span className="text-[10px] font-black text-yellow-600 bg-yellow-50 px-1 rounded">
-                    x{item.quantity}
-                  </span>
+            {/* Tracking Editor */}
+            {editingOrder === order._id && (
+              <div className="p-5 bg-[#FAF7F2] border-t border-gray-100">
+                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
+                  Shipping Details
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <input
+                    placeholder="Tracking ID"
+                    value={trackingData.trackingNumber}
+                    onChange={(e) =>
+                      setTrackingData({
+                        ...trackingData,
+                        trackingNumber: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
+                  <input
+                    placeholder="Courier Partner"
+                    value={trackingData.courierPartner}
+                    onChange={(e) =>
+                      setTrackingData({
+                        ...trackingData,
+                        courierPartner: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
+                  <input
+                    type="date"
+                    value={trackingData.estimatedDeliveryDate}
+                    onChange={(e) =>
+                      setTrackingData({
+                        ...trackingData,
+                        estimatedDeliveryDate: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border rounded-lg text-sm"
+                  />
                 </div>
-              ))}
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={() => handleSaveTracking(order._id)}
+                    className="bg-[#2C5530] text-white px-4 py-2 rounded-lg text-xs font-bold"
+                  >
+                    Save & Mark Shipped
+                  </button>
+                  <button
+                    onClick={() => setEditingOrder(null)}
+                    className="text-gray-500 text-xs font-bold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="px-5 py-3 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between gap-4 overflow-x-auto">
+              <div className="flex items-center gap-4">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  Items:
+                </span>
+                {order.items?.map((item: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2 bg-white px-2 py-1 rounded-md border border-gray-100"
+                  >
+                    <span className="text-xs font-bold text-gray-800">
+                      {item.productName}
+                    </span>
+                    <span className="text-[10px] font-black text-yellow-600 bg-yellow-50 px-1 rounded">
+                      x{item.quantity}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-xs text-gray-500">
+                {order.deliveryAddress?.city}, {order.deliveryAddress?.state} -{" "}
+                {order.deliveryAddress?.pincode}
+              </div>
             </div>
           </div>
         ))}
