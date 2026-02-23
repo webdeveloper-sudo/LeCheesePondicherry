@@ -230,21 +230,21 @@ h6 {
 }
 
 .bg-cheesesparks {
-  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("./src/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.png");
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("/src/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .bg-pattern {
-  background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url("./src/assets/images/bg-elements/cheese_patterns.jpg");
+  background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url("/src/assets/images/bg-elements/cheese_patterns.jpg");
   background-size: contain;
   /* background-repeat:no-repeat; */
   background-position: center;
 }
 
 .bg-dark-cheese{
- background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),url("./src/assets/images/bg-elements/dark-cheese-bg.jpg");
+ background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),url("/src/assets/images/bg-elements/dark-cheese-bg.jpg");
  background-size: cover;
  background-position: center;
  background-repeat: no-repeat;
