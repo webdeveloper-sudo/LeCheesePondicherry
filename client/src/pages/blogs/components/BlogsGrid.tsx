@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { MotionContainer } from "@/components/ui/MotionPrimitives";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
-import axios from "axios";
 import { Loader } from "lucide-react";
+import axios from "axios";
+import { blogs as staticBlogs } from "@/data/blogs";
 
 interface Blog {
   _id: string;
@@ -19,9 +20,23 @@ interface Blog {
 }
 
 export const BlogsGrid = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Using static blogs data instead of backend fetch
+  const [blogs] = useState<Blog[]>(
+    staticBlogs.map((b) => ({
+      _id: b.id,
+      title: b.title,
+      slug: b.id, // Using id as slug for static data
+      excerpt: b.excerpt,
+      image: b.image,
+      category: b.category,
+      date: b.date,
+      author: b.author,
+      isPublished: true,
+    })),
+  );
+  const [loading] = useState(false);
 
+  /* Commenting out backend fetch logic
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -44,6 +59,7 @@ export const BlogsGrid = () => {
 
     fetchBlogs();
   }, []);
+  */
 
   if (loading) {
     return (

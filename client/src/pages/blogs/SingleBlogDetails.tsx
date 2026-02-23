@@ -16,6 +16,7 @@ import {
   Loader,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { blogs as staticBlogs } from "@/data/blogs";
 
 interface Blog {
   _id?: string;
@@ -41,6 +42,34 @@ export default function SingleBlogDetails() {
   const [loading, setLoading] = useState(true);
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]); // To find prev/next
 
+  useEffect(() => {
+    // Map static blogs to the expected Blog interface
+    const mappedBlogs = staticBlogs.map((b) => ({
+      _id: b.id,
+      id: b.id,
+      title: b.title,
+      slug: b.id,
+      content: b.content,
+      image: b.image,
+      category: b.category,
+      date: b.date,
+      author: b.author,
+      tags: b.tags,
+      gallery: b.gallery,
+      quote: b.quote,
+    }));
+
+    setAllBlogs(mappedBlogs);
+
+    // Find the specific blog by slug (which is id in static data)
+    const currentBlog = mappedBlogs.find((b) => b.slug === slug);
+    if (currentBlog) {
+      setBlog(currentBlog);
+    }
+    setLoading(false);
+  }, [slug]);
+
+  /* Commenting out backend fetch logic
   useEffect(() => {
     const fetchBlogData = async () => {
       setLoading(true);
@@ -71,6 +100,7 @@ export default function SingleBlogDetails() {
       fetchBlogData();
     }
   }, [slug]);
+  */
 
   if (loading) {
     return (
