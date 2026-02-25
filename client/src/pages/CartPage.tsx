@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function CartPage() {
   const {
@@ -11,11 +13,38 @@ export default function CartPage() {
     updateWeight,
     removeFromCart,
     subtotal,
+    totalWeight,
+    toggleSelectItem,
+    toggleSelectAll,
   } = useCart();
+  const { isAuthenticated, addresses } = useUserStore();
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isGuestPuducherry, setIsGuestPuducherry] = useState(false);
 
   const discount = 0;
-  const shipping = subtotal > 1500 ? 0 : 99;
-  const total = subtotal - discount + shipping;
+
+  const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
+  const isPuducherry = isAuthenticated()
+    ? defaultAddr
+      ? (defaultAddr.city || "").toLowerCase().includes("puducherry") ||
+        (defaultAddr.city || "").toLowerCase().includes("pondicherry") ||
+        (defaultAddr.state || "").toLowerCase().includes("puducherry") ||
+        (defaultAddr.state || "").toLowerCase().includes("pondicherry")
+      : false
+    : isGuestPuducherry;
+
+  const calculateDeliveryCharge = (weight: number, pudu: boolean) => {
+    if (weight === 0) return 0;
+    const slabs = Math.ceil(weight / 200);
+    return pudu ? 50 + (slabs - 1) * 30 : 100 + (slabs - 1) * 50;
+  };
+
+  const shipping = calculateDeliveryCharge(totalWeight, isPuducherry);
+  const taxAmount = Math.round(subtotal * 0.04);
+  const total = subtotal - discount + shipping + taxAmount;
+
+  const selectedCount = items.filter((item) => item.selected !== false).length;
+  const isAllSelected = selectedCount === items.length;
 
   if (items.length === 0) {
     return (
@@ -45,12 +74,33 @@ export default function CartPage() {
   return (
     <div className="min-h-screen py-12 bg-[#FAF7F2]">
       <div className="container mx-auto px-4">
-        <h1
-          className="text-3xl md:text-4xl font-bold mb-8 text-[#1A1A1A]"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Shopping Cart ({items.length} {items.length === 1 ? "item" : "items"})
-        </h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <h1
+            className="text-3xl md:text-4xl font-bold text-[#1A1A1A]"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            Shopping Cart ({items.length}{" "}
+            {items.length === 1 ? "item" : "items"})
+          </h1>
+
+          {items.length > 0 && (
+            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <input
+                type="checkbox"
+                id="select-all"
+                checked={isAllSelected}
+                onChange={(e) => toggleSelectAll(e.target.checked)}
+                className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+              />
+              <label
+                htmlFor="select-all"
+                className="text-sm font-semibold text-[#1A1A1A] cursor-pointer"
+              >
+                Select All ({items.length})
+              </label>
+            </div>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -62,8 +112,20 @@ export default function CartPage() {
               return (
                 <div
                   key={index}
-                  className="bg-white p-4 md:p-6 rounded-lg shadow-sm flex gap-4"
+                  className={`bg-white p-4 md:p-6 rounded-lg shadow-sm flex gap-4 transition-all ${
+                    item.selected === false ? "opacity-75 grayscale-[0.5]" : ""
+                  }`}
                 >
+                  {/* Select Checkbox */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={item.selected !== false}
+                      onChange={() => toggleSelectItem(index)}
+                      className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+                    />
+                  </div>
+
                   {/* Product Image */}
                   <div className="w-24 h-24 md:w-32 md:h-32 bg-[#FAF7F2] rounded-lg overflow-hidden relative flex-shrink-0">
                     <img
@@ -213,6 +275,7 @@ export default function CartPage() {
                   </p>
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                     {items.map((item, idx) => {
+                      if (item.selected === false) return null;
                       const product = getProduct(item.productId);
                       if (!product) return null;
                       return (
@@ -236,6 +299,11 @@ export default function CartPage() {
                         </div>
                       );
                     })}
+                    {selectedCount === 0 && (
+                      <p className="text-xs text-red-500 italic">
+                        No items selected for checkout
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-between text-[#6B6B6B] border-t pt-3">
@@ -244,16 +312,52 @@ export default function CartPage() {
                     ₹{subtotal.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between text-[#6B6B6B]">
-                  <span>Shipping</span>
+                <div className="flex justify-between text-[#6B6B6B] items-center">
+                  <div className="flex items-center gap-1.5">
+                    <span>Shipping</span>
+                    <div className="relative inline-block">
+                      <button
+                        onClick={() => setShowTooltip(!showTooltip)}
+                        className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 hover:border-[#2C5530] hover:text-[#2C5530] transition-colors"
+                        title="Click for info"
+                      >
+                        i
+                      </button>
+                      {showTooltip && (
+                        <div className="absolute bottom-full left-0 mb-2 p-3 bg-gray-900 text-white text-[11px] rounded-xl shadow-xl w-64 z-50 leading-relaxed animate-in fade-in zoom-in slide-in-from-bottom-2">
+                          <div className="relative">
+                            We are packing your order with specialized packaging
+                            and trying to deliver you without 0% quality loss.
+                            <div className="absolute -bottom-4 left-1 w-2 h-2 bg-gray-900 rotate-45" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   <span className="text-[#1A1A1A]">
-                    {shipping === 0 ? "FREE" : `₹${shipping}`}
+                    ₹{shipping.toLocaleString()}
                   </span>
                 </div>
-                {shipping === 0 && (
-                  <p className="text-xs text-green-600">
-                    🎉 You qualify for free shipping!
-                  </p>
+                <div className="flex justify-between text-[#6B6B6B]">
+                  <span>Tax and Charges</span>
+                  <span className="text-[#1A1A1A]">
+                    ₹{taxAmount.toLocaleString()}
+                  </span>
+                </div>
+                {isPuducherry && (
+                  <div className="text-[10px] font-bold text-[#2C5530] bg-green-50 p-2 rounded-lg border border-green-100 animate-in fade-in slide-in-from-top-1">
+                    Special 50% discount for Puducherrians only.
+                  </div>
+                )}
+                {!isAuthenticated() && !isGuestPuducherry && (
+                  <div className="pt-2 text-center">
+                    <button
+                      onClick={() => setIsGuestPuducherry(true)}
+                      className="text-xs text-[#2C5530] underline hover:text-[#C9A961] transition-colors"
+                    >
+                      Are you located in Puducherry?
+                    </button>
+                  </div>
                 )}
                 <div className="flex justify-between text-lg font-bold pt-3 border-t text-[#1A1A1A]">
                   <span>Total</span>
@@ -264,12 +368,21 @@ export default function CartPage() {
               </div>
 
               {/* Checkout Button */}
-              <Link
-                to="/checkout"
-                className="w-full btn btn-primary text-lg py-4 mt-6 block text-center"
-              >
-                Proceed to Checkout
-              </Link>
+              {selectedCount > 0 ? (
+                <Link
+                  to="/checkout"
+                  className="w-full btn btn-primary text-lg py-4 mt-6 block text-center"
+                >
+                  Proceed to Checkout ({selectedCount})
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-gray-200 text-gray-400 cursor-not-allowed text-lg font-bold py-4 mt-6 rounded-xl"
+                >
+                  Select Items to Checkout
+                </button>
+              )}
 
               {/* Trust Badges */}
               <div className="mt-6 pt-6 border-t">

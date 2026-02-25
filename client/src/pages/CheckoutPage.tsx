@@ -28,7 +28,8 @@ declare global {
 }
 
 export default function CheckoutPage() {
-  const { items, getProduct, subtotal, clearCart } = useCart();
+  const { items, getProduct, subtotal, totalWeight, clearCart } = useCart();
+  const selectedItems = items.filter((item) => item.selected !== false);
   const {
     isAuthenticated,
     name: userName,
@@ -47,6 +48,7 @@ export default function CheckoutPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderResult, setOrderResult] = useState<any>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // Address state
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
@@ -69,8 +71,22 @@ export default function CheckoutPage() {
   const [gpsCoords, setGpsCoords] = useState<string>("Not detected");
 
   const discount = 0;
-  const shippingCost = subtotal > 1500 ? 0 : 99;
-  const total = subtotal - discount + shippingCost;
+
+  const isPuducherry =
+    shipping.city.toLowerCase().includes("puducherry") ||
+    shipping.city.toLowerCase().includes("pondicherry") ||
+    shipping.state.toLowerCase().includes("puducherry") ||
+    shipping.state.toLowerCase().includes("pondicherry");
+
+  const calculateDeliveryCharge = (weight: number, pudu: boolean) => {
+    if (weight === 0) return 0;
+    const slabs = Math.ceil(weight / 200);
+    return pudu ? 50 + (slabs - 1) * 30 : 100 + (slabs - 1) * 50;
+  };
+
+  const deliveryCharge = calculateDeliveryCharge(totalWeight, isPuducherry);
+  const taxAmount = Math.round(subtotal * 0.04);
+  const total = subtotal - discount + deliveryCharge + taxAmount;
 
   const fetchAddressesAndSetDefault = async () => {
     try {
@@ -235,7 +251,7 @@ export default function CheckoutPage() {
     try {
       // 1. Create Order in Backend & Get Payment Session
       const orderData = {
-        items: items.map((item) => ({
+        items: selectedItems.map((item) => ({
           productId: item.productId,
           productName: getProduct(item.productId)?.name,
           productImage: getProduct(item.productId)?.image,
@@ -245,8 +261,8 @@ export default function CheckoutPage() {
         })),
         orderAmount: subtotal,
         discount,
-        deliveryCharge: shippingCost,
-        taxAmount: 0,
+        deliveryCharge: deliveryCharge,
+        taxAmount: taxAmount,
         finalAmount: total,
         shippingAddress: {
           addressLine1: shipping.address,
@@ -349,7 +365,7 @@ export default function CheckoutPage() {
   };
 
   if (
-    items.length === 0 &&
+    selectedItems.length === 0 &&
     step !== "confirmation" &&
     !searchParams.get("order_id")
   ) {
@@ -942,7 +958,7 @@ export default function CheckoutPage() {
                 </h3>
 
                 <div className="max-h-64 overflow-y-auto pr-2 custom-scrollbar space-y-4 mb-6">
-                  {items.map((item, i) => {
+                  {selectedItems.map((item, i) => {
                     const product = getProduct(item.productId);
                     if (!product) return null;
                     return (
@@ -977,10 +993,37 @@ export default function CheckoutPage() {
                       ₹{subtotal.toLocaleString()}
                     </span>
                   </div>
+                  <div className="flex justify-between text-sm text-[#6B6B6B] items-center">
+                    <div className="flex items-center gap-1.5">
+                      <span>Delivery</span>
+                      <div className="relative inline-block">
+                        <button
+                          onClick={() => setShowTooltip(!showTooltip)}
+                          className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 hover:border-[#2C5530] hover:text-[#2C5530] transition-colors"
+                          title="Click for info"
+                        >
+                          i
+                        </button>
+                        {showTooltip && (
+                          <div className="absolute bottom-full left-0 mb-2 p-3 bg-gray-900 text-white text-[11px] rounded-xl shadow-xl w-64 z-50 leading-relaxed animate-in fade-in zoom-in slide-in-from-bottom-2">
+                            <div className="relative">
+                              We are packing your order with specialized
+                              packaging and trying to deliver you without 0%
+                              quality loss.
+                              <div className="absolute -bottom-4 left-1 w-2 h-2 bg-gray-900 rotate-45" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#1A1A1A]">
+                      ₹{deliveryCharge.toLocaleString()}
+                    </span>
+                  </div>
                   <div className="flex justify-between text-sm text-[#6B6B6B]">
-                    <span>Delivery</span>
-                    <span className="font-bold text-green-600">
-                      {shippingCost === 0 ? "FREE" : `₹${shippingCost}`}
+                    <span>Tax and Charges</span>
+                    <span className="font-bold text-[#1A1A1A]">
+                      ₹{taxAmount.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between font-black text-xl pt-4 border-t border-gray-100 text-[#1A1A1A]">

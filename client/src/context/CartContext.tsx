@@ -16,6 +16,7 @@ export interface CartItem {
   quantity: number;
   weight: string;
   price: number; // Added price to store weight-based price
+  selected?: boolean;
 }
 
 interface CartContextType {
@@ -33,7 +34,10 @@ interface CartContextType {
   getProduct: (id: string) => Product | undefined;
   totalItems: number;
   subtotal: number;
+  totalWeight: number;
   loading: boolean;
+  toggleSelectItem: (index: number) => void;
+  toggleSelectAll: (selected: boolean) => void;
   syncWithBackend: () => Promise<void>;
 }
 
@@ -109,6 +113,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             quantity: item.quantity,
             weight: "200g", // Default weight for legacy backend data
             price: product ? product.price : 0,
+            selected: true,
           };
         });
 
@@ -171,7 +176,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return updated;
       }
 
-      return [...prev, { productId, quantity, weight, price }];
+      return [...prev, { productId, quantity, weight, price, selected: true }];
     });
 
     // Sync with backend if authenticated
@@ -245,10 +250,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const toggleSelectItem = (index: number) => {
+    setItems((prev) => {
+      const updated = [...prev];
+      if (updated[index]) {
+        updated[index] = {
+          ...updated[index],
+          selected: !updated[index].selected,
+        };
+      }
+      return updated;
+    });
+  };
 
-  const subtotal = items.reduce((sum, item) => {
+  const toggleSelectAll = (selected: boolean) => {
+    setItems((prev) => prev.map((item) => ({ ...item, selected })));
+  };
+
+  const selectedItems = items.filter((item) => item.selected !== false);
+
+  const totalItemsForCheckout = selectedItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
+
+  const subtotal = selectedItems.reduce((sum, item) => {
     return sum + (item.price || 0) * item.quantity;
+  }, 0);
+
+  const totalWeight = selectedItems.reduce((sum, item) => {
+    let weightInGrams = 0;
+    const weightStr = item.weight.toLowerCase();
+    if (weightStr.endsWith("kg")) {
+      weightInGrams = parseFloat(weightStr) * 1000;
+    } else if (weightStr.endsWith("g")) {
+      weightInGrams = parseFloat(weightStr);
+    }
+    return sum + weightInGrams * item.quantity;
   }, 0);
 
   return (
@@ -261,9 +299,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateWeight,
         clearCart,
         getProduct,
-        totalItems,
+        totalItems: totalItemsForCheckout,
         subtotal,
+        totalWeight,
         loading,
+        toggleSelectItem,
+        toggleSelectAll,
         syncWithBackend,
       }}
     >
