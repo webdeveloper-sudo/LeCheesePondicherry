@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useUserStore } from "@/store/useUserStore";
+import { useToastStore } from "@/store/useToastStore";
 import { Heart } from "lucide-react";
 
 interface ProductDetailClientProps {
@@ -19,6 +20,7 @@ export default function ProductDetailClient({
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist, trackProductView } = useUserStore();
+  const { addToast } = useToastStore();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedWeight, setSelectedWeight] = useState(
@@ -50,6 +52,10 @@ export default function ProductDetailClient({
 
   const handleAddToCart = () => {
     addToCart(product.id, quantity, selectedWeight, selectedPrice);
+    addToast(`${quantity}x ${product.name} added to cart!`, "success", {
+      label: "View Cart",
+      href: "/cart",
+    });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
@@ -64,6 +70,14 @@ export default function ProductDetailClient({
     setIsTogglingWishlist(true);
     try {
       await toggleWishlist(product.id);
+      if (inWishlist) {
+        addToast(`${product.name} removed from wishlist`, "info");
+      } else {
+        addToast(`${product.name} added to wishlist!`, "success", {
+          label: "View Wishlist",
+          href: "/wishlist",
+        });
+      }
     } finally {
       setIsTogglingWishlist(false);
     }
@@ -74,7 +88,7 @@ export default function ProductDetailClient({
       {/* Breadcrumb */}
       <nav className="bg-[#FAF7F2] py-4">
         <div className="container mx-auto px-4">
-          <ol className="flex items-center text-sm text-[#6B6B6B]">
+          <ol className="flex flex-wrap items-center text-sm text-[#6B6B6B]">
             <li>
               <Link to="/" className="hover:text-[#C9A961]">
                 Home
@@ -194,7 +208,7 @@ export default function ProductDetailClient({
               {/* Weight Selection */}
               <div className="mb-6">
                 <label className="block text-sm font-medium mb-2">Size:</label>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {weightOptions.map((option) => (
                     <button
                       key={option.label}
@@ -236,14 +250,14 @@ export default function ProductDetailClient({
               </div>
 
               {/* Add to Cart & Wishlist */}
-              <div className="flex gap-4 mb-8">
+              <div className="flex flex-wrap gap-4 mb-8">
                 <button
                   onClick={handleAddToCart}
-                  className={`flex-1 btn ${addedToCart ? "bg-green-600 hover:bg-green-600" : "btn-primary"} text-lg py-4`}
+                  className={`flex-1 w-max-content btn ${addedToCart ? "bg-green-600 hover:bg-green-600" : "btn-primary"} text-lg py-4`}
                 >
                   {addedToCart ? "✓ Added to Cart!" : "Add to Cart"}
                 </button>
-                <button
+                {/* <button
                   onClick={handleWishlistToggle}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     inWishlist
@@ -260,7 +274,7 @@ export default function ProductDetailClient({
                         : "fill-transparent text-gray-500"
                     }`}
                   />
-                </button>
+                </button> */}
                 <button
                   onClick={handleBuyNow}
                   className="btn btn-accent text-lg py-4 px-8"
@@ -313,7 +327,7 @@ export default function ProductDetailClient({
       <section className="py-12 bg-[#FAF7F2]">
         <div className="container mx-auto px-4">
           {/* Tab Headers */}
-          <div className="flex border-b border-gray-300 mb-8">
+          <div className="flex flex-wrap border-b border-gray-300 mb-8">
             {["description", "tasting", "pairings"].map((tab) => (
               <button
                 key={tab}

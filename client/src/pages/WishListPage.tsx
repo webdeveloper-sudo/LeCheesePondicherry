@@ -84,7 +84,7 @@ export default function WishlistPage() {
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white py-10">
         <div className="container mx-auto px-4 py-8">
           <h1
             className="text-3xl font-bold text-[#2C5530]"

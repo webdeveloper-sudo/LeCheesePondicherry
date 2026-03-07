@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Upload, Plus, Trash2, Save, Loader } from "lucide-react";
 import axios from "axios";
+import { useToastStore } from "@/store/useToastStore";
 
 interface BlogFormProps {
   existingBlog?: any;
@@ -35,6 +36,7 @@ export default function BlogForm({
   const [mainImagePreview, setMainImagePreview] = useState<string>("");
   const [galleryImages, setGalleryImages] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const { addToast } = useToastStore();
 
   const [loading, setLoading] = useState(false);
   const mainImageInputRef = useRef<HTMLInputElement>(null);
@@ -158,7 +160,7 @@ export default function BlogForm({
       onSuccess();
     } catch (error) {
       console.error("Error saving blog:", error);
-      alert("Failed to save blog. Please try again.");
+      addToast("Failed to save blog. Please try again.", "error");
     } finally {
       setLoading(false);
     }

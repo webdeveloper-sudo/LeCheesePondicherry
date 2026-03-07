@@ -59,7 +59,7 @@ export default function ContactPage() {
           className="container mx-auto px-4 relative z-10 text-center"
           stagger
         >
-          <MotionText className="block text-secondary font-medium tracking-[0.2em] mb-4 uppercase text-sm md:text-base">
+          <MotionText className="block text-white font-medium tracking-[0.2em] mb-4 uppercase text-sm md:text-base">
             Get in Touch
           </MotionText>
           <MotionHeading
@@ -87,9 +87,9 @@ export default function ContactPage() {
               stagger
             >
               {/* Contact Information Column */}
-              <div className="lg:col-span-5 space-y-12">
+              <div className="lg:col-span-5 space-y-6">
                 <motion.div variants={fadeUp}>
-                  <h2
+                  {/* <h2
                     className="text-4xl font-bold mb-6 text-text"
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
@@ -98,10 +98,10 @@ export default function ContactPage() {
                   <p className="text-text-light text-lg leading-relaxed mb-8">
                     Experience the art of cheese making firsthand. Our facility
                     is open for tours and tastings by appointment.
-                  </p>
+                  </p> */}
 
-                  <div className="space-y-8">
-                    <div className="flex items-start gap-4 group">
+                  <div className="space-y-4"> 
+                    <div className="flex items-start gap-4 group bg-[#FADB9A]/20 p-6  py-8 shadow-md border-gray-300 border">
                       <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-colors">
                         <MapPin className="w-6 h-6 text-secondary" />
                       </div>
@@ -117,7 +117,7 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 group">
+                    <div className="flex items-start gap-4 group bg-[#FADB9A]/20 p-6 py-8 shadow-md  border-gray-300 border">
                       <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-colors">
                         <Mail className="w-6 h-6 text-secondary" />
                       </div>
@@ -134,7 +134,7 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 group">
+                    <div className="flex items-start gap-4 group bg-[#FADB9A]/20 p-6 py-8 shadow-md border-gray-300 border">
                       <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-colors">
                         <Phone className="w-6 h-6 text-secondary" />
                       </div>
@@ -151,7 +151,7 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4 group">
+                    <div className="flex items-start gap-4 group bg-[#FADB9A]/20 shadow-md p-6 py-8 border-gray-300 border">
                       <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-colors">
                         <Clock className="w-6 h-6 text-secondary" />
                       </div>
@@ -172,16 +172,16 @@ export default function ContactPage() {
 
               {/* Contact Form Column */}
               <motion.div className="lg:col-span-7" variants={fadeUp}>
-                <div className="bg-white p-8 md:p-10 rounded-xl shadow-xl border border-gray-100 relative overflow-hidden">
+                <div className="bg-white p-8 md:p-10 rounded-sm shadow-xl border border-green relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-50"></div>
 
                   <h2
-                    className="text-3xl font-bold mb-2 text-text"
+                    className="text-3xl font-bold mb-2 text-green"
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
                     Send us a Message
                   </h2>
-                  <p className="text-text-light mb-8">
+                  <p className="text-md py-2 mb-8">
                     Have a question about our cheeses or want to place a bulk
                     order? Fill out the form below.
                   </p>

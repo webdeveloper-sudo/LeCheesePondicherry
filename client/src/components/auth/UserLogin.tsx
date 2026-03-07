@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
+import { useToastStore } from "@/store/useToastStore";
 import {
   Mail,
   Lock,
@@ -60,6 +61,7 @@ export default function UserLogin() {
     | "forgot-password"
     | "reset-password"
   >("login");
+  const { addToast } = useToastStore();
   const [otpPurpose, setOtpPurpose] = useState<"signup" | "reset-password">(
     "signup",
   );
@@ -155,7 +157,7 @@ export default function UserLogin() {
 
   const detectLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      addToast("Geolocation is not supported by your browser", "error");
       return;
     }
 
@@ -186,7 +188,7 @@ export default function UserLogin() {
       },
       (error) => {
         console.error("GPS ERROR:", error.message);
-        alert("Unable to retrieve your location");
+        addToast("Unable to retrieve your location", "error");
         setIsLocating(false);
       },
     );
@@ -232,9 +234,7 @@ export default function UserLogin() {
         // In development, OTP is returned for testing
         if (result.data?.otp) {
           console.log("Development OTP:", result.data.otp);
-          alert(
-            `OTP sent to ${formData.email}. Check console for development OTP.`,
-          );
+          addToast(`OTP sent to ${formData.email}. Check console for development OTP.`, "success");
         }
       } else {
         setError(result.message || "Failed to send OTP");
@@ -294,9 +294,7 @@ export default function UserLogin() {
 
       if (result.success && result.data) {
         if (otpPurpose === "reset-password") {
-          alert(
-            "Password reset successfully! Please login with your new password.",
-          );
+          addToast("Password reset successfully! Please login with your new password.", "success");
           setStep("login");
           setFormData({ ...formData, password: "", otp: "" });
           return;

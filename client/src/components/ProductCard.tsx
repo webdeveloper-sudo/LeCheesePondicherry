@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/useUserStore";
 
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
+import { useToastStore } from "@/store/useToastStore";
 
 interface ProductCardProps {
   id: string;
@@ -28,6 +29,7 @@ export default function ProductCard({
   reviews = 0,
 }: ProductCardProps) {
   const { isInWishlist, toggleWishlist, trackProductView } = useUserStore();
+  const { addToast } = useToastStore();
   const [isToggling, setIsToggling] = useState(false);
   const inWishlist = isInWishlist(id);
 
@@ -39,6 +41,14 @@ export default function ProductCard({
     setIsToggling(true);
     try {
       await toggleWishlist(id);
+      if (inWishlist) {
+        addToast(`${name} removed from wishlist`, "info");
+      } else {
+        addToast(`${name} added to wishlist!`, "success", {
+          label: "View Wishlist",
+          href: "/wishlist",
+        });
+      }
     } finally {
       setIsToggling(false);
     }
@@ -110,13 +120,13 @@ export default function ProductCard({
         </Link>
 
         {/* Description */}
-        <p className="text-sm text-[#6B6B6B] mb-2 line-clamp-2">
+        <p className="md:text-sm text-[12px] text-[#6B6B6B] mb-2 line-clamp-2">
           {description}
         </p>
 
         {/* Rating */}
         {reviews > 0 && (
-          <div className="flex items-center gap-1 mb-2">
+          <div className="flex items-center space-y-2 gap-1 mb-2">
             <div className="flex text-[#C9A961]">
               {[...Array(5)].map((_, i) => (
                 <svg
@@ -134,11 +144,11 @@ export default function ProductCard({
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg font-semibold text-[#2C5530]">
+          <span className="md:text-lg text-[15px] font-semibold text-[#2C5530]">
             ₹{price.toLocaleString()}
           </span>
           {originalPrice && (
-            <span className="text-sm text-[#6B6B6B] line-through">
+            <span className="md:text-sm text-[13px] text-[#6B6B6B] line-through">
               ₹{originalPrice.toLocaleString()}
             </span>
           )}
@@ -150,7 +160,7 @@ export default function ProductCard({
           className="block w-full mt-auto"
           onClick={handleProductClick}
         >
-          <button className="w-full btn btn-secondary text-sm py-2 group-hover:bg-[#C9A961] group-hover:text-black group-hover:border-[#C9A961]">
+          <button className="w-full  btn-secondary text-[13px] md:text-sm  py-2 group-hover:bg-[#C9A961] group-hover:text-black group-hover:border-[#C9A961]">
             View Details
           </button>
         </Link>

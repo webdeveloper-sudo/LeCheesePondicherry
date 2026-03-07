@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
 import FlashSaleBanner from "@/components/FlashSaleBanner";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChatBot from "@/components/ChatBot";
 import DecorativeWrapper from "@/components/DecorativeWrapper";
+import LoaderComponent from "@/components/Loader";
+import ToastContainer from "@/components/ToastContainer";
 import { CartProvider } from "@/context/CartContext";
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -37,51 +40,63 @@ import YourOrders from "./pages/user/YourOrders";
 export default function App() {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
+  const [isRouting, setIsRouting] = useState(false);
+
+  useEffect(() => {
+    setIsRouting(true);
+    const timer = setTimeout(() => {
+      setIsRouting(false);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   return (
     <CartProvider>
-        {!isAdminPath && (
-          <div className="mb-[145px]">
-            <Header />
-          </div>
-        )}
-        <ScrollToTop />
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/shop" element={<ShopPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/checkout/status" element={<OrderStatusPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/faq" element={<FaqPage />} />
-            <Route path="/gifts" element={<GiftsPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/process" element={<ProcessPage />} />
-            <Route path="/products/:slug" element={<ProductPage />} />
-            <Route path="/shipping" element={<ShippingPage />} />
-            <Route path="/stories" element={<AllBlogs />} />
-            <Route path="/stories/:slug" element={<SingleBlogDetails />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/user/login" element={<UserLoginPage />} />
-            <Route path="/wholesale" element={<WholesalePage />} />
-            <Route path="/user" element={<UserDashboardPage />} />
-            <Route path="/user/editprofile" element={<EditUserProfile />} />
-            <Route path="/wishlist" element={<WishlistPage />} />
-            <Route path="/orders" element={<YourOrders />} />
-            <Route path="/dummy" element={<DummyPage />} />
-            <Route path="/admin" element={<AdminLoginPage />} />
-            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-            {/* Gifts landing and other legacy routes can be mapped here if needed */}
-          </Routes>
-        </main>
-        {!isAdminPath && (
-          <>
-            <ChatBot />
-            <Footer />
-          </>
-        )}
+      {/* {isRouting && <LoaderComponent fullScreen={true} size="lg" label="Loading..." />} */}
+      {!isAdminPath && (
+        <div className="mb-[110px] sm:mb-[130px] md:mb-[145px]">
+          <Header />
+        </div>
+      )}
+      <ScrollToTop />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/checkout/status" element={<OrderStatusPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/gifts" element={<GiftsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/process" element={<ProcessPage />} />
+          <Route path="/products/:slug" element={<ProductPage />} />
+          <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/stories" element={<AllBlogs />} />
+          <Route path="/stories/:slug" element={<SingleBlogDetails />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/user/login" element={<UserLoginPage />} />
+          <Route path="/wholesale" element={<WholesalePage />} />
+          <Route path="/user" element={<UserDashboardPage />} />
+          <Route path="/user/editprofile" element={<EditUserProfile />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/orders" element={<YourOrders />} />
+          <Route path="/dummy" element={<DummyPage />} />
+          <Route path="/admin" element={<AdminLoginPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          {/* Gifts landing and other legacy routes can be mapped here if needed */}
+        </Routes>
+      </main>
+      {!isAdminPath && (
+        <>
+          <ChatBot />
+          <Footer />
+        </>
+      )}
+      <ToastContainer />
     </CartProvider>
   );
 }

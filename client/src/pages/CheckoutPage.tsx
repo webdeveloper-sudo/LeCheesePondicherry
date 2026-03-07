@@ -20,6 +20,7 @@ import {
   Phone,
   User as UserIcon,
 } from "lucide-react";
+import { useToastStore } from "@/store/useToastStore";
 
 declare global {
   interface Window {
@@ -50,6 +51,7 @@ export default function CheckoutPage() {
   const [orderResult, setOrderResult] = useState<any>(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
+    const { addToast } = useToastStore();
   // Address state
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
@@ -130,6 +132,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!isAuthenticated()) {
       navigate("/user/login?redirect=checkout");
+      addToast("Please login to continue", "error")
     } else {
       // Pre-fill user data name
       setShipping((prev) => ({
@@ -193,7 +196,7 @@ export default function CheckoutPage() {
   const handleAddNewAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     if (shipping.phone.length !== 10) {
-      alert("Phone number must be exactly 10 digits.");
+      addToast("Phone number must be exactly 10 digits.", "error");
       return;
     }
 
@@ -230,7 +233,7 @@ export default function CheckoutPage() {
 
         // Optional: Re-fetch or rely on store update
       } else {
-        alert(res.message || "Failed to save address");
+        addToast(res.message || "Failed to save address", "error");
       }
     } catch (error) {
       console.error("Error saving address:", error);
@@ -288,8 +291,9 @@ export default function CheckoutPage() {
           console.error(
             "❌ Cashfree SDK not loaded! Check index.html script tag.",
           );
-          alert(
+          addToast(
             "Payment system is currently unavailable. Please refresh the page.",
+            "error"
           );
           setIsProcessing(false);
           return;
@@ -318,11 +322,11 @@ export default function CheckoutPage() {
           (response.data as any)?.message ||
           response.message ||
           "Failed to initiate payment session";
-        alert(errorMsg);
+        addToast(errorMsg, "error");
       }
     } catch (error: any) {
       console.error("Payment Process Error:", error);
-      alert("Something went wrong with the payment process.");
+      addToast("Something went wrong with the payment process.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -330,7 +334,7 @@ export default function CheckoutPage() {
 
   const detectLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      addToast("Geolocation is not supported by your browser", "error");
       return;
     }
 
@@ -358,7 +362,7 @@ export default function CheckoutPage() {
         setIsLocating(false);
       },
       () => {
-        alert("Unable to retrieve your location");
+        addToast("Unable to retrieve your location", "error");
         setIsLocating(false);
       },
     );
@@ -555,7 +559,7 @@ export default function CheckoutPage() {
                         <button
                           onClick={() => {
                             if (!selectedAddressId) {
-                              alert("Please select a delivery address.");
+                              addToast("Please select a delivery address.", "error");
                               return;
                             }
                             setStep("payment");

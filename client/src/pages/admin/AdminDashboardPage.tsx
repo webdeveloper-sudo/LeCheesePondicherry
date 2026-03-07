@@ -7,10 +7,12 @@ import ProductManagement from "@/pages/admin/ProductManagement";
 import OrderManagement from "@/pages/admin/OrderManagement";
 import BlogManagement from "@/pages/admin/BlogManagement";
 import { LogOut } from "lucide-react";
+import { useToastStore } from "@/store/useToastStore";
 
 export default function AdminDashboardPage() {
   const { role, logout } = useUserStore();
   const navigate = useNavigate();
+  const { addToast } = useToastStore();
   const [activeTab, setActiveTab] = useState("products");
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function AdminDashboardPage() {
         const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
         const now = Date.now();
         if (now - state.loginAt > sevenDaysInMs) {
-          alert("Your admin session has expired. Please login again.");
+          addToast("Your admin session has expired. Please login again.", "error");
           handleLogout();
         }
       }

@@ -40,7 +40,7 @@ export default function CartPage() {
   };
 
   const shipping = calculateDeliveryCharge(totalWeight, isPuducherry);
-  const taxAmount = Math.round(subtotal * 0.04);
+  const taxAmount = Math.round(subtotal * 0.05);
   const total = subtotal - discount + shipping + taxAmount;
 
   const selectedCount = items.filter((item) => item.selected !== false).length;

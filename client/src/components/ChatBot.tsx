@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { findBestMatch } from '@/data/chatbot-knowledge';
 import { logChatInteraction, generateSessionId } from '@/utils/chatAnalytics';
 import { products } from '@/data/products';
+import { useToastStore } from '@/store/useToastStore';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function ChatBot() {
     const [userData, setUserData] = useState({ name: '', email: '' });
     const [userLocation, setUserLocation] = useState<string>('Requesting...');
     const [sessionId] = useState(() => generateSessionId());
+    const { addToast } = useToastStore();
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const handleSend = async (query?: string) => {
@@ -77,7 +79,7 @@ Action Required: Please reply to ${text} as soon as possible.
                     const result = await response.json();
                     if (!result.success) {
                         console.warn('EMAIL NOT SENT:', result.error);
-                        alert(`E-Commerce Notice: Support escalation is currently in 'Simulated Mode'. To enable live email alerts, please configure the RESEND_API_KEY in the site environment settings.`);
+                        addToast(`E-Commerce Notice: Support escalation is currently in 'Simulated Mode'. To enable live email alerts, please configure the RESEND_API_KEY in the site environment settings.`, "info");
                     }
                 } catch (err) {
                     console.error('FAILED TO SEND ESCALATION EMAIL:', err);
@@ -163,10 +165,10 @@ Action Required: Please reply to ${text} as soon as possible.
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-6 right-6 z-90 ">
             {/* Chat Window */}
             {isOpen && (
-                <div className="bg-white w-80 md:w-96 h-[500px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="bg-white w-80 md:w-96 h-[500px]  rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
                     {/* Header */}
                     <div className="bg-[#2C5530] p-4 text-white flex justify-between items-center shadow-lg">
                         <div className="flex items-center gap-3">
@@ -278,7 +280,7 @@ Action Required: Please reply to ${text} as soon as possible.
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-[#2C5530] text-white p-4 rounded-full shadow-lg hover:scale-110 hover:rotate-12 transition-all group relative"
+                    className="bg-[#2C5530] text-white p-4 border-2 border-[#FAB519] border rounded-full shadow-lg hover:scale-110 hover:rotate-12 transition-all group relative"
                 >
                     <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />

@@ -16,8 +16,10 @@ export default function ShopClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   // Subscription states
   const [subscribingId, setSubscribingId] = useState<string | null>(null);
@@ -45,6 +47,12 @@ export default function ShopClient() {
         !searchRef.current.contains(event.target as Node)
       ) {
         setIsSearchOpen(false);
+      }
+      if (
+        categoryRef.current &&
+        !categoryRef.current.contains(event.target as Node)
+      ) {
+        setIsCategoryOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -135,25 +143,69 @@ export default function ShopClient() {
         <div className="container mx-auto px-4">
           {/* Filters Row */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-            {/* Category Tabs */}
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeCategory === cat.id
-                      ? "bg-[#2C5530] text-white"
-                      : "bg-gray-100 text-[#1A1A1A] hover:bg-gray-200"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
+            <div className="hidden md:block">
+              {/* Category Tabs */}
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      activeCategory === cat.id
+                        ? "bg-[#2C5530] text-white"
+                        : "bg-gray-100 text-[#1A1A1A] hover:bg-gray-200"
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Search & Sort Actions */}
-            <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-end">
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+              <div className="md:hidden block relative z-20" ref={categoryRef}>
+                {/* Category Mobile Tabs Dropdown */}
+                <button
+                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:border-[#C9A961] transition-all min-w-[140px] justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="truncate max-w-[120px]">
+                      {categories.find((c) => c.id === activeCategory)?.name ||
+                        "Categories"}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={`text-[#6B6B6B] transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {isCategoryOpen && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => {
+                          setActiveCategory(cat.id);
+                          setIsCategoryOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#FAF7F2] flex items-center justify-between group transition-colors ${
+                          activeCategory === cat.id
+                            ? "text-[#2C5530] font-medium bg-[#FAF7F2]"
+                            : "text-[#4A4A4A]"
+                        }`}
+                      >
+                        <span className="truncate">{cat.name}</span>
+                        {activeCategory === cat.id && (
+                          <Check size={16} className="text-[#C9A961]" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               {/* Search */}
               <div className="relative" ref={searchRef}>
                 <div
@@ -242,69 +294,69 @@ export default function ShopClient() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Results Count & Clear Search */}
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-[#6B6B6B]">
-              Showing {sortedProducts.length}{" "}
-              {sortedProducts.length === 1 ? "product" : "products"}
-              {searchTerm && (
-                <span>
-                  {" "}
-                  for "<span className="font-semibold">{searchTerm}</span>"
-                </span>
-              )}
-            </p>
+        {/* Results Count & Clear Search */}
+        <div className="container flex justify-between items-center ">
+          <p className="text-sm text-[#6B6B6B] mb-8">
+            Showing {sortedProducts.length}{" "}
+            {sortedProducts.length === 1 ? "product" : "products"}
             {searchTerm && (
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  window.history.replaceState(null, "", "/shop");
-                }}
-                className="text-sm text-[#2C5530] hover:underline font-medium"
-              >
-                Clear Search
-              </button>
+              <span>
+                {" "}
+                for "<span className="font-semibold">{searchTerm}</span>"
+              </span>
             )}
-          </div>
-
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortedProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                description={product.shortDescription}
-                price={product.price}
-                originalPrice={product.originalPrice}
-                image={product.image}
-                rating={product.rating}
-                reviews={product.reviews}
-              />
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {sortedProducts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-xl text-[#6B6B6B]">
-                No products found
-                {searchTerm ? " matching your search" : " in this category"}.
-              </p>
-              <button
-                onClick={() => {
-                  setActiveCategory("all");
-                  setSearchTerm("");
-                  window.history.replaceState(null, "", "/shop");
-                }}
-                className="mt-4 btn btn-secondary"
-              >
-                View All Cheeses
-              </button>
-            </div>
+          </p>
+          {searchTerm && (
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                window.history.replaceState(null, "", "/shop");
+              }}
+              className="text-sm text-[#2C5530] hover:underline font-medium"
+            >
+              Clear Search
+            </button>
           )}
         </div>
+
+        {/* Product Grid */}
+        <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {sortedProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              description={product.shortDescription}
+              price={product.price}
+              originalPrice={product.originalPrice}
+              image={product.image}
+              rating={product.rating}
+              reviews={product.reviews}
+            />
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {sortedProducts.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-xl text-[#6B6B6B]">
+              No products found
+              {searchTerm ? " matching your search" : " in this category"}.
+            </p>
+            <button
+              onClick={() => {
+                setActiveCategory("all");
+                setSearchTerm("");
+                window.history.replaceState(null, "", "/shop");
+              }}
+              className="mt-4 btn btn-secondary"
+            >
+              View All Cheeses
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Subscription CTA */}

@@ -104,20 +104,23 @@
 @theme inline {
   --color-background: var(--color-background);
   --color-foreground: var(--color-text);
+  --color-green: #254228;
   --font-sans: var(--font-body);
 }
 
 * {
   box-sizing: border-box;
   scroll-behavior: smooth;
+
 }
 
-body {
+html, body {
   background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.6;
   animation: fadeIn 0.4s ease-in-out;
+    overflow-x: hidden;
 }
 
 @keyframes fadeIn {
