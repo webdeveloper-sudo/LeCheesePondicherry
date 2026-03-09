@@ -172,7 +172,7 @@ export default function AboutPage() {
                 traditional methods that preserve the nutritional integrity of
                 our products.
               </MotionText>
-              <MotionContainer
+             <MotionContainer
                 className="grid grid-cols-2 md:grid-cols-4 gap-4"
                 stagger
               >
@@ -180,8 +180,8 @@ export default function AboutPage() {
                   className="bg-white p-6 border-gray-200 border shadow-lg"
                   variants={scaleIn}
                 >
-                  <div className="w-32 h-32 bg-[#F9B51D] rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-white font-bold text-5xl">H</span>
+                  <div className="md:w-[clamp(6rem,20vw,8rem)] w-[clamp(6rem,20vw,8rem)] md:h-[clamp(6rem,20vw,8rem)] h-[clamp(6rem,20vw,8rem)] bg-[#F9B51D] rounded-full flex items-center justify-center mx-auto mb-6 aspect-square">
+                    <span className="text-white font-bold [font-size:clamp(2rem,10vw,4rem)] leading-none">H</span>
                   </div>
                   <h3 className="font-semibold text-2xl mb-3">Healthy</h3>
                   <p className="text-md text-[#6B6B6B]">
@@ -192,8 +192,8 @@ export default function AboutPage() {
                   className="bg-white p-6 border-gray-200 border shadow-lg"
                   variants={scaleIn}
                 >
-                  <div className="w-32 h-32 bg-[#2C5530] rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-white font-bold text-5xl">O</span>
+                  <div className="w-[clamp(6rem,20vw,8rem)] h-[clamp(6rem,20vw,8rem)] bg-[#2C5530] rounded-full flex items-center justify-center mx-auto mb-3 aspect-square">
+                    <span className="text-white font-bold [font-size:clamp(2rem,10vw,4rem)] leading-none">O</span>
                   </div>
                   <h3 className="font-semibold text-2xl mb-3">Organic</h3>
                   <p className="text-md text-[#6B6B6B]">
@@ -204,8 +204,8 @@ export default function AboutPage() {
                   className="bg-white p-6 border-gray-200 border shadow-lg"
                   variants={scaleIn}
                 >
-                  <div className="w-32 h-32 bg-[#F9B51D] rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-white font-bold text-5xl">P</span>
+                  <div className="w-[clamp(6rem,20vw,8rem)] h-[clamp(6rem,20vw,8rem)] bg-[#F9B51D] rounded-full flex items-center justify-center mx-auto mb-3 aspect-square">
+                    <span className="text-white font-bold [font-size:clamp(2rem,10vw,4rem)] leading-none">P</span>
                   </div>
                   <h3 className="font-semibold text-2xl mb-3">Pure</h3>
                   <p className="text-md text-[#6B6B6B]">
@@ -216,8 +216,8 @@ export default function AboutPage() {
                   className="bg-white p-6 border-gray-200 border shadow-lg"
                   variants={scaleIn}
                 >
-                  <div className="w-32 h-32 bg-[#2C5530] rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-white font-bold text-5xl">E</span>
+                  <div className="w-[clamp(6rem,20vw,8rem)] h-[clamp(6rem,20vw,8rem)] bg-[#2C5530] rounded-full flex items-center justify-center mx-auto mb-3 aspect-square">
+                    <span className="text-white font-bold [font-size:clamp(2rem,10vw,4rem)] leading-none">E</span>
                   </div>
                   <h3 className="font-semibold text-2xl mb-3">Enriched</h3>
                   <p className="text-md text-[#6B6B6B]">
@@ -225,6 +225,7 @@ export default function AboutPage() {
                   </p>
                 </motion.div>
               </MotionContainer>
+
             </div>
           </MotionContainer>
         </section>

@@ -135,7 +135,7 @@ export default function SingleBlogDetails() {
   return (
     <>
       {/* Full-screen pattern background - covers entire body */}
-      <div className="fixed inset-0 bg-pattern z-0" />
+      <div className="fixed inset-0 bg-pattern -z-10" />
 
       <div className="relative z-10 min-h-screen">
         {/* Header / Hero Area - Clean background, sits above pattern */}
@@ -183,7 +183,76 @@ export default function SingleBlogDetails() {
 
                   {/* Content */}
                   <div className="prose prose-slate max-w-none prose-headings:font-heading prose-headings:text-[#1A1A1A] prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-6">
-                    <ReactMarkdown>{blog.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      components={{
+                        h1: ({ children }) => (
+                          <h1 className="text-3xl font-bold text-[#1A1A1A] mt-10 mb-4 pb-2 border-b border-gray-100">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-2xl font-bold text-[#1A1A1A] mt-10 mb-4 pb-2 border-b border-gray-100">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-xl font-bold text-[#1A1A1A] mt-8 mb-3">
+                            {children}
+                          </h3>
+                        ),
+                        h4: ({ children }) => (
+                          <h4 className="text-lg font-bold text-[#1A1A1A] mt-6 mb-2">
+                            {children}
+                          </h4>
+                        ),
+                        p: ({ children }) => (
+                          <p className="text-gray-600 leading-relaxed mb-6">
+                            {children}
+                          </p>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc list-outside pl-6 mb-6 space-y-2 text-gray-600">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal list-outside pl-6 mb-6 space-y-2 text-gray-600">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="text-gray-600 leading-relaxed">
+                            {children}
+                          </li>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-bold text-[#1A1A1A]">
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ children }) => (
+                          <em className="italic text-gray-600">{children}</em>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-4 border-[#C9A961] pl-6 my-6 italic text-gray-500">
+                            {children}
+                          </blockquote>
+                        ),
+                        hr: () => (
+                          <hr className="my-8 border-t border-gray-100" />
+                        ),
+                        a: ({ href, children }) => (
+                          <a
+                            href={href}
+                            className="text-[#2C5530] underline hover:text-[#C9A961] transition-colors"
+                          >
+                            {children}
+                          </a>
+                        ),
+                      }}
+                    >
+                      {blog.content}
+                    </ReactMarkdown>
                   </div>
 
                   {/* Quote */}
@@ -224,21 +293,21 @@ export default function SingleBlogDetails() {
                   {/* Footer of post */}
                   <div className="mt-12 pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="text-xs font-black uppercase text-gray-400">
-                        Tags:
+                      <span className="text-md font-semibold uppercase text-gray-400">
+                        Tags :
                       </span>
                       {blog.tags &&
                         blog.tags.map((tag) => (
                           <Link
                             key={tag}
                             to="/stories"
-                            className="px-3 py-1.5 bg-gray-50 text-gray-500 text-[10px] font-bold rounded hover:bg-[#2C5530] hover:text-white transition-all"
+                            className="px-3 py-1.5 bg-gray-50 text-gray-500 text-[12px] border border-gray-300 rounded hover:bg-[#2C5530] hover:text-white transition-all"
                           >
                             {tag}
                           </Link>
                         ))}
                     </div>
-                    <div className="flex items-center gap-4">
+                    {/* <div className="flex items-center gap-4">
                       <button className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all">
                         <Facebook size={14} />
                       </button>
@@ -251,7 +320,7 @@ export default function SingleBlogDetails() {
                       <button className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] transition-all">
                         <Linkedin size={14} />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
@@ -260,16 +329,16 @@ export default function SingleBlogDetails() {
                   {prevPost && (
                     <Link
                       to={`/stories/${prevPost.slug || prevPost.id}`}
-                      className="flex-1 bg-white/90 p-6 rounded-2xl border border-gray-100 flex items-center gap-4 hover:shadow-md transition-all group backdrop-blur-sm"
+                      className="flex-1 bg-white/90 p-6 border border-green-800 rounded-2xl border border-gray-100 flex items-center gap-4 hover:shadow-md transition-all group backdrop-blur-sm"
                     >
                       <div className="p-2 bg-gray-50 rounded-lg text-[#C9A961] group-hover:bg-[#C9A961] group-hover:text-white transition-all">
-                        <ChevronLeft size={20} />
+                        <ChevronLeft size={30} />
                       </div>
                       <div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                        <span className="text-[12px] font-bold text-gray-600 uppercase tracking-widest">
                           Previous Post
                         </span>
-                        <h4 className="font-bold text-sm text-[#1A1A1A] line-clamp-1">
+                        <h4 className="font-bold text-sm text-[#1A1A1A] line-clamp-2">
                           {prevPost.title}
                         </h4>
                       </div>
@@ -278,25 +347,25 @@ export default function SingleBlogDetails() {
                   {nextPost && (
                     <Link
                       to={`/stories/${nextPost.slug || nextPost.id}`}
-                      className="flex-1 bg-white/90 p-6 rounded-2xl border border-gray-100 flex items-center justify-end text-right gap-4 hover:shadow-md transition-all group backdrop-blur-sm"
+                      className="flex-1 bg-white/90 p-6 rounded-2xl border border-green-800 flex items-center justify-end text-right gap-4 hover:shadow-md transition-all group backdrop-blur-sm"
                     >
                       <div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                        <span className="text-[12px] font-bold text-gray-600 uppercase tracking-widest">
                           Next Post
                         </span>
-                        <h4 className="font-bold text-sm text-[#1A1A1A] line-clamp-1">
+                        <h4 className="font-bold text-sm text-[#1A1A1A] line-clamp-2">
                           {nextPost.title}
                         </h4>
                       </div>
                       <div className="p-2 bg-gray-50 rounded-lg text-[#C9A961] group-hover:bg-[#C9A961] group-hover:text-white transition-all">
-                        <ChevronRight size={20} />
+                        <ChevronRight size={30} />
                       </div>
                     </Link>
                   )}
                 </div>
 
                 {/* Comment Section */}
-                <div className="bg-white/90 rounded-2xl shadow-sm border border-gray-100 p-10 backdrop-blur-sm">
+                {/* <div className="bg-white/90 rounded-2xl shadow-sm border border-gray-100 p-10 backdrop-blur-sm">
                   <h3 className="text-2xl font-bold text-[#1A1A1A] mb-8 font-heading">
                     Leave A Comment
                   </h3>
@@ -344,7 +413,7 @@ export default function SingleBlogDetails() {
                       Post Comment
                     </button>
                   </form>
-                </div>
+                </div> */}
               </div>
 
               {/* Sidebar */}
