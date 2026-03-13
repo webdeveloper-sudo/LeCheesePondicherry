@@ -1,0 +1,47 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'server/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'server/**' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Run Jest Tests
+        working-directory: ./server
+        run: npm test
+
+  deploy:
+    needs: test # Only deploy if tests pass!
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚀 Deploy to Hostinger VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/project/LeCheesePondicherry/server
+            git pull origin main
+            npm install --production
+            pm2 restart all
