@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { products as staticProducts, Product } from "@/data/products";
+import { blogs as staticBlogs, BlogPost } from "@/data/blogs";
 import { cartAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
 import { FETCH_MODE } from "@/config";
@@ -43,6 +44,7 @@ interface CartContextType {
   syncWithBackend: () => Promise<void>;
   isServerDown: boolean;
   allProducts: Product[];
+  allBlogs: any[]; // Changed to any to handle internal mapping or keep as BlogPost
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -108,18 +110,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [allProducts, setAllProducts] = useState<Product[]>(
     FETCH_MODE === "static" ? staticProducts : [],
   );
+  const [allBlogs, setAllBlogs] = useState<any[]>(
+    FETCH_MODE === "static" ? staticBlogs : [],
+  );
 
   useEffect(() => {
     if (FETCH_MODE !== "dynamic") return;
 
-    const fetchAllProducts = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`,
-          { timeout: 5000 } // Add timeout to detect hang/down faster
-        );
-        if (response.data) {
-          const fetchedData = response.data.data || response.data;
+        // Fetch Products and Blogs in parallel
+        const [productsRes, blogsRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_URL}/api/products`, { timeout: 5000 }),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`, { timeout: 5000 })
+        ]);
+
+        if (productsRes.data) {
+          const fetchedData = productsRes.data.data || productsRes.data;
           const mappedProducts = fetchedData.map((p: any) => {
             let hash = 0;
             const id = p._id || "";
@@ -134,20 +142,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
             };
           });
           setAllProducts(mappedProducts);
-          setIsServerDown(false);
         }
+
+        if (blogsRes.data.success) {
+          const fetchedBlogs = blogsRes.data.data || [];
+          const publishedBlogs = fetchedBlogs
+            .filter((b: any) => b.isPublished !== false)
+            .map((b: any) => ({
+              ...b,
+              id: b._id,
+              slug: b.slug || b._id,
+            }));
+          setAllBlogs(publishedBlogs);
+        }
+        
+        setIsServerDown(false);
       } catch (error: any) {
-        console.error("CartProvider: Failed to fetch products, falling back to static:", error);
+        console.error("CartProvider: Failed to fetch dynamic data, falling back to static:", error);
         
         // Check if it's a network error or connection timeout
         if (!error.response || error.code === 'ECONNABORTED' || error.message.includes('Network Error')) {
           setIsServerDown(true);
-          // Fallback to static products
+          // Fallback to static data
           setAllProducts(staticProducts);
+          setAllBlogs(staticBlogs.map(b => ({ ...b, _id: b.id, slug: b.id })));
         }
+      } finally {
+        setLoading(false);
       }
     };
-    fetchAllProducts();
+    fetchData();
   }, []);
 
   const getProduct = (id: string) => allProducts.find((p) => p.id === id);
@@ -359,6 +383,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         syncWithBackend,
         isServerDown,
         allProducts,
+        allBlogs,
       }}
     >
       {children}

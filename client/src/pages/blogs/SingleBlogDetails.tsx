@@ -18,6 +18,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { blogs as staticBlogs } from "@/data/blogs";
 import { FETCH_MODE } from "@/config";
+import { useCart } from "@/context/CartContext";
 
 interface Blog {
   _id?: string;
@@ -39,59 +40,20 @@ interface Blog {
 
 export default function SingleBlogDetails() {
   const { slug } = useParams();
+  const { allBlogs, loading: cartLoading } = useCart();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
-  const [allBlogs, setAllBlogs] = useState<Blog[]>([]); // To find prev/next
 
   useEffect(() => {
-    const fetchBlogData = async () => {
-      setLoading(true);
-      try {
-        if (FETCH_MODE === "static") {
-          const mappedBlogs = staticBlogs.map((b) => ({
-            _id: b.id,
-            id: b.id,
-            title: b.title,
-            slug: b.id,
-            content: b.content,
-            image: b.image,
-            category: b.category,
-            date: b.date,
-            author: b.author,
-            tags: b.tags,
-            gallery: b.gallery,
-            quote: b.quote,
-          }));
-          setAllBlogs(mappedBlogs);
-          const currentBlog = mappedBlogs.find((b) => b.slug === slug);
-          if (currentBlog) {
-            setBlog(currentBlog);
-          }
-        } else {
-          // Dynamic mode
-          const [blogRes, allRes] = await Promise.all([
-            axios.get(`${import.meta.env.VITE_API_URL}/api/blogs/${slug}`),
-            axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`),
-          ]);
-
-          if (blogRes.data.success) {
-            setBlog(blogRes.data.data);
-          }
-          if (allRes.data.success) {
-            setAllBlogs(allRes.data.data);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch blog details", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (slug) {
-      fetchBlogData();
+    if (cartLoading) return;
+    
+    setLoading(true);
+    const currentBlog = allBlogs.find((b: any) => b.slug === slug);
+    if (currentBlog) {
+      setBlog(currentBlog);
     }
-  }, [slug]);
+    setLoading(false);
+  }, [slug, allBlogs, cartLoading]);
 
   if (loading) {
     return (

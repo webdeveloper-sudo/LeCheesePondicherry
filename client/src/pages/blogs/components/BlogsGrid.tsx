@@ -7,6 +7,7 @@ import { Loader } from "lucide-react";
 import axios from "axios";
 import { blogs as staticBlogs } from "@/data/blogs";
 import { FETCH_MODE } from "@/config";
+import { useCart } from "@/context/CartContext";
 
 interface Blog {
   _id: string;
@@ -21,52 +22,7 @@ interface Blog {
 }
 
 export const BlogsGrid = () => {
-  const [blogs, setBlogs] = useState<Blog[]>(
-    FETCH_MODE === "static"
-      ? staticBlogs.map((b) => ({
-          _id: b.id,
-          title: b.title,
-          slug: b.id,
-          excerpt: b.excerpt,
-          image: b.image,
-          category: b.category,
-          date: b.date,
-          author: b.author,
-          isPublished: true,
-        }))
-      : [],
-  );
-  const [loading, setLoading] = useState(FETCH_MODE === "dynamic");
-
-  useEffect(() => {
-    if (FETCH_MODE !== "dynamic") return;
-
-    const fetchBlogs = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/blogs`,
-        );
-        if (response.data.success) {
-          // Filter only published blogs for public view
-          const fetchedBlogs = response.data.data || [];
-          const publishedBlogs = fetchedBlogs
-            .filter((b: any) => b.isPublished !== false)
-            .map((b: any) => ({
-              ...b,
-              id: b._id,
-              slug: b.slug || b._id, // Ensure slug exists for the Link
-            }));
-          setBlogs(publishedBlogs);
-        }
-      } catch (error) {
-        console.error("Failed to fetch blogs", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, []);
+  const { allBlogs: blogs, loading } = useCart();
 
   if (loading) {
     return (
@@ -91,7 +47,7 @@ export const BlogsGrid = () => {
           className="grid grid-cols-1 md:grid-cols-3 gap-10"
           stagger
         >
-          {blogs.map((story) => (
+          {blogs.map((story: any) => (
             <motion.div key={story._id} variants={fadeUp}>
               <Link
                 to={`/stories/${story.slug}`}
