@@ -12,6 +12,7 @@ on:
       - 'client/**'
       - '.github/workflows/frontend.yml'
 
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
