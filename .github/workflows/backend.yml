@@ -36,6 +36,7 @@ jobs:
         working-directory: ./server
         run: npm test
 
+        
   deploy:
     needs: test # Only deploy if tests pass!
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
