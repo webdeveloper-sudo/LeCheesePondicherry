@@ -6,6 +6,7 @@ import { fadeUp } from "@/animations/variants";
 import { Loader } from "lucide-react";
 import axios from "axios";
 import { blogs as staticBlogs } from "@/data/blogs";
+import { FETCH_MODE } from "@/config";
 
 interface Blog {
   _id: string;
@@ -20,24 +21,26 @@ interface Blog {
 }
 
 export const BlogsGrid = () => {
-  // Using static blogs data instead of backend fetch
-  const [blogs] = useState<Blog[]>(
-    staticBlogs.map((b) => ({
-      _id: b.id,
-      title: b.title,
-      slug: b.id, // Using id as slug for static data
-      excerpt: b.excerpt,
-      image: b.image,
-      category: b.category,
-      date: b.date,
-      author: b.author,
-      isPublished: true,
-    })),
+  const [blogs, setBlogs] = useState<Blog[]>(
+    FETCH_MODE === "static"
+      ? staticBlogs.map((b) => ({
+          _id: b.id,
+          title: b.title,
+          slug: b.id,
+          excerpt: b.excerpt,
+          image: b.image,
+          category: b.category,
+          date: b.date,
+          author: b.author,
+          isPublished: true,
+        }))
+      : [],
   );
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(FETCH_MODE === "dynamic");
 
-  /* Commenting out backend fetch logic
   useEffect(() => {
+    if (FETCH_MODE !== "dynamic") return;
+
     const fetchBlogs = async () => {
       try {
         const response = await axios.get(
@@ -45,9 +48,14 @@ export const BlogsGrid = () => {
         );
         if (response.data.success) {
           // Filter only published blogs for public view
-          const publishedBlogs = response.data.data.filter(
-            (b: Blog) => b.isPublished !== false,
-          );
+          const fetchedBlogs = response.data.data || [];
+          const publishedBlogs = fetchedBlogs
+            .filter((b: any) => b.isPublished !== false)
+            .map((b: any) => ({
+              ...b,
+              id: b._id,
+              slug: b.slug || b._id, // Ensure slug exists for the Link
+            }));
           setBlogs(publishedBlogs);
         }
       } catch (error) {
@@ -59,7 +67,6 @@ export const BlogsGrid = () => {
 
     fetchBlogs();
   }, []);
-  */
 
   if (loading) {
     return (

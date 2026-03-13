@@ -21,11 +21,11 @@ import GiftsPage from "@/pages/GiftsPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import ProcessPage from "@/pages/ProcessPage";
 import ProductPage from "@/pages/products/SingleProductPage";
-import ShippingPage from "@/app/shipping/page";
-import TermsPage from "@/app/terms/page";
+import ShippingPage from "@/pages/RefundPolicyPage";
+import TermsPage from "@/pages/TermsPage";
 import UserLoginPage from "@/app/user/login/page";
 import UserDashboardPage from "@/app/user/page";
-import WholesalePage from "@/app/wholesale/page";
+import WholesalePage from "@/pages/WholeSale";
 import DummyPage from "@/app/dummy/page";
 
 import WishlistPage from "@/pages/WishListPage";
@@ -36,6 +36,7 @@ import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import YourOrders from "./pages/user/YourOrders";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   const location = useLocation();
@@ -87,6 +88,8 @@ export default function App() {
           <Route path="/dummy" element={<DummyPage />} />
           <Route path="/admin" element={<AdminLoginPage />} />
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          {/* 404 Page */}
+          <Route path="*" element={<NotFoundPage />} />
           {/* Gifts landing and other legacy routes can be mapped here if needed */}
         </Routes>
       </main>

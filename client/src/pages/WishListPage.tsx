@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "@/store/useUserStore";
 import { wishlistAPI } from "@/lib/api";
-import { products, Product } from "@/data/products";
+import { products as staticProducts, Product } from "@/data/products";
 import { Heart, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { FETCH_MODE } from "@/config";
+import axios from "axios";
 import { MotionContainer } from "@/components/ui/MotionPrimitives";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
@@ -24,27 +26,62 @@ export default function WishlistPage() {
   const [loading, setLoading] = useState(true);
   const [movingToCart, setMovingToCart] = useState<string | null>(null);
 
+  // 1. Initial Load & Auth Change: Fetch from API
   useEffect(() => {
-    const loadWishlist = async () => {
-      setLoading(true);
-
+    const initialFetch = async () => {
       if (isAuthenticated()) {
         await fetchWishlist();
       }
-
-      setLoading(false);
     };
-
-    loadWishlist();
+    initialFetch();
   }, [isAuthenticated, fetchWishlist]);
 
+  // 2. Fetch Products Data & Handle List Changes
   useEffect(() => {
-    // Get product details for wishlist items
-    const wishlistProductsList = products.filter((p) =>
-      wishlistIds.includes(p.id),
-    );
-    setWishlistProducts(wishlistProductsList);
-  }, [wishlistIds]);
+    const loadProductsAndSync = async () => {
+      // If we're already loading or have no IDs, we might still want to clear if needed
+      // but let's just focus on the core logic.
+      try {
+        let productsToUse: Product[] = [];
+        if (FETCH_MODE === "static") {
+          productsToUse = staticProducts;
+        } else {
+          // If we are in dynamic mode, we fetch products if we haven't already
+          // Note: In a larger app, this would be in a context or global state
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/products`,
+          );
+          if (response.data) {
+            const fetchedData = response.data.data || response.data;
+            productsToUse = fetchedData.map((p: any) => {
+              let hash = 0;
+              const id = p._id || "";
+              for (let i = 0; i < id.length; i++) {
+                hash = id.charCodeAt(i) + ((hash << 5) - hash);
+              }
+              const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
+              return {
+                ...p,
+                id: p._id,
+                rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
+              };
+            });
+          }
+        }
+
+        const wishlistProductsList = productsToUse.filter((p) =>
+          wishlistIds.includes(p.id),
+        );
+        setWishlistProducts(wishlistProductsList);
+      } catch (err) {
+        console.error("Wishlist: Failed to load products", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProductsAndSync();
+  }, [wishlistIds]); // Only re-filter when ids change, don't call fetchWishlist() here!
 
   const handleRemoveFromWishlist = async (productId: string) => {
     await toggleWishlist(productId);
@@ -54,7 +91,7 @@ export default function WishlistPage() {
     setMovingToCart(productId);
     try {
       // Add to cart (default 200g)
-      const product = products.find((p) => p.id === productId);
+      const product = wishlistProducts.find((p) => p.id === productId);
       addToCart(productId, 1, "200g", product?.price || 0);
 
       // If authenticated, also call backend API to move

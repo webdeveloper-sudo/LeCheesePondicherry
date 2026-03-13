@@ -24,6 +24,12 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide author name"],
     },
+    authorRole: {
+      type: String,
+    },
+    authorImage: {
+      type: String,
+    },
     category: {
       type: String,
       required: [true, "Please provide blog category"],
@@ -56,6 +62,10 @@ const blogSchema = new mongoose.Schema(
     quote: {
       text: String,
       author: String,
+    },
+    relatedPosts: {
+      type: [String],
+      default: [],
     },
   },
   {

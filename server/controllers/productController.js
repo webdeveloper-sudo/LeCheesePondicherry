@@ -70,6 +70,8 @@ const createProduct = async (req, res) => {
       featured,
       tastingNotes,
       pairings,
+      rating,
+      reviews,
       ingredients,
       variants,
       imagesBase64, // Array of { name: string, mimeType: string, data: string }
@@ -119,7 +121,13 @@ const createProduct = async (req, res) => {
       inStock: inStock === "true" || inStock === true,
       featured: featured === "true" || featured === true,
       tastingNotes,
-      pairings,
+      pairings: Array.isArray(pairings)
+        ? pairings
+        : pairings
+          ? pairings.split(",").map((p) => p.trim())
+          : [],
+      rating: Number(rating) || 0,
+      reviews: Number(reviews) || 0,
       ingredients,
       variants,
       googleDriveFolderId: mainFolderId,
@@ -160,6 +168,19 @@ const updateProduct = async (req, res) => {
     }
 
     const { imagesBase64, images: existingImages, ...updateData } = req.body;
+
+    // Convert numeric fields if present
+    if (updateData.price) updateData.price = Number(updateData.price);
+    if (updateData.originalPrice)
+      updateData.originalPrice = Number(updateData.originalPrice);
+    if (updateData.rating) updateData.rating = Number(updateData.rating);
+    if (updateData.reviews) updateData.reviews = Number(updateData.reviews);
+
+    if (updateData.pairings) {
+      updateData.pairings = Array.isArray(updateData.pairings)
+        ? updateData.pairings
+        : updateData.pairings.split(",").map((p) => p.trim());
+    }
 
     // Handle image uploads if provided
     let finalImages = existingImages

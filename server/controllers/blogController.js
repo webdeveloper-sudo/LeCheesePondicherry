@@ -63,13 +63,16 @@ const createBlog = async (req, res) => {
       excerpt,
       content,
       author,
+      authorRole,
       category,
       tags, // Array or string
       date,
       readTime,
       mainImageBase64, // { name, mimeType, data }
+      authorImageBase64, // { name, mimeType, data }
       galleryBase64, // Array
       quote,
+      relatedPosts,
     } = req.body;
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
@@ -86,6 +89,21 @@ const createBlog = async (req, res) => {
         );
       } catch (uploadError) {
         console.error("❌ Main Blog Image upload failed:", uploadError.message);
+      }
+    }
+
+    // 1.5 Upload Author Image
+    let authorImageUrl = "";
+    if (authorImageBase64 && authorImageBase64.data) {
+      try {
+        authorImageUrl = await uploadFile(
+          authorImageBase64.name,
+          authorImageBase64.mimeType,
+          authorImageBase64.data,
+          mainFolderId,
+        );
+      } catch (uploadError) {
+        console.error("❌ Author Image upload failed:", uploadError.message);
       }
     }
 
@@ -117,6 +135,8 @@ const createBlog = async (req, res) => {
       excerpt,
       content,
       author,
+      authorRole,
+      authorImage: authorImageUrl,
       category,
       tags: Array.isArray(tags)
         ? tags
@@ -134,6 +154,11 @@ const createBlog = async (req, res) => {
       image: mainImageUrl,
       gallery: galleryUrls,
       quote,
+      relatedPosts: Array.isArray(relatedPosts)
+        ? relatedPosts
+        : relatedPosts
+          ? relatedPosts.split(",").map((p) => p.trim())
+          : [],
     };
 
     console.log("📝 Blog Data to Save:", JSON.stringify(blogData, null, 2));
@@ -171,7 +196,14 @@ const updateBlog = async (req, res) => {
       });
     }
 
-    const { mainImageBase64, galleryBase64, tags, ...updateData } = req.body;
+    const {
+      mainImageBase64,
+      authorImageBase64,
+      galleryBase64,
+      tags,
+      relatedPosts,
+      ...updateData
+    } = req.body;
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
@@ -187,6 +219,21 @@ const updateBlog = async (req, res) => {
         updateData.image = url;
       } catch (uploadError) {
         console.error("❌ Main Blog Image upload failed:", uploadError.message);
+      }
+    }
+
+    // Handle Author Image Update
+    if (authorImageBase64 && authorImageBase64.data) {
+      try {
+        const url = await uploadFile(
+          authorImageBase64.name,
+          authorImageBase64.mimeType,
+          authorImageBase64.data,
+          mainFolderId,
+        );
+        updateData.authorImage = url;
+      } catch (uploadError) {
+        console.error("❌ Author Image upload failed:", uploadError.message);
       }
     }
 
@@ -229,6 +276,12 @@ const updateBlog = async (req, res) => {
       updateData.tags = Array.isArray(tags)
         ? tags
         : tags.split(",").map((t) => t.trim());
+    }
+
+    if (relatedPosts) {
+      updateData.relatedPosts = Array.isArray(relatedPosts)
+        ? relatedPosts
+        : relatedPosts.split(",").map((p) => p.trim());
     }
 
     blog = await Blog.findByIdAndUpdate(req.params.id, updateData, {

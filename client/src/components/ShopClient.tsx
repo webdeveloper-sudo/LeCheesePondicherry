@@ -4,12 +4,23 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Search, X, ChevronDown, Check, ArrowUpDown } from "lucide-react";
-import { products, categories, Product } from "@/data/products";
+import {
+  products as staticProducts,
+  categories,
+  Product,
+} from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import { FETCH_MODE } from "@/config";
+import axios from "axios";
+import { Loader } from "lucide-react";
 
 export default function ShopClient() {
-  const { addToCart } = useCart();
+  const { addToCart, allProducts, loading: cartLoading, isServerDown } = useCart();
+  
+  const products = allProducts;
+  const loading = cartLoading;
+
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
@@ -109,13 +120,37 @@ export default function ShopClient() {
     console.log("---------------------------");
 
     if (plan) {
-      addToCart(plan.id, 1, plan.weight);
+      addToCart(plan.id, 1, plan.weight, plan.price);
     }
 
     setSubscribingId(null);
     setSuccessId(planId);
     setTimeout(() => setSuccessId(null), 3000);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-pattern flex flex-col">
+        <div
+          className="relative h-[40vh] min-h-[400px] flex items-center justify-center bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        >
+          <div className="absolute inset-0 hero-overlay" />
+          <div className="relative z-10 text-center text-white max-w-3xl mx-auto px-4">
+            <h1
+              className="text-4xl md:text-5xl font-bold mb-4 text-white-prominent"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              Shop Artisan Cheeses
+            </h1>
+          </div>
+        </div>
+        <div className="flex-1 flex justify-center items-center py-20">
+          <Loader className="animate-spin text-[#2C5530]" size={48} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-pattern">

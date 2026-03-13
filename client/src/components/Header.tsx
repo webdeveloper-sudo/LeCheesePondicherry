@@ -96,9 +96,9 @@ export default function Header() {
 
   const navLinks = [
     { href: "/shop", label: "Shop" },
-    { href: "/about", label: "Our Story" },
+    { href: "/about", label: "About Us" },
     { href: "/process", label: "Artisan Process" },
-    { href: "/gifts", label: "Gifts" },
+    { href: "/wholesale", label: "Wholesale" },
     { href: "/stories", label: "Journal" },
     { href: "/contact", label: "Contact" },
   ];

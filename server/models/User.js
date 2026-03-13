@@ -25,6 +25,8 @@ const cartItemSchema = new mongoose.Schema(
   {
     productId: { type: String, required: true },
     quantity: { type: Number, required: true, min: 1, default: 1 },
+    weight: { type: String, default: "200g" },
+    price: { type: Number, default: 0 },
     addedAt: { type: Date, default: Date.now },
   },
   { _id: false },

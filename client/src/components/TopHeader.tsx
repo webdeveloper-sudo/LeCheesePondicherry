@@ -14,11 +14,11 @@ export default function TopHeader() {
       {/* Sparkle/Glitter Effects using pseudo-elements in CSS or simple divs */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay pointer-events-none"></div>
 
-      <div className=" mx-auto px-4 md:px-8 lg:px-16 py-1 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-8 relative z-10">  
+      <div className=" mx-auto px-4 md:px-8 lg:px-16 py-1 flex flex-col md:flex-row items-center justify-end gap-3 md:gap-8 relative z-10">  
         {/* Center/Right: Offer & CTA */}
-       <div className="text-xs sm:text-sm font-medium text-green">
+       {/* <div className="text-xs sm:text-sm font-medium text-green">
         Free Delivery on orders above ₹2000
-       </div>
+       </div> */}
        <div className="flex items-center text-green gap-4">
         <a href="tel:+919150121331" className="flex items-center gap-2">
           <Phone size={16}/> +91 91501 21331

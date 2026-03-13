@@ -26,6 +26,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     inStock: true,
     featured: false,
     ingredients: "",
+    rating: 0,
+    reviews: 0,
+    pairings: "",
   });
 
   const [tastingNotes, setTastingNotes] = useState({
@@ -52,6 +55,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
         inStock: product.inStock ?? true,
         featured: product.featured ?? false,
         ingredients: product.ingredients || "",
+        rating: product.rating || 0,
+        reviews: product.reviews || 0,
+        pairings: product.pairings ? product.pairings.join(", ") : "",
       });
       if (product.tastingNotes) {
         setTastingNotes({ ...product.tastingNotes });
@@ -124,6 +130,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     try {
       const submissionData = {
         ...formData,
+        rating: Number(formData.rating),
+        reviews: Number(formData.reviews),
+        pairings: formData.pairings
+          ? formData.pairings.split(",").map((p: string) => p.trim())
+          : [],
         tastingNotes,
         imagesBase64: images.map((img) => ({
           name: img.name,
@@ -173,6 +184,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
       inStock: true,
       featured: true,
       ingredients: "Cow Milk, Salt, Culture, Rennet",
+      rating: 4.8,
+      reviews: 12,
+      pairings: "Red Wine, Grapes, Sourdough",
     });
     setTastingNotes({
       appearance: "Creamy white rind",
@@ -477,6 +491,53 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                     />
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Rating, Reviews & Pairings */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-100">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">
+                    Rating (0-5)
+                  </label>
+                  <input
+                    type="number"
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleInputChange}
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">
+                    Reviews Count
+                  </label>
+                  <input
+                    type="number"
+                    name="reviews"
+                    value={formData.reviews}
+                    onChange={handleInputChange}
+                    min="0"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700">
+                  Pairings (comma separated)
+                </label>
+                <input
+                  type="text"
+                  name="pairings"
+                  value={formData.pairings}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Wine, Crackers, Fruit"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
+                />
               </div>
             </div>
 

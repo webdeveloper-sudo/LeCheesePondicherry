@@ -1,0 +1,31 @@
+name: Frontend CI
+
+on:
+push:
+branches: [main]
+paths: ['client/**']
+pull_request: 
+branches: [main]
+paths: ['client/**']
+
+jobs:
+test-and-build:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout code
+uses: actions/checkout@v4
+  - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm install --legacy-peer-deps
+      - name: Run Vitest Tests
+        working-directory: ./client
+        run: npm test -- --run # '--run' makes sure it doesn't stay in "watch" mode
+      - name: Build Project
+        working-directory: ./client
+        run: npm run build

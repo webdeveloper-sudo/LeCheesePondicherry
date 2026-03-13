@@ -112,7 +112,7 @@ export default function Footer() {
                     to="/about"
                     className="hover:text-[#C9A961] transition-colors"
                   >
-                    Our Story
+                    About Us
                   </Link>
                 </li>
                 <li>

@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { wishlistAPI, cartAPI, browsingAPI } from "@/lib/api";
+import { FETCH_MODE } from "@/config";
+
+const isDynamicId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
 
 interface UserState {
   // User info
@@ -14,13 +17,19 @@ interface UserState {
   mobile?: string;
   countryCode?: string;
   addresses: any[];
-  preferences: any[];
+  preferences: any[]; // Current mode's list
+  staticPreferences: any[];
+  dynamicPreferences: any[];
 
   // Shopping state
   cartItemCount: number;
   wishlistCount: number;
-  wishlistIds: string[];
-  recentlyViewed: string[];
+  wishlistIds: string[]; // Current mode's list
+  staticWishlistIds: string[];
+  dynamicWishlistIds: string[];
+  recentlyViewed: string[]; // Current mode's list
+  staticRecentlyViewed: string[];
+  dynamicRecentlyViewed: string[];
 
   // Actions
   setUser: (user: Partial<UserState>) => void;
@@ -56,10 +65,16 @@ export const useUserStore = create<UserState>()(
       countryCode: "+91",
       addresses: [],
       preferences: [],
+      staticPreferences: [],
+      dynamicPreferences: [],
       cartItemCount: 0,
       wishlistCount: 0,
       wishlistIds: [],
+      staticWishlistIds: [],
+      dynamicWishlistIds: [],
       recentlyViewed: [],
+      staticRecentlyViewed: [],
+      dynamicRecentlyViewed: [],
 
       // Set user data
       setUser: (userData) => {
@@ -67,7 +82,16 @@ export const useUserStore = create<UserState>()(
           "setUser: Setting complete user data in Zustand store",
           userData,
         );
-        set((state) => ({ ...state, ...userData }));
+        // Important: When setting from backend, we update dynamic lists
+        set((state) => ({ 
+          ...state, 
+          ...userData,
+          dynamicWishlistIds: userData.wishlistIds || state.dynamicWishlistIds,
+          dynamicPreferences: userData.preferences || state.dynamicPreferences,
+          wishlistIds: FETCH_MODE === "dynamic" ? (userData.wishlistIds || state.wishlistIds) : state.wishlistIds,
+          preferences: FETCH_MODE === "dynamic" ? (userData.preferences || state.preferences) : state.preferences,
+          wishlistCount: FETCH_MODE === "dynamic" ? (userData.wishlistCount ?? state.wishlistCount) : state.wishlistCount
+        }));
       },
 
       // Clear user (logout helper)
@@ -81,9 +105,10 @@ export const useUserStore = create<UserState>()(
           photoURL: "",
           mobile: "",
           cartItemCount: 0,
-          wishlistCount: 0,
-          wishlistIds: [],
-          recentlyViewed: [],
+          wishlistCount: FETCH_MODE === "static" ? get().wishlistCount : 0,
+          wishlistIds: FETCH_MODE === "static" ? get().wishlistIds : [],
+          dynamicWishlistIds: [],
+          dynamicRecentlyViewed: [],
         }),
 
       // Check if authenticated
@@ -115,7 +140,9 @@ export const useUserStore = create<UserState>()(
               "syncProfile: Received complete user dataset from backend",
               user,
             );
-            set({
+            
+            const isDynamic = FETCH_MODE === "dynamic";
+            set((state) => ({
               name: user.name || "",
               email: user.email,
               mobile: user.mobile || "",
@@ -123,14 +150,12 @@ export const useUserStore = create<UserState>()(
               photoURL: user.profilePhoto || "",
               role: user.role,
               addresses: user.addresses || [],
-              preferences: user.preferences || [],
-              cartItemCount: user.cartItemCount || 0,
-              wishlistCount: user.wishlistCount || 0,
-            });
-            console.log(
-              "syncProfile: Preferences saved in store:",
-              user.preferences,
-            );
+              dynamicPreferences: user.preferences || [],
+              preferences: isDynamic ? (user.preferences || []) : state.staticPreferences,
+              // Partitioning
+              cartItemCount: isDynamic ? (user.cartItemCount || 0) : state.cartItemCount,
+              wishlistCount: isDynamic ? (user.wishlistCount || 0) : state.wishlistCount,
+            }));
           }
         } catch (error) {
           console.error("Profile sync error:", error);
@@ -139,59 +164,95 @@ export const useUserStore = create<UserState>()(
 
       // Toggle wishlist item
       toggleWishlist: async (productId: string) => {
-        // ... around line 115 in original file
         const state = get();
+        const isDynamic = FETCH_MODE === "dynamic";
+        const currentIds = isDynamic ? state.dynamicWishlistIds : state.staticWishlistIds;
+        const isInWishlist = currentIds.includes(productId);
+
         if (!state.isAuthenticated()) {
           // For guests, store in local state only
-          const isInWishlist = state.wishlistIds.includes(productId);
+          let newIds;
+          let newCount;
           if (isInWishlist) {
+            newIds = currentIds.filter((id) => id !== productId);
+            newCount = Math.max(0, state.wishlistCount - 1);
+          } else {
+            newIds = [...currentIds, productId];
+            newCount = state.wishlistCount + 1;
+          }
+
+          if (isDynamic) {
             set({
-              wishlistIds: state.wishlistIds.filter((id) => id !== productId),
-              wishlistCount: state.wishlistCount - 1,
+              dynamicWishlistIds: newIds,
+              wishlistIds: newIds,
+              wishlistCount: newCount,
             });
           } else {
             set({
-              wishlistIds: [...state.wishlistIds, productId],
-              wishlistCount: state.wishlistCount + 1,
+              staticWishlistIds: newIds,
+              wishlistIds: newIds,
+              wishlistCount: newCount,
             });
           }
           return !isInWishlist;
         }
 
-        // For logged-in users, call API
+        // For logged-in users, call API (only for dynamic products usually, but we handle both)
         const result = await wishlistAPI.toggleWishlist(productId);
         if (result.success && result.data) {
-          const isInWishlist = result.data.isInWishlist;
-          if (isInWishlist) {
+          const actuallyIn = result.data.isInWishlist;
+          const newCount = result.data.count;
+          
+          if (isDynamic) {
+            const newIds = actuallyIn 
+              ? [...state.dynamicWishlistIds, productId]
+              : state.dynamicWishlistIds.filter(id => id !== productId);
             set({
-              wishlistIds: [...state.wishlistIds, productId],
-              wishlistCount: result.data.count,
+              dynamicWishlistIds: newIds,
+              wishlistIds: newIds,
+              wishlistCount: newCount,
             });
           } else {
-            set({
-              wishlistIds: state.wishlistIds.filter((id) => id !== productId),
-              wishlistCount: result.data.count,
-            });
+             // For static products even if logged in, we keep them local if the API doesn't support them well
+             // But usually dynamic mode is for DB. 
+             const newIds = actuallyIn 
+              ? [...state.staticWishlistIds, productId]
+              : state.staticWishlistIds.filter(id => id !== productId);
+             set({
+              staticWishlistIds: newIds,
+              wishlistIds: newIds,
+              wishlistCount: newCount,
+             });
           }
-          return isInWishlist;
+          return actuallyIn;
         }
-        return state.wishlistIds.includes(productId);
+        return isInWishlist;
       },
 
       // Check if product is in wishlist
-      isInWishlist: (productId: string) =>
-        get().wishlistIds.includes(productId),
+      isInWishlist: (productId: string) => {
+        const state = get();
+        const list = FETCH_MODE === "dynamic" ? state.dynamicWishlistIds : state.staticWishlistIds;
+        return list.includes(productId);
+      },
 
       // Fetch wishlist from server
       fetchWishlist: async () => {
-        if (!get().isAuthenticated()) return;
+        if (!get().isAuthenticated() || FETCH_MODE !== "dynamic") return;
 
         const result = await wishlistAPI.getWishlist();
         if (result.success && result.data) {
-          set({
-            wishlistIds: result.data.wishlist.map((item) => item.productId),
-            wishlistCount: result.data.count,
-          });
+          const ids = result.data.wishlist.map((item: any) => item.productId);
+          
+          // Only update if IDs have changed to prevent infinite loops in subscribers
+          const currentIds = get().dynamicWishlistIds;
+          if (JSON.stringify(ids) !== JSON.stringify(currentIds)) {
+            set({
+              dynamicWishlistIds: ids,
+              wishlistIds: ids,
+              wishlistCount: result.data.count,
+            });
+          }
         }
       },
 
@@ -201,32 +262,107 @@ export const useUserStore = create<UserState>()(
       // Track product view
       trackProductView: async (productId: string) => {
         const state = get();
+        const isDynamic = FETCH_MODE === "dynamic";
+        const currentViewed = isDynamic ? state.dynamicRecentlyViewed : state.staticRecentlyViewed;
+        const currentPrefs = isDynamic ? state.dynamicPreferences : state.staticPreferences;
+
+        // Strict filtering: Don't track if the ID doesn't match the mode
+        const idMatchesMode = isDynamic ? isDynamicId(productId) : !isDynamicId(productId);
+        if (!idMatchesMode) return;
 
         // Update local recently viewed
-        const currentViewed = state.recentlyViewed.filter(
-          (id) => id !== productId,
-        );
-        const newViewed = [productId, ...currentViewed].slice(0, 5);
-        set({ recentlyViewed: newViewed });
+        const filtered = currentViewed.filter((id) => id !== productId);
+        const newViewed = [productId, ...filtered].slice(0, 5);
+        
+        // Update local preferences (simple LRU of 10 items for static mode)
+        const filteredPrefs = currentPrefs.filter((p: any) => (p.productId || p.id || p) !== productId);
+        const newPrefs = [{ productId, viewedAt: new Date().toISOString() }, ...filteredPrefs].slice(0, 10);
 
-        if (state.isAuthenticated()) {
+        if (isDynamic) {
+          set({ 
+            dynamicRecentlyViewed: newViewed, 
+            recentlyViewed: newViewed,
+            dynamicPreferences: newPrefs,
+            preferences: newPrefs
+          });
+        } else {
+          set({ 
+            staticRecentlyViewed: newViewed, 
+            recentlyViewed: newViewed,
+            staticPreferences: newPrefs,
+            preferences: newPrefs
+          });
+        }
+
+        if (state.isAuthenticated() && isDynamic) {
           const result = await browsingAPI.trackProductView(productId);
           if (result.success && result.data) {
-            console.log(
-              "trackProductView: Preferences updated from server:",
-              result.data.preferences,
-            );
-            set({ preferences: result.data.preferences });
+            set({ 
+              dynamicPreferences: result.data.preferences,
+              preferences: result.data.preferences 
+            });
           }
         }
       },
 
       // Get recently viewed product IDs
-      getRecentlyViewedIds: () => get().recentlyViewed,
+      getRecentlyViewedIds: () => {
+        const isDynamic = FETCH_MODE === "dynamic";
+        const list = isDynamic ? get().dynamicRecentlyViewed : get().staticRecentlyViewed;
+        // Double check filtering
+        return list.filter(id => isDynamic ? isDynamicId(id) : !isDynamicId(id));
+      },
     }),
     {
       name: "lepondy-user-storage",
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          const isDynamic = FETCH_MODE === "dynamic";
+
+          // --- MIGRATION & CLEANUP LOGIC ---
+          // 1. If dynamic list has static IDs, move them to static list
+          // 2. If static list has dynamic IDs, move them to dynamic list
+          const allKnownIds = Array.from(new Set([
+            ...state.wishlistIds,
+            ...state.staticWishlistIds,
+            ...state.dynamicWishlistIds
+          ]));
+
+          state.staticWishlistIds = allKnownIds.filter(id => !isDynamicId(id));
+          state.dynamicWishlistIds = allKnownIds.filter(id => isDynamicId(id));
+
+          // Same for recently viewed
+          const allViewedIds = Array.from(new Set([
+            ...state.recentlyViewed,
+            ...state.staticRecentlyViewed,
+            ...state.dynamicRecentlyViewed
+          ]));
+          state.staticRecentlyViewed = allViewedIds.filter(id => !isDynamicId(id)).slice(0, 5);
+          state.dynamicRecentlyViewed = allViewedIds.filter(id => isDynamicId(id)).slice(0, 5);
+
+          // Partition preferences if not already partitioned
+          if (!state.staticPreferences || !state.dynamicPreferences) {
+            const allPrefs = state.preferences || [];
+            state.staticPreferences = allPrefs.filter((p: any) => {
+              const id = p.productId || p.id || p;
+              return !isDynamicId(id);
+            });
+            state.dynamicPreferences = allPrefs.filter((p: any) => {
+              const id = p.productId || p.id || p;
+              return isDynamicId(id);
+            });
+          }
+
+          // 3. Set current active list based on mode
+          state.wishlistIds = isDynamic ? state.dynamicWishlistIds : state.staticWishlistIds;
+          state.recentlyViewed = isDynamic ? state.dynamicRecentlyViewed : state.staticRecentlyViewed;
+          state.preferences = isDynamic ? state.dynamicPreferences : state.staticPreferences;
+          
+          // 4. Force count to be based on CURRENT mode only
+          state.wishlistCount = state.wishlistIds.length;
+        }
+      },
       partialize: (state) => ({
         uid: state.uid,
         name: state.name,
@@ -239,10 +375,16 @@ export const useUserStore = create<UserState>()(
         countryCode: state.countryCode,
         addresses: state.addresses,
         preferences: state.preferences,
+        staticPreferences: state.staticPreferences,
+        dynamicPreferences: state.dynamicPreferences,
         cartItemCount: state.cartItemCount,
         wishlistCount: state.wishlistCount,
         wishlistIds: state.wishlistIds,
+        staticWishlistIds: state.staticWishlistIds,
+        dynamicWishlistIds: state.dynamicWishlistIds,
         recentlyViewed: state.recentlyViewed,
+        staticRecentlyViewed: state.staticRecentlyViewed,
+        dynamicRecentlyViewed: state.dynamicRecentlyViewed,
       }),
     },
   ),

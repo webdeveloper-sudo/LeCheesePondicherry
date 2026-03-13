@@ -19,8 +19,10 @@ export default function BlogForm({
     excerpt: "",
     content: "",
     author: "",
+    authorRole: "",
     category: "",
     tags: "",
+    relatedPosts: "",
     date: new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -34,6 +36,8 @@ export default function BlogForm({
 
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainImagePreview, setMainImagePreview] = useState<string>("");
+  const [authorImage, setAuthorImage] = useState<File | null>(null);
+  const [authorImagePreview, setAuthorImagePreview] = useState<string>("");
   const [galleryImages, setGalleryImages] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const { addToast } = useToastStore();
@@ -49,8 +53,12 @@ export default function BlogForm({
         excerpt: existingBlog.excerpt || "",
         content: existingBlog.content || "",
         author: existingBlog.author || "",
+        authorRole: existingBlog.authorRole || "",
         category: existingBlog.category || "",
         tags: existingBlog.tags ? existingBlog.tags.join(", ") : "",
+        relatedPosts: existingBlog.relatedPosts
+          ? existingBlog.relatedPosts.join(", ")
+          : "",
         date: existingBlog.date || "",
         readTime: existingBlog.readTime || "",
         quoteText: existingBlog.quote?.text || "",
@@ -58,6 +66,7 @@ export default function BlogForm({
         isPublished: existingBlog.isPublished !== false,
       });
       setMainImagePreview(existingBlog.image || "");
+      setAuthorImagePreview(existingBlog.authorImage || "");
       if (existingBlog.gallery) {
         setGalleryPreviews(existingBlog.gallery);
       }
@@ -78,6 +87,14 @@ export default function BlogForm({
       const file = e.target.files[0];
       setMainImage(file);
       setMainImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAuthorImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAuthorImage(file);
+      setAuthorImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -112,6 +129,11 @@ export default function BlogForm({
       // Prepare payload
       const payload: any = {
         ...formData,
+        tags: formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
+        relatedPosts: formData.relatedPosts
+          .split(",")
+          .map((p) => p.trim())
+          .filter(Boolean),
         quote: {
           text: formData.quoteText,
           author: formData.quoteAuthor,
@@ -124,6 +146,16 @@ export default function BlogForm({
         payload.mainImageBase64 = {
           name: mainImage.name,
           mimeType: mainImage.type,
+          data: base64.split(",")[1], // Remove prefix
+        };
+      }
+
+      // Handle Author Image
+      if (authorImage) {
+        const base64 = await convertToBase64(authorImage);
+        payload.authorImageBase64 = {
+          name: authorImage.name,
+          mimeType: authorImage.type,
           data: base64.split(",")[1], // Remove prefix
         };
       }
@@ -219,18 +251,33 @@ export default function BlogForm({
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Author
-                </label>
-                <input
-                  type="text"
-                  name="author"
-                  value={formData.author}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Author
+                  </label>
+                  <input
+                    type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Author Role
+                  </label>
+                  <input
+                    type="text"
+                    name="authorRole"
+                    value={formData.authorRole}
+                    onChange={handleChange}
+                    placeholder="e.g. Master Cheesemaker"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
+                  />
+                </div>
               </div>
 
               <div>
@@ -250,36 +297,70 @@ export default function BlogForm({
             </div>
 
             {/* Image Upload Section */}
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                Main Image
-              </label>
-              <div
-                onClick={() => mainImageInputRef.current?.click()}
-                className="w-full h-64 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-yellow-500 hover:bg-yellow-50 transition-all overflow-hidden relative"
-              >
-                {mainImagePreview ? (
-                  <img
-                    src={mainImagePreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Main Image
+                </label>
+                <div
+                  onClick={() => mainImageInputRef.current?.click()}
+                  className="w-full h-48 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-yellow-500 hover:bg-yellow-50 transition-all overflow-hidden relative"
+                >
+                  {mainImagePreview ? (
+                    <img
+                      src={mainImagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <>
+                      <Upload size={32} className="text-gray-300 mb-2" />
+                      <span className="text-xs text-gray-400 font-medium">
+                        Click to upload main image
+                      </span>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    ref={mainImageInputRef}
+                    className="hidden"
+                    onChange={handleMainImageChange}
+                    accept="image/*"
                   />
-                ) : (
-                  <>
-                    <Upload size={40} className="text-gray-300 mb-2" />
-                    <span className="text-sm text-gray-400 font-medium">
-                      Click to upload main image
-                    </span>
-                  </>
-                )}
-                <input
-                  type="file"
-                  ref={mainImageInputRef}
-                  className="hidden"
-                  onChange={handleMainImageChange}
-                  accept="image/*"
-                />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Author Image
+                </label>
+                <div
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.onchange = (e: any) => handleAuthorImageChange(e);
+                    input.click();
+                  }}
+                  className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-full flex flex-col items-center justify-center cursor-pointer hover:border-yellow-500 hover:bg-yellow-50 transition-all overflow-hidden relative"
+                >
+                  {authorImagePreview ? (
+                    <img
+                      src={authorImagePreview}
+                      alt="Author"
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <>
+                      <Upload size={20} className="text-gray-300 mb-1" />
+                      <span className="text-[10px] text-gray-400 text-center px-2">
+                        Upload Author Photo
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -315,8 +396,8 @@ export default function BlogForm({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-1">
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 Tags (comma separated)
               </label>
@@ -329,7 +410,20 @@ export default function BlogForm({
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
               />
             </div>
-            <div>
+            <div className="md:col-span-1">
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Related Posts (Slugs)
+              </label>
+              <input
+                type="text"
+                name="relatedPosts"
+                value={formData.relatedPosts}
+                onChange={handleChange}
+                placeholder="e.g. farm-to-fromage, rise-of-artisanal"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
+              />
+            </div>
+            <div className="md:col-span-1">
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 Read Time
               </label>

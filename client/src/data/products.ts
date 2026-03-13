@@ -24,7 +24,7 @@ import fetaPackage from "@/assets/images/products/feta-package.png";
 import pizzaellaPackage from "@/assets/images/products/pizzaella-package.png";
 import cottageCheesePackage from "@/assets/images/products/cottage-cheese-package.png";
 // import skyrPackage from "@/assets/images/products/skyr-package.png";
-import agedCheddar from "@/assets/images/products/aged-cheddar.jpg";
+import agedPondyOrange from "@/assets/images/products/aged-cheddar.jpg";
 import classicBrie from "@/assets/images/products/classic-brie.jpg";
 import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
 
@@ -107,13 +107,13 @@ export const products: Product[] = [
     pairings: ["Cooking", "Melting", "Hot dishes"],
     ingredients: "Cow milk, cultures, salt, Veg rennet",
   },
-  // Cheddar (Aged 6 Months)
+  // PondyOrange (Aged 6 Months)
   {
-    id: "cheddar",
-    name: "Cheddar",
+    id: "pondyorange",
+    name: "Pondy Orange",
     shortDescription: "Smooth, Mature & Versatile",
     description:
-      "Cheddar is a semi-hard cheese aged for around six months to develop balanced flavour and smooth texture. Suitable for slicing, melting, and everyday cooking.",
+      "Pondy Orange is a semi-hard cheese aged for around six months to develop balanced flavour and smooth texture. Suitable for slicing, melting, and everyday cooking.",
     price: 420,
     originalPrice: 560,
     image: pondyOrangePackage,

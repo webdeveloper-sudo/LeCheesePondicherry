@@ -20,7 +20,13 @@ const getAuthHeaders = (): HeadersInit => {
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},
-): Promise<{ success: boolean; data?: T; message?: string; error?: string }> {
+): Promise<{ 
+  success: boolean; 
+  data?: T; 
+  message?: string; 
+  error?: string;
+  isNetworkError?: boolean;
+}> {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
@@ -48,9 +54,15 @@ async function apiRequest<T>(
       success: false,
       message: "Network error. Please check your connection.",
       error: error instanceof Error ? error.message : "Unknown error",
+      isNetworkError: true,
     };
   }
 }
+
+// Health Check
+export const checkHealth = async () => {
+  return apiRequest<{ success: boolean }>("/api/health", { method: "GET" });
+};
 
 // ============ AUTH API ============
 export const authAPI = {
@@ -162,24 +174,25 @@ export const cartAPI = {
   },
 
   // Add to cart
-  addToCart: async (productId: string, quantity: number = 1) => {
+  addToCart: async (productId: string, quantity: number = 1, weight?: string, price?: number) => {
     return apiRequest("/api/cart/add", {
       method: "POST",
-      body: JSON.stringify({ productId, quantity }),
+      body: JSON.stringify({ productId, quantity, weight, price }),
     });
   },
 
   // Update cart item
-  updateCartItem: async (productId: string, quantity: number) => {
+  updateCartItem: async (productId: string, quantity: number, weight?: string) => {
     return apiRequest("/api/cart/update", {
       method: "PUT",
-      body: JSON.stringify({ productId, quantity }),
+      body: JSON.stringify({ productId, quantity, weight }),
     });
   },
 
   // Remove from cart
-  removeFromCart: async (productId: string) => {
-    return apiRequest(`/api/cart/remove/${productId}`, { method: "DELETE" });
+  removeFromCart: async (productId: string, weight?: string) => {
+    const query = weight ? `?weight=${encodeURIComponent(weight)}` : '';
+    return apiRequest(`/api/cart/remove/${productId}${query}`, { method: "DELETE" });
   },
 
   // Clear cart

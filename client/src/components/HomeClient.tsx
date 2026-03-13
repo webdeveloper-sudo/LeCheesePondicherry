@@ -319,7 +319,7 @@ Action: Item added to cart for checkout.
           </div>
         </MotionContainer>
       </section>
-      {/* Gift Collections CTA */}
+      {/* Wholesale Partnership CTA */}
       <section className="p-2 py-10 bg-pattern">
         <div className=" mx-auto px-2">
           <MotionContainer
@@ -330,15 +330,16 @@ Action: Item added to cart for checkout.
               className="text-3xl md:text-4xl mb-4  text-black"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              The Perfect Gift for Cheese Lovers
+              Wholesale & Partnerships
             </MotionHeading>
             <MotionText className="text-black mb-8 max-w-2xl mx-auto">
-              Our curated gift collections feature the finest artisan cheeses,
-              paired with premium accompaniments. Perfect for any occasion.
+              Elevate your menu with Pondicherry's finest handcrafted artisan
+              cheeses. We partner with premium restaurants, hotels, and cafes
+              across India.
             </MotionText>
-            <Link to="/gifts">
-              <MotionButton className="btn btn-primary bg-[#C9A961] hover:bg-[#B8942F]">
-                Explore Gift Collections
+            <Link to="/wholesale">
+              <MotionButton className="btn btn-primary bg-[#2C5530] hover:bg-[#1a3a20]">
+                Bulk Inquiry
               </MotionButton>
             </Link>
           </MotionContainer>

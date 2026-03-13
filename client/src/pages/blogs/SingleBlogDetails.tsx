@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { blogs as staticBlogs } from "@/data/blogs";
+import { FETCH_MODE } from "@/config";
 
 interface Blog {
   _id?: string;
@@ -43,51 +44,42 @@ export default function SingleBlogDetails() {
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]); // To find prev/next
 
   useEffect(() => {
-    // Map static blogs to the expected Blog interface
-    const mappedBlogs = staticBlogs.map((b) => ({
-      _id: b.id,
-      id: b.id,
-      title: b.title,
-      slug: b.id,
-      content: b.content,
-      image: b.image,
-      category: b.category,
-      date: b.date,
-      author: b.author,
-      tags: b.tags,
-      gallery: b.gallery,
-      quote: b.quote,
-    }));
-
-    setAllBlogs(mappedBlogs);
-
-    // Find the specific blog by slug (which is id in static data)
-    const currentBlog = mappedBlogs.find((b) => b.slug === slug);
-    if (currentBlog) {
-      setBlog(currentBlog);
-    }
-    setLoading(false);
-  }, [slug]);
-
-  /* Commenting out backend fetch logic
-  useEffect(() => {
     const fetchBlogData = async () => {
       setLoading(true);
       try {
-        // Fetch single blog
-        const blogRes = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/blogs/${slug}`,
-        );
-        if (blogRes.data.success) {
-          setBlog(blogRes.data.data);
-        }
+        if (FETCH_MODE === "static") {
+          const mappedBlogs = staticBlogs.map((b) => ({
+            _id: b.id,
+            id: b.id,
+            title: b.title,
+            slug: b.id,
+            content: b.content,
+            image: b.image,
+            category: b.category,
+            date: b.date,
+            author: b.author,
+            tags: b.tags,
+            gallery: b.gallery,
+            quote: b.quote,
+          }));
+          setAllBlogs(mappedBlogs);
+          const currentBlog = mappedBlogs.find((b) => b.slug === slug);
+          if (currentBlog) {
+            setBlog(currentBlog);
+          }
+        } else {
+          // Dynamic mode
+          const [blogRes, allRes] = await Promise.all([
+            axios.get(`${import.meta.env.VITE_API_URL}/api/blogs/${slug}`),
+            axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`),
+          ]);
 
-        // Fetch all blogs for navigation (could be optimized to just fetch IDs/slugs)
-        const allRes = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/blogs`,
-        );
-        if (allRes.data.success) {
-          setAllBlogs(allRes.data.data);
+          if (blogRes.data.success) {
+            setBlog(blogRes.data.data);
+          }
+          if (allRes.data.success) {
+            setAllBlogs(allRes.data.data);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch blog details", error);
@@ -100,7 +92,6 @@ export default function SingleBlogDetails() {
       fetchBlogData();
     }
   }, [slug]);
-  */
 
   if (loading) {
     return (

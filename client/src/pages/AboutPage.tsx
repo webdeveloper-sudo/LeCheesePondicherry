@@ -66,7 +66,7 @@ export default function AboutPage() {
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white-prominent"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Our Story
+          About Us
           </MotionHeading>
           <MotionText className="text-xl text-white-prominent">
             Born from a Dream in Pondicherry

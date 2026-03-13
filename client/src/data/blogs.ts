@@ -1,5 +1,5 @@
 // Import images
-import agedCheddar from "@/assets/images/products/aged-cheddar.jpg";
+import agedPondyOrange from "@/assets/images/products/aged-cheddar.jpg";
 import classicBrie from "@/assets/images/products/classic-brie.jpg";
 import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
 import babySwissTexture from "@/assets/images/products/baby-swiss-texture.png";
@@ -35,12 +35,12 @@ export const blogs: BlogPost[] = [
     authorRole: "Master Cheesemaker",
     authorImage: "/images/team/chef-1.jpg",
     category: "Tradition",
-    image: agedCheddar,
+    image: agedPondyOrange,
     excerpt:
       "In a world of mass-produced dairy, true artisanal cheese stands apart. It is not simply a food product — it is a craft shaped by patience, science, and tradition...",
     tags: ["Artisan", "Farm", "Tradition", "Pondicherry"],
     gallery: [
-      agedCheddar,
+      agedPondyOrange,
       classicBrie,
       kombuchaRind,
       babySwissTexture,
@@ -310,7 +310,7 @@ Recognisable by its characteristic holes, Swiss cheese offers a nutty, buttery f
 **Best For:** Sandwiches, fondues, omelettes
 **Key Feature:** Smooth melt and mild sweetness
 
-## 7. Cheddar
+## 7. PondyOrange
 
 One of the most popular cheeses worldwide, known for its sharp and tangy profile.
 

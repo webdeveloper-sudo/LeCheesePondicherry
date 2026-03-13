@@ -7,9 +7,11 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { products, Product } from "@/data/products";
+import { products as staticProducts, Product } from "@/data/products";
 import { cartAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
+import { FETCH_MODE } from "@/config";
+import axios from "axios";
 
 export interface CartItem {
   productId: string;
@@ -39,61 +41,116 @@ interface CartContextType {
   toggleSelectItem: (index: number) => void;
   toggleSelectAll: (selected: boolean) => void;
   syncWithBackend: () => Promise<void>;
+  isServerDown: boolean;
+  allProducts: Product[];
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+const isDynamicId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isServerDown, setIsServerDown] = useState(false);
   const { uid, token, isAuthenticated, updateCartCount } = useUserStore();
+
+  const CART_KEY = `lepondy-cart-${FETCH_MODE}`;
 
   // Load cart from localStorage on mount (only if guest or first load)
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem("lepondy-cart");
+    const saved = localStorage.getItem(CART_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        console.log("CartProvider: Initial local load", parsed);
-        setItems(parsed);
+        // STRICT FILTERING: Remove items that don't match the current mode
+        const isDynamic = FETCH_MODE === "dynamic";
+        const filtered = parsed.filter((item: any) => 
+          isDynamic ? isDynamicId(item.productId) : !isDynamicId(item.productId)
+        );
+        console.log(`CartProvider: Initial local load [${FETCH_MODE}] (Filtered: ${parsed.length} -> ${filtered.length})`, filtered);
+        setItems(filtered);
       } catch (e) {
         console.error("CartProvider: Failed to parse local cart", e);
       }
+    } else {
+      setItems([]); // Clear if no items for this mode
     }
-  }, []);
+  }, [FETCH_MODE]);
+
   // Effect to handle user transitions (Login/Logout)
   useEffect(() => {
     if (!mounted) return;
 
     const isCurrentlyAuth = !!uid && !!token;
-    console.log("=== CART SYSTEM DIAGNOSTIC ===");
-    console.log("User UID:", uid);
-    console.log("Auth Status:", isCurrentlyAuth ? "LOGGED IN" : "GUEST");
-    console.log("Current Cart Items:", items);
-    console.log("===============================");
-
     if (isCurrentlyAuth) {
-      syncWithBackend();
+      if (FETCH_MODE === "dynamic") {
+        syncWithBackend();
+      }
     } else {
-      setItems([]);
-      localStorage.removeItem("lepondy-cart");
+      // Guest: Items are managed by mode-specific storage, 
+      // but let's clear if completely logged out (or keep them?)
+      // The user wants strict duality, so let's keep guest items in their respective mode buckets.
     }
   }, [uid, token, mounted]);
 
   // Save cart to localStorage and update global count
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem("lepondy-cart", JSON.stringify(items));
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
       const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
       updateCartCount(totalItems);
-      console.log("CartProvider: State persisted", {
-        itemsCount: items.length,
-        totalQty: totalItems,
-      });
     }
-  }, [items, mounted, updateCartCount]);
+  }, [items, mounted, updateCartCount, FETCH_MODE]);
+
+  const [allProducts, setAllProducts] = useState<Product[]>(
+    FETCH_MODE === "static" ? staticProducts : [],
+  );
+
+  useEffect(() => {
+    if (FETCH_MODE !== "dynamic") return;
+
+    const fetchAllProducts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+          { timeout: 5000 } // Add timeout to detect hang/down faster
+        );
+        if (response.data) {
+          const fetchedData = response.data.data || response.data;
+          const mappedProducts = fetchedData.map((p: any) => {
+            let hash = 0;
+            const id = p._id || "";
+            for (let i = 0; i < id.length; i++) {
+              hash = id.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
+            return {
+              ...p,
+              id: p._id,
+              rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
+            };
+          });
+          setAllProducts(mappedProducts);
+          setIsServerDown(false);
+        }
+      } catch (error: any) {
+        console.error("CartProvider: Failed to fetch products, falling back to static:", error);
+        
+        // Check if it's a network error or connection timeout
+        if (!error.response || error.code === 'ECONNABORTED' || error.message.includes('Network Error')) {
+          setIsServerDown(true);
+          // Fallback to static products
+          setAllProducts(staticProducts);
+        }
+      }
+    };
+    fetchAllProducts();
+  }, []);
+
+  const getProduct = (id: string) => allProducts.find((p) => p.id === id);
 
   // Sync with backend when user logs in
   const syncWithBackend = async () => {
@@ -101,18 +158,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setLoading(true);
     try {
-      // Get cart from backend
       const result = await cartAPI.getCart();
-      console.log("CartProvider: Backend sync result", result);
-
       if (result.success && result.data) {
         const backendItems = result.data.cart.map((item: any) => {
-          const product = products.find((p) => p.id === item.productId);
+          const product = allProducts.find((p) => p.id === item.productId);
           return {
             productId: item.productId,
             quantity: item.quantity,
-            weight: "200g", // Default weight for legacy backend data
-            price: product ? product.price : 0,
+            weight: item.weight || "200g",
+            price: item.price || (product ? product.price : 0),
             selected: true,
           };
         });
@@ -125,11 +179,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Logic to merge local cart into backend if desired,
-        // or just prioritize backend if multiple devices are used.
-        // For now, let's merge local into backend for a seamless experience.
+        // Logic to merge local cart into backend if desired
         const localOnly = items.filter(
-          (local) => !backendItems.find((b) => b.productId === local.productId),
+          (local) => !backendItems.find((b) => b.productId === local.productId && b.weight === local.weight),
         );
 
         if (localOnly.length > 0) {
@@ -138,7 +190,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             localOnly,
           );
           for (const item of localOnly) {
-            await cartAPI.addToCart(item.productId, item.quantity);
+            await cartAPI.addToCart(item.productId, item.quantity, item.weight, item.price);
           }
         }
 
@@ -152,13 +204,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const getProduct = (id: string) => products.find((p) => p.id === id);
 
   const addToCart = async (
     productId: string,
     quantity: number,
     weight: string,
-    price: number, // Added price parameter
+    price: number,
   ) => {
     // Update local state immediately
     setItems((prev) => {
@@ -171,7 +222,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updated[existingIndex] = {
           ...updated[existingIndex],
           quantity: updated[existingIndex].quantity + quantity,
-          price: price, // Update price if it changed (though weight being same usually means price same)
+          price: price, 
         };
         return updated;
       }
@@ -182,7 +233,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Sync with backend if authenticated
     if (isAuthenticated()) {
       try {
-        await cartAPI.addToCart(productId, quantity);
+        await cartAPI.addToCart(productId, quantity, weight, price);
       } catch (error) {
         console.error("Failed to sync cart addition with backend:", error);
       }
@@ -196,7 +247,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Sync with backend if authenticated
     if (isAuthenticated() && item) {
       try {
-        await cartAPI.removeFromCart(item.productId);
+        await cartAPI.removeFromCart(item.productId, item.weight);
       } catch (error) {
         console.error("Failed to sync cart removal with backend:", error);
       }
@@ -219,7 +270,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Sync with backend if authenticated
     if (isAuthenticated() && item) {
       try {
-        await cartAPI.updateCartItem(item.productId, quantity);
+        await cartAPI.updateCartItem(item.productId, quantity, item.weight);
       } catch (error) {
         console.error("Failed to sync cart update with backend:", error);
       }
@@ -306,6 +357,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         toggleSelectItem,
         toggleSelectAll,
         syncWithBackend,
+        isServerDown,
+        allProducts,
       }}
     >
       {children}

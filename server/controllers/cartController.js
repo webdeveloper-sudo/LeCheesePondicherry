@@ -46,24 +46,28 @@ const getCart = async (req, res) => {
  */
 const addToCart = async (req, res) => {
   try {
-    const { productId, quantity = 1 } = req.body;
+    const { productId, quantity = 1, weight, price } = req.body;
     const userId = req.user._id;
 
     const user = await User.findById(userId);
 
-    // Check if item already exists in cart
+    // Check if item already exists in cart with same product ID AND weight
     const existingItemIndex = user.cart.findIndex(
-      (item) => item.productId === productId,
+      (item) => item.productId === productId && item.weight === weight,
     );
 
     if (existingItemIndex > -1) {
       // Update quantity
       user.cart[existingItemIndex].quantity += quantity;
+      // Also update price in case it changed (though usually tied to weight)
+      if (price) user.cart[existingItemIndex].price = price;
     } else {
       // Add new item
       user.cart.push({
         productId,
         quantity,
+        weight: weight || "200g",
+        price: price || 0,
         addedAt: new Date(),
       });
     }
@@ -92,7 +96,7 @@ const addToCart = async (req, res) => {
  */
 const updateCartItem = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity, weight } = req.body;
     const userId = req.user._id;
 
     if (quantity < 1) {
@@ -105,7 +109,8 @@ const updateCartItem = async (req, res) => {
     const user = await User.findById(userId);
 
     const itemIndex = user.cart.findIndex(
-      (item) => item.productId === productId,
+      (item) =>
+        item.productId === productId && (weight ? item.weight === weight : true),
     );
 
     if (itemIndex === -1) {
@@ -141,12 +146,19 @@ const updateCartItem = async (req, res) => {
 const removeFromCart = async (req, res) => {
   try {
     const { productId } = req.params;
+    const { weight } = req.query; // Allow weight as query param for specific removal
     const userId = req.user._id;
 
     const user = await User.findById(userId);
 
     const initialLength = user.cart.length;
-    user.cart = user.cart.filter((item) => item.productId !== productId);
+    user.cart = user.cart.filter(
+      (item) =>
+        !(
+          item.productId === productId &&
+          (weight ? item.weight === weight : true)
+        ),
+    );
 
     if (user.cart.length === initialLength) {
       return res.status(404).json({

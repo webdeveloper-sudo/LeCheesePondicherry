@@ -2,8 +2,11 @@
 
 import { useUserStore } from "@/store/useUserStore";
 import { useCart } from "@/context/CartContext";
-import { products } from "@/data/products";
+import { products as staticProducts, Product } from "@/data/products";
 import ProductCard from "./ProductCard";
+import { FETCH_MODE } from "@/config";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Star, ShoppingBag, Heart } from "lucide-react";
 
@@ -19,28 +22,64 @@ export default function YourPicks({
   showAllRows = true,
 }: YourPicksProps) {
   const { preferences, wishlistIds = [] } = useUserStore();
-  console.log(wishlistIds);
   const { items: cartItems } = useCart();
 
+  const [allProducts, setAllProducts] = useState<Product[]>(
+    FETCH_MODE === "static" ? staticProducts : [],
+  );
+  const [loading, setLoading] = useState(FETCH_MODE === "dynamic");
+
+  useEffect(() => {
+    if (FETCH_MODE !== "dynamic") return;
+
+    const fetchAllProducts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+        );
+        if (response.data) {
+          const fetchedData = response.data.data || response.data;
+          const mappedProducts = fetchedData.map((p: any) => {
+            let hash = 0;
+            const id = p._id || "";
+            for (let i = 0; i < id.length; i++) {
+              hash = id.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
+            return {
+              ...p,
+              id: p._id,
+              rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
+            };
+          });
+          setAllProducts(mappedProducts);
+        }
+      } catch (error) {
+        console.error("YourPicks: Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllProducts();
+  }, []);
+
   // 1. Top Picks based on preferences
-  console.log("YourPicks: Current preferences from store:", preferences);
   const recommendedProducts = (preferences || [])
     .map((pref: any) =>
-      products.find((p) => p.id === (pref.productId || pref.id || pref)),
+      allProducts.find((p) => p.id === (pref.productId || pref.id || pref)),
     )
     .filter(Boolean)
     .slice(0, 4);
-  console.log("YourPicks: Mapped recommended products:", recommendedProducts);
 
   // 2. From Your Cart
   const cartProducts = cartItems
-    .map((item) => products.find((p) => p.id === item.productId))
+    .map((item) => allProducts.find((p) => p.id === item.productId))
     .filter(Boolean)
     .slice(0, 4);
 
   // 3. Your Wishlist
   const wishlistProducts = wishlistIds
-    .map((id) => products.find((p) => p.id === id))
+    .map((id) => allProducts.find((p) => p.id === id))
     .filter(Boolean)
     .slice(0, 4);
 
@@ -123,7 +162,7 @@ export default function YourPicks({
           title="Top Picks for You"
           icon={Star}
           items={recommendedProducts}
-          emptyText="Update your preferences to see personalized matches."
+          emptyText={FETCH_MODE === "dynamic" ? "Update your preferences by browsing products to see personalized matches." : "Browse products in static mode to see your top picks."}
           linkTo="/shop"
           linkText="Explore Shop"
         />

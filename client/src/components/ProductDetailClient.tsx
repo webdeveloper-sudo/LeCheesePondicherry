@@ -33,6 +33,15 @@ export default function ProductDetailClient({
 
   const inWishlist = isInWishlist(product.id);
 
+  // Sync state when product changes (for similar items navigation)
+  useEffect(() => {
+    setMainImage(product.image);
+    setQuantity(1);
+    setSelectedWeight(product.weight || "200g");
+    setAddedToCart(false);
+    setActiveTab("description");
+  }, [product.id, product.image, product.weight]);
+
   // Track product view when component mounts
   useEffect(() => {
     trackProductView(product.id);
