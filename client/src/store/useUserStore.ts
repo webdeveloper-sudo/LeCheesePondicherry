@@ -155,6 +155,8 @@ export const useUserStore = create<UserState>()(
               // Partitioning
               cartItemCount: isDynamic ? (user.cartItemCount || 0) : state.cartItemCount,
               wishlistCount: isDynamic ? (user.wishlistCount || 0) : state.wishlistCount,
+              dynamicWishlistIds: isDynamic ? (user.wishlistIds || []) : state.dynamicWishlistIds,
+              wishlistIds: isDynamic ? (user.wishlistIds || []) : state.wishlistIds,
             }));
           }
         } catch (error) {

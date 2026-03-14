@@ -23,9 +23,9 @@ export default function ProductDetailClient({
   const { addToast } = useToastStore();
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedWeight, setSelectedWeight] = useState(
-    product.weight || "200g",
-  );
+  // Always default to "200g" — the base price weight.
+  // product.weight from DB may be a non-standard value so we ignore it.
+  const [selectedWeight, setSelectedWeight] = useState("200g");
   const [activeTab, setActiveTab] = useState("description");
   const [addedToCart, setAddedToCart] = useState(false);
   const [mainImage, setMainImage] = useState(product.image);
@@ -37,10 +37,10 @@ export default function ProductDetailClient({
   useEffect(() => {
     setMainImage(product.image);
     setQuantity(1);
-    setSelectedWeight(product.weight || "200g");
+    setSelectedWeight("200g"); // Always reset to 200g base price on product change
     setAddedToCart(false);
     setActiveTab("description");
-  }, [product.id, product.image, product.weight]);
+  }, [product.id, product.image]);
 
   // Track product view when component mounts
   useEffect(() => {

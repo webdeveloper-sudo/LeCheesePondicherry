@@ -409,22 +409,22 @@ export default function Header() {
           {role === "user" || !isAuthenticated() ? (
             <>
               {/* Wishlist */}
-              {/* <Link
-                  to="/wishlist"
-                  className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
-                >
-                  <Heart
-                    size={20}
-                    className={
-                      wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
-                    }
-                  />
-                  {wishlistCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link> */}
+              <Link
+                to="/wishlist"
+                className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
+              >
+                <Heart
+                  size={20}
+                  className={
+                    wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
+                  }
+                />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
             </>
           ) : (
             <div className="w-4"></div>

@@ -130,6 +130,7 @@ export const authAPI = {
         role: string;
         cartItemCount: number;
         wishlistCount: number;
+        wishlistIds: string[];
         preferences: any[];
       };
     }>("/api/auth/login", {
@@ -153,6 +154,7 @@ export const authAPI = {
         preferences: any[];
         cartItemCount: number;
         wishlistCount: number;
+        wishlistIds: string[];
       };
     }>("/api/auth/me", { method: "GET" });
   },

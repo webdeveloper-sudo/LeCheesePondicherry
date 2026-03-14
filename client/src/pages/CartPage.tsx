@@ -16,6 +16,7 @@ export default function CartPage() {
     totalWeight,
     toggleSelectItem,
     toggleSelectAll,
+    totalItems,
   } = useCart();
   const { isAuthenticated, addresses } = useUserStore();
   const [showTooltip, setShowTooltip] = useState(false);
@@ -79,8 +80,8 @@ export default function CartPage() {
             className="text-3xl md:text-4xl font-bold text-[#1A1A1A]"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Shopping Cart ({items.length}{" "}
-            {items.length === 1 ? "item" : "items"})
+            Shopping Cart ({totalItems}{" "}
+            {totalItems === 1 ? "item" : "items"})
           </h1>
 
           {items.length > 0 && (
@@ -107,7 +108,70 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item, index) => {
               const product = getProduct(item.productId);
-              if (!product) return null;
+              
+              if (!product) {
+                return (
+                  <div
+                    key={index}
+                    className="bg-white p-4 md:p-6 rounded-lg shadow-sm flex gap-4 opacity-75 border-l-4 border-yellow-400"
+                  >
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={item.selected !== false}
+                        onChange={() => toggleSelectItem(index)}
+                        className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+                      />
+                    </div>
+                    <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-lg font-semibold text-gray-400 italic">
+                            Product details not found
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">ID: {item.productId}</p>
+                          <p className="text-sm font-medium text-gray-600 mt-2">Weight: {item.weight}</p>
+                        </div>
+                        <button
+                          onClick={() => removeFromCart(index)}
+                          className="text-[#6B6B6B] hover:text-red-500 transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => updateQuantity(index, item.quantity - 1)}
+                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                          >
+                            −
+                          </button>
+                          <span className="w-8 text-center font-medium text-[#1A1A1A]">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(index, item.quantity + 1)}
+                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="text-lg font-semibold text-[#2C5530]">
+                          ₹{(item.price * item.quantity).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <div

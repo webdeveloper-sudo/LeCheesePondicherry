@@ -58,54 +58,62 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isServerDown, setIsServerDown] = useState(false);
   const { uid, token, isAuthenticated, updateCartCount } = useUserStore();
 
+  const [productsLoaded, setProductsLoaded] = useState(false);
+
   const CART_KEY = `lepondy-cart-${FETCH_MODE}`;
 
-  // Load cart from localStorage on mount (only if guest or first load)
+  // Load cart from localStorage on mount — ONLY for guests
+  // Authenticated users always get their cart from the backend (source of truth)
   useEffect(() => {
     setMounted(true);
+    const isCurrentlyAuth = !!(uid && token);
+    if (isCurrentlyAuth) {
+      // Don't pre-load stale localStorage items for logged-in users.
+      // syncWithBackend will populate after products load.
+      setItems([]);
+      return;
+    }
     const saved = localStorage.getItem(CART_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // STRICT FILTERING: Remove items that don't match the current mode
         const isDynamic = FETCH_MODE === "dynamic";
-        const filtered = parsed.filter((item: any) => 
+        const filtered = parsed.filter((item: any) =>
           isDynamic ? isDynamicId(item.productId) : !isDynamicId(item.productId)
         );
-        console.log(`CartProvider: Initial local load [${FETCH_MODE}] (Filtered: ${parsed.length} -> ${filtered.length})`, filtered);
+        console.log(`CartProvider: Guest local load [${FETCH_MODE}] (Filtered: ${parsed.length} -> ${filtered.length})`, filtered);
         setItems(filtered);
       } catch (e) {
         console.error("CartProvider: Failed to parse local cart", e);
       }
     } else {
-      setItems([]); // Clear if no items for this mode
+      setItems([]);
     }
   }, [FETCH_MODE]);
 
-  // Effect to handle user transitions (Login/Logout)
+  // Trigger backend sync AFTER products have loaded (so prices are correct)
   useEffect(() => {
-    if (!mounted) return;
-
-    const isCurrentlyAuth = !!uid && !!token;
-    if (isCurrentlyAuth) {
-      if (FETCH_MODE === "dynamic") {
-        syncWithBackend();
-      }
-    } else {
-      // Guest: Items are managed by mode-specific storage, 
-      // but let's clear if completely logged out (or keep them?)
-      // The user wants strict duality, so let's keep guest items in their respective mode buckets.
+    if (!mounted || !productsLoaded) return;
+    const isCurrentlyAuth = !!(uid && token);
+    if (isCurrentlyAuth && FETCH_MODE === "dynamic") {
+      syncWithBackend();
     }
-  }, [uid, token, mounted]);
+  }, [uid, token, mounted, productsLoaded]);
 
   // Save cart to localStorage and update global count
+  // For authenticated users in dynamic mode, DO NOT write back to localStorage
+  // to prevent stale ghost items from reappearing on next load.
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem(CART_KEY, JSON.stringify(items));
-      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-      updateCartCount(totalItems);
+      const isCurrentlyAuth = !!(uid && token);
+      if (!isCurrentlyAuth) {
+        localStorage.setItem(CART_KEY, JSON.stringify(items));
+      }
+      // Use unique item count for the global badge
+      const count = items.length;
+      updateCartCount(count);
     }
-  }, [items, mounted, updateCartCount, FETCH_MODE]);
+  }, [items, mounted, uid, token, updateCartCount, FETCH_MODE]);
 
   const [allProducts, setAllProducts] = useState<Product[]>(
     FETCH_MODE === "static" ? staticProducts : [],
@@ -115,7 +123,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (FETCH_MODE !== "dynamic") return;
+    if (FETCH_MODE !== "dynamic") {
+      // Static mode: products already set, mark as loaded immediately
+      setProductsLoaded(true);
+      return;
+    }
 
     const fetchData = async () => {
       setLoading(true);
@@ -142,6 +154,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             };
           });
           setAllProducts(mappedProducts);
+        setProductsLoaded(true);
         }
 
         if (blogsRes.data.success) {
@@ -197,29 +210,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         console.log("CartProvider: Backend cart items", backendItems);
 
-        // If local cart is empty, just use backend
-        if (items.length === 0) {
-          setItems(backendItems);
-          return;
-        }
-
-        // Logic to merge local cart into backend if desired
-        const localOnly = items.filter(
-          (local) => !backendItems.find((b) => b.productId === local.productId && b.weight === local.weight),
-        );
-
-        if (localOnly.length > 0) {
-          console.log(
-            "CartProvider: Merging local items to backend",
-            localOnly,
-          );
-          for (const item of localOnly) {
-            await cartAPI.addToCart(item.productId, item.quantity, item.weight, item.price);
-          }
-        }
-
-        const mergedItems = [...backendItems, ...localOnly];
-        setItems(mergedItems);
+        // SOURCE OF TRUTH: For authenticated users, backend defines the cart.
+        // We stop merging local items back to the server automatically to avoid deleted items reappearing.
+        setItems(backendItems);
       }
     } catch (error) {
       console.error("Failed to sync cart with backend:", error);
@@ -344,10 +337,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const selectedItems = items.filter((item) => item.selected !== false);
 
-  const totalItemsForCheckout = selectedItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0,
-  );
+  const totalItemsForCheckout = selectedItems.length;
 
   const subtotal = selectedItems.reduce((sum, item) => {
     return sum + (item.price || 0) * item.quantity;

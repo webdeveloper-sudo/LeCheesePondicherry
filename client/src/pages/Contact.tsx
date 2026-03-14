@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import CountryList from "country-list-with-dial-code-and-flag";
 import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import SubmissionSuccessModal from "@/components/ui/SubmissionSuccessModal";
 import {
   MapPin,
   Mail,
@@ -19,30 +21,70 @@ import { fadeUp, staggerContainer } from "@/animations/variants";
 import { motion } from "framer-motion";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading">("idle");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [referenceId, setReferenceId] = useState("");
+  const [dialCode, setDialCode] = useState("+91");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const allCountries = CountryList.getAll();
+  const filteredCountries = search
+    ? allCountries.filter(
+        (c) =>
+          c.name.toLowerCase().includes(search.toLowerCase()) ||
+          c.dialCode.includes(search)
+      )
+    : allCountries;
+
+  const selectedCountry = allCountries.find((c) => c.dialCode === dialCode);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+        setSearch("");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const emailPayload = {
-      to: "technicalhead@achariya.org",
-      subject: `New Inquiry from Le Pondicherry Cheese Contact Form`,
-      body: `
-                Brand: Le Pondicherry Cheese
-                From: ${formData.get("name")} (${formData.get("email")})
-                Message: ${formData.get("message")}
-            `.trim(),
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      dialCode: dialCode,
+      mobile: formData.get("mobile") || "",
+      message: formData.get("message"),
     };
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("MOCK EMAIL SEND:", emailPayload);
-      setStatus("success");
-      (e.target as HTMLFormElement).reset();
-      setTimeout(() => setStatus("idle"), 5000);
-    }, 2000);
+    try {
+      const res = await fetch(import.meta.env.VITE_APPSCRIPT_URL_GENERAL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("idle");
+        setReferenceId(data.referenceId || "");
+        setModalOpen(true);
+        (e.target as HTMLFormElement).reset();
+        setDialCode("+91");
+      } else {
+        console.error("AppScript error:", data.message);
+        setStatus("idle");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setStatus("idle");
+    }
   };
 
   return (
@@ -214,6 +256,82 @@ export default function ContactPage() {
                       </div>
                     </div>
 
+                    {/* Mobile Number with Country Code */}
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-text/80 uppercase tracking-wide">
+                        Mobile Number 
+                      </label>
+                      <div className="flex gap-2">
+                        {/* Custom country code dropdown */}
+                        <div className="relative shrink-0" ref={dropdownRef}>
+                          <button
+                            type="button"
+                            onClick={() => { setDropdownOpen(!dropdownOpen); setSearch(""); }}
+                            className="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all text-sm h-full"
+                            style={{ minWidth: "92px" }}
+                          >
+                            <span className="text-xl leading-none">{selectedCountry?.flag}</span>
+                            <span className="font-medium text-gray-700">{dialCode}</span>
+                            <svg className={`w-3 h-3 text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+
+                          {dropdownOpen && (
+                            <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden">
+                              {/* Search */}
+                              <div className="p-2 border-b border-gray-100">
+                                <input
+                                  autoFocus
+                                  type="text"
+                                  placeholder="Search country or code..."
+                                  value={search}
+                                  onChange={(e) => setSearch(e.target.value)}
+                                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                                />
+                              </div>
+                              {/* Country list */}
+                              <ul className="max-h-56 overflow-y-auto divide-y divide-gray-50">
+                                {filteredCountries.length === 0 ? (
+                                  <li className="px-4 py-3 text-sm text-gray-400 text-center">No results found</li>
+                                ) : (
+                                  filteredCountries.map((country, i) => (
+                                    <li key={`${country.code}-${i}`}>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setDialCode(country.dialCode);
+                                          setDropdownOpen(false);
+                                          setSearch("");
+                                        }}
+                                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-left ${
+                                          dialCode === country.dialCode ? "bg-secondary/10 font-semibold" : ""
+                                        }`}
+                                      >
+                                        <span className="text-xl leading-none w-7 text-center">{country.flag}</span>
+                                        <span className="flex-1 truncate text-gray-700">{country.name}</span>
+                                        <span className="text-gray-400 font-mono text-xs">{country.dialCode}</span>
+                                      </button>
+                                    </li>
+                                  ))
+                                )}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Phone number input */}
+                        <input
+                          name="mobile"
+                          type="tel"
+                          maxLength={15}
+                          className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-all"
+                          placeholder="9876543210"
+                          pattern="[0-9\s\-()]+"
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
                       <label className="block text-sm font-semibold text-text/80 uppercase tracking-wide">
                         Message
@@ -227,18 +345,7 @@ export default function ContactPage() {
                       ></textarea>
                     </div>
 
-                    {status === "success" && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="p-4 bg-green-50 text-green-700 rounded-lg border border-green-200 flex items-center gap-3"
-                      >
-                        <CheckCircle2 className="w-5 h-5" />
-                        <p>
-                          Message sent successfully! We'll be in touch soon.
-                        </p>
-                      </motion.div>
-                    )}
+
 
                     <button
                       type="submit"
@@ -265,7 +372,16 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section Placeholder or Additional decorative section could go here */}
+      {/* Map Section Placeholder */}
+
+      {/* Success Modal */}
+      <SubmissionSuccessModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Message Sent!"
+        message="Thank you for reaching out. Our team will get back to you shortly."
+        referenceId={referenceId}
+      />
     </div>
   );
 }
