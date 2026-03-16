@@ -61,14 +61,26 @@ const sendViaProxy = async (mailOptions) => {
   }
 
   try {
+    const abbreviatedUrl = APPS_SCRIPT_URL.substring(0, 15) + "..." + APPS_SCRIPT_URL.substring(APPS_SCRIPT_URL.length - 10);
     console.log(`📡 Sending email to ${mailOptions.to} via Apps Script Proxy...`);
+    console.log(`🔗 Proxy URL: ${abbreviatedUrl}`);
+
     const response = await axios.post(APPS_SCRIPT_URL, {
       action: "SEND_EMAIL",
       to: mailOptions.to,
       cc: mailOptions.cc,
       subject: mailOptions.subject,
       html: mailOptions.html,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      timeout: 10000 // 10 second timeout
     });
+
+    console.log("📥 Proxy Response Status:", response.status);
+    console.log("📥 Proxy Response Body:", JSON.stringify(response.data));
 
     if (response.data && response.data.success) {
       console.log(`✅ Email sent successfully via Proxy to ${mailOptions.to}`);

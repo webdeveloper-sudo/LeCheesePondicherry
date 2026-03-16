@@ -20,7 +20,12 @@ function doPost(e) {
     }
 
     const data = JSON.parse(e.postData.contents);
-    const action = data.action;
+    let action = data.action;
+    
+    // Make action robust: trim and uppercase
+    if (action) {
+      action = action.toString().trim().toUpperCase();
+    }
 
     // Route actions based on the "action" field
     switch (action) {
@@ -37,7 +42,7 @@ function doPost(e) {
         }
         return respond({
           success: false,
-          message: "Invalid action: " + action,
+          message: "Invalid action received: '" + (action || "MISSING") + "'. Please ensure your server sending logic matches the script cases."
         });
     }
   } catch (error) {
