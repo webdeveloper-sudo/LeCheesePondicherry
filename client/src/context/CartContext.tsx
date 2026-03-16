@@ -140,35 +140,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         if (productsRes.data) {
           const fetchedData = productsRes.data.data || productsRes.data;
-          const mappedProducts = fetchedData.map((p: any) => {
-            let hash = 0;
-            const id = p._id || "";
-            for (let i = 0; i < id.length; i++) {
-              hash = id.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
-            return {
-              ...p,
-              id: p._id,
-              rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
-            };
-          });
+          const mappedProducts = fetchedData
+            .filter((p: any) => p.onHold !== true)
+            .map((p: any) => {
+              let hash = 0;
+              const id = p._id || "";
+              for (let i = 0; i < id.length; i++) {
+                hash = id.charCodeAt(i) + ((hash << 5) - hash);
+              }
+              const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
+              return {
+                ...p,
+                id: p._id,
+                rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
+              };
+            });
           setAllProducts(mappedProducts);
           console.log("All Products", mappedProducts);
-        setProductsLoaded(true);
+          setProductsLoaded(true);
         }
 
-        if (blogsRes.data.success) {
-          const fetchedBlogs = blogsRes.data.data || [];
-          const publishedBlogs = fetchedBlogs
-            .filter((b: any) => b.isPublished !== false)
-            .map((b: any) => ({
-              ...b,
-              id: b._id,
-              slug: b.slug || b._id,
-            }));
-          setAllBlogs(publishedBlogs);
-        }
+          if (blogsRes.data.success) {
+            const fetchedBlogs = blogsRes.data.data || [];
+            const publishedBlogs = fetchedBlogs
+              .filter((b: any) => b.isPublished !== false && b.onHold !== true)
+              .map((b: any) => ({
+                ...b,
+                id: b._id,
+                slug: b.slug || b._id,
+              }));
+            setAllBlogs(publishedBlogs);
+          }
         
         setIsServerDown(false);
       } catch (error: any) {

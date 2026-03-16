@@ -252,7 +252,7 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
-      // 1. Create Order in Backend & Get Payment Session
+      // 1. Create Order in Backend
       const orderData = {
         items: selectedItems.map((item) => ({
           productId: item.productId,
@@ -274,59 +274,24 @@ export default function CheckoutPage() {
           pincode: shipping.pincode,
           mobile: shipping.phone,
         },
+        paymentMethod: "WhatsApp",
+        status: "Pending Confirmation"
       };
+
       const response = await orderAPI.createOrder(orderData);
 
-      if (response.success && response.data?.success) {
-        const { payment_session_id, order_id } = response.data.data;
-
-        // Save order data for verification after redirect
-        localStorage.setItem(
-          "lepondy_pending_order",
-          JSON.stringify(orderData),
-        );
-
-        // 2. Initialize Cashfree SDK
-        if (typeof window.Cashfree === "undefined") {
-          console.error(
-            "❌ Cashfree SDK not loaded! Check index.html script tag.",
-          );
-          addToast(
-            "Payment system is currently unavailable. Please refresh the page.",
-            "error"
-          );
-          setIsProcessing(false);
-          return;
-        }
-
-        const cashfree = new window.Cashfree({
-          mode:
-            import.meta.env.VITE_CASHFREE_ENV === "PROD"
-              ? "production"
-              : "sandbox",
-        });
-
-        console.log(
-          "🚀 Initiating Cashfree checkout with session:",
-          payment_session_id,
-        );
-
-        // 3. Trigger Checkout Component
-        await cashfree.checkout({
-          paymentSessionId: payment_session_id,
-          redirectTarget: "_self",
-        });
+      if (response.success) {
+        // Clear cart after successful order creation
+        clearCart();
+        addToast("Order details saved. Redirecting to WhatsApp...", "success");
       } else {
-        console.error("❌ Session creation failed:", response);
-        const errorMsg =
-          (response.data as any)?.message ||
-          response.message ||
-          "Failed to initiate payment session";
-        addToast(errorMsg, "error");
+        console.error("❌ Order creation failed:", response);
+        addToast("Failed to save order details, but you can still proceed on WhatsApp.", "warning");
       }
     } catch (error: any) {
-      console.error("Payment Process Error:", error);
-      addToast("Something went wrong with the payment process.", "error");
+      console.error("Order Creation Error:", error);
+      // We don't block the user since they are going to WhatsApp anyway
+      addToast("Order saved locally. Proceeding to WhatsApp.", "info");
     } finally {
       setIsProcessing(false);
     }
@@ -369,10 +334,11 @@ export default function CheckoutPage() {
   };
 
   const handleWhatsAppOrder = () => {
-    const whatsappNumber = "919047123904"; // Actual business number from context
+    const whatsappNumber = "917200504628"; // Updated business number
     
-    let message = "🧀 *New Order from Le Cheese Pondicherry Website*\n\n";
-    message += `*Customer:* ${userName}\n`;
+    let message = "🧀 *Helo, Le Cheese Pondicherry*\n\n";
+    message += `*Name:* ${userName}\n`;
+    message += `*Email:* ${userEmail}\n`;
     message += `*Mobile:* ${userMobile}\n`;
     message += `*Delivery Address:* ${shipping.address}, ${shipping.city}, ${shipping.state} - ${shipping.pincode}\n\n`;
     message += "*Order Items:*\n";
@@ -381,17 +347,15 @@ export default function CheckoutPage() {
       const product = getProduct(item.productId);
       message += `${index + 1}. ${product?.name} (${item.weight}) x ${item.quantity} - ₹${(item.price * item.quantity).toLocaleString()}\n`;
     });
-    
-    message += `\n*Subtotal:* ₹${subtotal.toLocaleString()}`;
-    message += `\n*Delivery:* ₹${deliveryCharge.toLocaleString()}`;
-    message += `\n*Tax:* ₹${taxAmount.toLocaleString()}`;
-    message += `\n*Total Amount:* ₹${total.toLocaleString()}\n\n`;
     message += "I'd like to place this order via WhatsApp. Please confirm!";
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     
     window.open(whatsappUrl, "_blank");
+
+    // Also trigger order creation in background for records
+    handleCreateOrderAndPay();
   };
 
   if (
@@ -448,27 +412,6 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {isServerDown && (
-              <div className="mb-8 bg-red-50 border-2 border-red-200 p-8 rounded-2xl text-center">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <X className="w-8 h-8 text-red-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-red-800 mb-2">Server Under Maintenance</h2>
-                <p className="text-red-700 mb-6 font-medium">
-                  We're currently experiencing some technical difficulties with our payment system. 
-                  Don't worry! You can still place your order directly via WhatsApp.
-                </p>
-                <button
-                  onClick={handleWhatsAppOrder}
-                  className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-xl font-black text-lg hover:bg-[#128C7E] transition-all shadow-xl shadow-green-900/10 active:scale-95"
-                >
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                  </svg>
-                  Order via WhatsApp
-                </button>
-              </div>
-            )}
             {/* Step 1: Shipping */}
             {step === "shipping" && (
               <div className="space-y-6">
@@ -613,7 +556,7 @@ export default function CheckoutPage() {
                           }}
                           className="w-full btn btn-primary py-4 text-lg flex items-center justify-center gap-2 group"
                         >
-                          Proceed to Payment
+                          Review Order
                           <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>
@@ -854,21 +797,21 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* Step 2: Payment */}
+            {/* Step 2: Payment (Repurposed as Review) */}
             {step === "payment" && (
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                 <h2
                   className="text-2xl font-bold mb-6 text-[#1A1A1A]"
                   style={{ fontFamily: "var(--font-heading)" }}
                 >
-                  Secure Payment
+                  Order Review
                 </h2>
 
-                <div className="mb-8 p-6 bg-[#FAF7F2] rounded-2xl">
+                <div className="mb-8 p-6 bg-[#FAF7F2] rounded-2xl text-left">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">
-                        Deliver to
+                        Ship to
                       </p>
                       <p className="font-bold text-[#1A1A1A]">
                         {shipping.name}
@@ -878,6 +821,10 @@ export default function CheckoutPage() {
                         <br />
                         {shipping.city}, {shipping.state} - {shipping.pincode}
                       </p>
+                      <p className="text-sm font-black text-[#2C5530] mt-2 flex items-center gap-2">
+                        <Phone className="w-3 h-3" />
+                        {shipping.phone}
+                      </p>
                     </div>
                     <button
                       onClick={() => setStep("shipping")}
@@ -886,54 +833,34 @@ export default function CheckoutPage() {
                       Change
                     </button>
                   </div>
-                  <div className="pt-4 border-t border-gray-200 flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-green-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-sm font-medium text-green-700">
-                      Cashfree Secure Checkout Enabled
-                    </span>
-                  </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="p-4 border-2 border-[#FAB519] bg-[#FAB519]/5 rounded-2xl flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center p-2">
-                        <img
-                          src="https://www.cashfree.com/wp-content/uploads/2022/10/logo.png"
-                          alt="Cashfree"
-                          className="max-h-full object-contain"
-                        />
+                  <div className="p-6 border-2 border-[#25D366] bg-[#25D366]/5 rounded-2xl">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white">
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg>
                       </div>
-                      <div>
-                        <p className="font-bold text-[#1A1A1A]">
-                          Payment Gateway
-                        </p>
-                        <p className="text-xs text-[#6B6B6B]">
-                          UPI, Cards, Netbanking, Wallets
-                        </p>
-                      </div>
+                      <p className="font-bold text-[#1A1A1A]">WhatsApp Confirmation</p>
                     </div>
-                    <span className="w-6 h-6 rounded-full border-4 border-[#FAB519] bg-[#FAB519]" />
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Your order will be sent to our team for final confirmation and payment link sharing via WhatsApp.
+                    </p>
                   </div>
 
                   <button
-                    onClick={handleCreateOrderAndPay}
+                    onClick={handleWhatsAppOrder}
                     disabled={isProcessing}
-                    className={`w-full py-4 rounded-xl text-lg font-bold transition-all ${isProcessing ? "bg-gray-200 text-gray-400" : "bg-[#2C5530] text-white hover:bg-[#1f3d22] shadow-lg shadow-green-900/10"}`}
+                    className={`w-full py-4 rounded-xl text-lg font-bold transition-all flex items-center justify-center gap-3 ${isProcessing ? "bg-gray-200 text-gray-400" : "bg-[#2C5530] text-white hover:bg-[#1f3d22] shadow-lg shadow-green-900/10"}`}
                   >
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
                     {isProcessing
-                      ? "Processing..."
-                      : `Pay ₹${total.toLocaleString()}`}
+                      ? "Creating Order..."
+                      : `Confirm Order (₹${total.toLocaleString()})`}
                   </button>
                 </div>
               </div>

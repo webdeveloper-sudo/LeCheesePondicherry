@@ -24,6 +24,7 @@ export interface BlogPost {
     author: string;
   };
   relatedPosts?: string[];
+  onHold?: boolean;
 }
 
 export const blogs: BlogPost[] = [

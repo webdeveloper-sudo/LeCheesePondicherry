@@ -168,10 +168,10 @@ export default function ContactPage() {
                           Email Us
                         </h3>
                         <a
-                          href="mailto:hello@lepondycheese.com"
+                          href="mailto:vp.expansions@hopemarket.in"
                           className="text-text-light hover:text-secondary transition-colors"
                         >
-                          hello@lepondycheese.com
+                          vp.expansions@hopemarket.in
                         </a>
                       </div>
                     </div>
@@ -185,10 +185,10 @@ export default function ContactPage() {
                           Call Us
                         </h3>
                         <a
-                          href="tel:+914132234567"
+                          href="tel:+917200504628"
                           className="text-text-light hover:text-secondary transition-colors"
                         >
-                          +91 413 2234 567
+                          +91 72005 04628
                         </a>
                       </div>
                     </div>

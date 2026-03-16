@@ -58,7 +58,7 @@ export default function ChatBot() {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            to: 'savinashshankar@gmail.com',
+                            to: 'vp.expansions@hopemarket.in',
                             subject: `Urgent: Unresolved Chat Inquiry from ${userData.name}`,
                             content: `
 User Details:

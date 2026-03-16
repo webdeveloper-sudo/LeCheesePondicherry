@@ -29,6 +29,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     rating: 0,
     reviews: 0,
     pairings: "",
+    onHold: false,
   });
 
   const [tastingNotes, setTastingNotes] = useState({
@@ -58,6 +59,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
         rating: product.rating || 0,
         reviews: product.reviews || 0,
         pairings: product.pairings ? product.pairings.join(", ") : "",
+        onHold: product.onHold ?? false,
       });
       if (product.tastingNotes) {
         setTastingNotes({ ...product.tastingNotes });
@@ -187,6 +189,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
       rating: 4.8,
       reviews: 12,
       pairings: "Red Wine, Grapes, Sourdough",
+      onHold: false,
     });
     setTastingNotes({
       appearance: "Creamy white rind",
@@ -336,6 +339,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                     />
                     <span className="text-sm font-bold text-gray-700 group-hover:text-gray-900 transition-colors">
                       Featured
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="onHold"
+                      checked={formData.onHold}
+                      onChange={handleInputChange}
+                      className="w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                    />
+                    <span className="text-sm font-bold text-red-700 group-hover:text-red-900 transition-colors">
+                      On Hold (Hidden from Shop)
                     </span>
                   </label>
                 </div>

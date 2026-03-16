@@ -84,6 +84,14 @@ const ProductManagement: React.FC = () => {
                   <ImageIcon size={48} />
                 </div>
               )}
+              {/* On Hold Badge */}
+              {product.onHold && (
+                <div className="absolute top-3 left-3 z-20">
+                  <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-lg">
+                    On Hold
+                  </span>
+                </div>
+              )}
               {/* Quick View Overlay */}
               {/* <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
                 <button

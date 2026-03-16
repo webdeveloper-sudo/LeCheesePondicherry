@@ -160,18 +160,18 @@ export default function Footer() {
                 <p>Pondicherry - 605111, India</p>
                 <div className="pt-2">
                   <a
-                    href="mailto:hello@lepondicheese.com"
+                    href="mailto:vp.expansions@hopemarket.in"
                     className="hover:text-[#C9A961] transition-colors block font-medium"
                   >
-                    hello@lepondicheese.com
+                    vp.expansions@hopemarket.in
                   </a>
                 </div>
                 <div className="pt-1">
                   <a
-                    href="tel:+919150121331"
+                    href="tel:+917200504628"
                     className="hover:text-[#C9A961] transition-colors block font-medium"
                   >
-                    +91 91501 21331
+                    +91 72005 04628
                   </a>
                 </div>
               </address>

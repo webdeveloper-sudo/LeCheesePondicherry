@@ -20,12 +20,12 @@ export default function TopHeader() {
         Free Delivery on orders above ₹2000
        </div> */}
        <div className="flex items-center text-green gap-4">
-        <a href="tel:+919150121331" className="flex items-center gap-2">
-          <Phone size={16}/> +91 91501 21331
+        <a href="tel:+917200504628" className="flex items-center gap-2">
+          <Phone size={16}/> +91 72005 04628
         </a>
         <div className="px-1">|</div>
-        <a href="mailto:hello@lepondicheese.com" className="flex items-center gap-2">
-          <Mail size={16}/> hello@lepondicheese.com
+        <a href="mailto:vp.expansions@hopemarket.in" className="flex items-center gap-2">
+          <Mail size={16}/> vp.expansions@hopemarket.in
         </a>
        </div>
       </div>

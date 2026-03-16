@@ -43,6 +43,7 @@ export interface Product {
   weight: string;
   inStock: boolean;
   featured?: boolean;
+  onHold?: boolean;
   tastingNotes?: {
     appearance: string;
     texture: string;

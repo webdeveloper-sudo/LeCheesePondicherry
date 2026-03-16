@@ -213,7 +213,7 @@ export default function WholesalePage() {
                     type="email"
                     required
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all"
-                    placeholder="your@email.com"
+                    placeholder="vp.expansions@hopemarket.in"
                   />
                 </div>
 

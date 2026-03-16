@@ -499,14 +499,14 @@ export default function UserLogin() {
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       className="w-4 h-4 rounded text-[#2C5530] focus:ring-[#2C5530] border-gray-300"
                     />
                     <span className="text-gray-600">Remember me</span>
                   </label>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => {
                       if (formData.email) {
@@ -520,7 +520,7 @@ export default function UserLogin() {
                     className="text-[#2C5530] font-medium hover:underline"
                   >
                     Forgot Password?
-                  </button>
+                  </button> */}
                 </div>
 
                 <button

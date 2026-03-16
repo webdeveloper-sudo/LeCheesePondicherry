@@ -34,7 +34,7 @@ const rawData = [
     ["track order, status", "Check email for tracking link or [Contact Us](/contact)", "Shipping Info, Refund, Help", "shipping"],
 
     // HELP
-    ["contact, email, phone", "hello@lepondycheese.com | [Contact Page](/contact)", "Wholesale, Story, Visit Us", "other"],
+    ["contact, email, phone", "vp.expansions@hopemarket.in | [Contact Page](/contact)", "Wholesale, Story, Visit Us", "other"],
     ["thanks, thank you, goodbye, bye", "You're welcome! Come back anytime for cheese assistance!", "Shop Now, Story, Top Products", "other"],
     ["hello, hi, namaste", "Namaste! Your Le Pondy Cheese assistant here. Check [Products](/shop)!", "Top Products, Shipping, Story", "other"]
 ];
