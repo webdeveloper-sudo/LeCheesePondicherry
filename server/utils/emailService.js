@@ -157,8 +157,12 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
   // Priority 2: HTTP Proxy (Bypass Render block)
   const result = await sendViaProxy(mailOptions);
   
-  if (!result && process.env.NODE_ENV === "development") {
-    // Keep dev flow moving even if proxy fails
+  if (!result) {
+    // If proxy failed on Render, it's a hard failure regardless of NODE_ENV
+    if (process.env.RENDER || process.env.NODE_ENV === "production") {
+      return false;
+    }
+    // Only in local dev (no RENDER env) we allow the flow to continue
     return true;
   }
 
