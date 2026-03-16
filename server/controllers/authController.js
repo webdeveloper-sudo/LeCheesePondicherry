@@ -351,6 +351,7 @@ const login = async (req, res) => {
         isEmailVerified: user.isEmailVerified,
         cartItemCount: user.getCartItemCount(),
         wishlistCount: user.wishlist?.length || 0,
+        wishlistIds: user.wishlist?.map((item) => item.productId) || [],
         preferences: user.preferences || [],
       },
     });
@@ -386,6 +387,7 @@ const getMe = async (req, res) => {
         loyaltyPoints: user.loyaltyPoints,
         cartItemCount: user.getCartItemCount(),
         wishlistCount: user.wishlist?.length || 0,
+        wishlistIds: user.wishlist?.map((item) => item.productId) || [],
         preferences: user.preferences || [],
       },
     });

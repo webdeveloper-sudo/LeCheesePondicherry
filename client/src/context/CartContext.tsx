@@ -154,6 +154,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             };
           });
           setAllProducts(mappedProducts);
+          console.log("All Products", mappedProducts);
         setProductsLoaded(true);
         }
 

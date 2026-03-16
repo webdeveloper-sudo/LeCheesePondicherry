@@ -11,8 +11,6 @@ import {
 } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import heroImage from "@/assets/images/hero-cheese-board.jpg";
-import { FETCH_MODE } from "@/config";
-import axios from "axios";
 import { Loader } from "lucide-react";
 
 export default function ShopClient() {
@@ -89,6 +87,8 @@ export default function ShopClient() {
     if (sortBy === "name") return a.name.localeCompare(b.name);
     return 0; // featured - keep original order
   });
+
+  console.log("sortedProducts", sortedProducts);
 
   const subscriptionPlans = products.filter(
     (p) => p.category === "subscriptions",
