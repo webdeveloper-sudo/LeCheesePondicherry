@@ -231,11 +231,7 @@ export default function UserLogin() {
 
       if (result.success) {
         setStep("otp");
-        // In development, OTP is returned for testing
-        if (result.data?.otp) {
-          console.log("Development OTP:", result.data.otp);
-          addToast(`OTP sent to ${formData.email}. Check console for development OTP.`, "success");
-        }
+        addToast(`OTP sent to ${formData.email}.`, "success");
       } else {
         setError(result.message || "Failed to send OTP");
       }
