@@ -3,19 +3,38 @@ const nodemailer = require("nodemailer");
 // Create reusable transporter
 let transporter = null;
 
-const initializeTransporter = () => {
+const initializeTransporter = async () => {
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
       transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === "true", // true for 465, false for 587/25
+        port: parseInt(process.env.SMTP_PORT) || 465,
+        secure: process.env.SMTP_SECURE === "true" || parseInt(process.env.SMTP_PORT) === 465, // true for port 465 (SSL), false for 587
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        tls: {
+          // Do not fail on invalid certs in production cloud environments
+          rejectUnauthorized: false,
+        },
       });
       console.log("✅ Email Transporter Initialized");
+
+      // Verify SMTP connectivity on startup
+      try {
+        await transporter.verify();
+        console.log("✅ SMTP connection verified — email service is ready.");
+      } catch (verifyError) {
+        console.error(
+          "❌ SMTP connection verification failed:",
+          verifyError.message,
+        );
+        console.error(
+          "   Check SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS and ensure the hosting provider allows outbound SMTP on the configured port.",
+        );
+        transporter = null; // Reset so we don't send on a broken transporter
+      }
     } catch (error) {
       console.error(
         "❌ Failed to initialize email transporter:",
@@ -102,8 +121,18 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
     }
   }
 
-  // If no transporter but in development, we logged it, so return true to keep flow moving
-  return process.env.NODE_ENV === "development";
+  // No transporter available
+  if (process.env.NODE_ENV === "production") {
+    // In production, fail loudly so the issue is immediately visible in server logs
+    console.error(
+      "❌ OTP email could not be sent: SMTP transporter is not initialized. " +
+      "Ensure SMTP_HOST, SMTP_PORT (use 465), SMTP_SECURE (set to true), SMTP_USER, and SMTP_PASS are correctly set in your hosting environment.",
+    );
+    return false;
+  }
+
+  // In development with no transporter, we already logged the OTP to console — keep flow moving
+  return true;
 };
 
 /**
@@ -267,8 +296,10 @@ const sendShippingUpdateEmail = async (order, user) => {
   }
 };
 
-// Initialize on module load
-initializeTransporter();
+// Initialize on module load (async — SMTP verify runs in background)
+initializeTransporter().catch((err) =>
+  console.error("❌ Email transporter initialization error:", err.message),
+);
 
 module.exports = {
   sendOTPEmail,

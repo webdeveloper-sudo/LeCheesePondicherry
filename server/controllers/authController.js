@@ -55,7 +55,17 @@ const sendOTP = async (req, res) => {
     });
 
     // Send OTP via email
-    await sendOTPEmail(email, otp, purpose);
+    const emailSent = await sendOTPEmail(email, otp, purpose);
+
+    if (!emailSent) {
+      // Clean up the OTP we just saved — can't use it without the email
+      await OTP.deleteMany({ email: email.toLowerCase(), purpose, isUsed: false });
+      return res.status(500).json({
+        success: false,
+        message:
+          "Failed to send OTP email. Please try again later or contact support.",
+      });
+    }
 
     res.status(200).json({
       success: true,
