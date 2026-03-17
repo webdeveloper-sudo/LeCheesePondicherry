@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import BlogSidebar from "./components/BlogSidebar";
-import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import heroImage from "@/assets/images/hero-cheese-board.webp";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {

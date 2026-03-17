@@ -10,7 +10,7 @@ import {
   Product,
 } from "@/data/products";
 import { useCart } from "@/context/CartContext";
-import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import heroImage from "@/assets/images/hero-cheese-board.webp";
 import { Loader } from "lucide-react";
 
 export default function ShopClient() {

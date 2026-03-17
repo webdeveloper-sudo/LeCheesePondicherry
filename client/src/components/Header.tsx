@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import FlashSaleBanner from "./FlashSaleBanner";
-import logo from "@/assets/images/logo.jpg";
+import logo from "@/assets/images/logo.webp";
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, imageVariant } from "@/animations/variants";
 import TopHeader from "./TopHeader";

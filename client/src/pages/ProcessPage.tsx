@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import cheesemakerImage from "@/assets/images/process-hero-new.jpg";
-import cow from "@/assets/icons/process/cow.png";
-import curd from "@/assets/icons/process/curd.png";
-import caves from "@/assets/icons/process/cave.png";
-import quality from "@/assets/icons/process/badge.png";
+import cheesemakerImage from "@/assets/images/process-hero-new.webp";
+import cow from "@/assets/icons/process/cow.webp";
+import curd from "@/assets/icons/process/curd.webp";
+import caves from "@/assets/icons/process/cave.webp";
+import quality from "@/assets/icons/process/badge.webp";
 import {
   MotionContainer,
   MotionHeading,

@@ -2,31 +2,31 @@
 // This will be replaced with API data when backend is connected
 
 // Import all product images
-import babySwissPackage from "@/assets/images/products/baby-swiss-package.png";
-import babySwissTexture from "@/assets/images/products/baby-swiss-texture.png";
-import babySwissPairing from "@/assets/images/products/baby-swiss-pairing.png";
-import daddySwissPackage from "@/assets/images/products/daddy-swiss-package.png";
-import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.png";
-import daddySwissPairing from "@/assets/images/products/daddy-swiss-pairing.png";
-import pondyOrangePackage from "@/assets/images/products/pondy-orange-package.png";
-import pondyOrangeTexture from "@/assets/images/products/pondy-orange-texture.png";
-import pondyOrangePairing from "@/assets/images/products/pondy-orange-pairing.png";
-import granaCherryPackage from "@/assets/images/products/grana-chery-package.png";
-import granaCherryTexture from "@/assets/images/products/grana-chery-texture.png";
-import granaCherryPairing from "@/assets/images/products/grana-chery-pairing.png";
-import burrataPackage from "@/assets/images/products/burrata-package.png";
-import mozzarellaPackage from "@/assets/images/products/mozzarella-package.png";
-import mozzarellaTexture from "@/assets/images/products/mozzarella-texture.png";
-import bocconciniPackage from "@/assets/images/products/bocconcini-package.png";
-import ricottaPackage from "@/assets/images/products/ricotta-package.png";
-import halloumiPackage from "@/assets/images/products/halloumi-package.png";
-import fetaPackage from "@/assets/images/products/feta-package.png";
-import pizzaellaPackage from "@/assets/images/products/pizzaella-package.png";
-import cottageCheesePackage from "@/assets/images/products/cottage-cheese-package.png";
-// import skyrPackage from "@/assets/images/products/skyr-package.png";
-import agedPondyOrange from "@/assets/images/products/aged-cheddar.jpg";
-import classicBrie from "@/assets/images/products/classic-brie.jpg";
-import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
+import babySwissPackage from "@/assets/images/products/baby-swiss-package.webp";
+import babySwissTexture from "@/assets/images/products/baby-swiss-texture.webp";
+import babySwissPairing from "@/assets/images/products/baby-swiss-pairing.webp";
+import daddySwissPackage from "@/assets/images/products/daddy-swiss-package.webp";
+import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.webp";
+import daddySwissPairing from "@/assets/images/products/daddy-swiss-pairing.webp";
+import pondyOrangePackage from "@/assets/images/products/pondy-orange-package.webp";
+import pondyOrangeTexture from "@/assets/images/products/pondy-orange-texture.webp";
+import pondyOrangePairing from "@/assets/images/products/pondy-orange-pairing.webp";
+import granaCherryPackage from "@/assets/images/products/grana-chery-package.webp";
+import granaCherryTexture from "@/assets/images/products/grana-chery-texture.webp";
+import granaCherryPairing from "@/assets/images/products/grana-chery-pairing.webp";
+import burrataPackage from "@/assets/images/products/burrata-package.webp";
+import mozzarellaPackage from "@/assets/images/products/mozzarella-package.webp";
+import mozzarellaTexture from "@/assets/images/products/mozzarella-texture.webp";
+import bocconciniPackage from "@/assets/images/products/bocconcini-package.webp";
+import ricottaPackage from "@/assets/images/products/ricotta-package.webp";
+import halloumiPackage from "@/assets/images/products/halloumi-package.webp";
+import fetaPackage from "@/assets/images/products/feta-package.webp";
+import pizzaellaPackage from "@/assets/images/products/pizzaella-package.webp";
+import cottageCheesePackage from "@/assets/images/products/cottage-cheese-package.webp";
+// import skyrPackage from "@/assets/images/products/skyr-package.webp";
+import agedPondyOrange from "@/assets/images/products/aged-cheddar.webp";
+import classicBrie from "@/assets/images/products/classic-brie.webp";
+import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
 
 export interface Product {
   id: string;

@@ -35,18 +35,18 @@ const countries = [
 
 // Array of images for the infinite slider
 const sliderImages = [
-  "/bg-removed/baby-swiss-package.png",
-  "/bg-removed/daddy-swiss-package.png",
-  "/bg-removed/pondy-orange-package.png",
-  "/bg-removed/grana-chery-package.png",
-  "/bg-removed/burrata-package.png",
-  "/bg-removed/mozzarella-package.png",
-  "/bg-removed/bocconcini-package.png",
-  "/bg-removed/ricotta-package.png",
-  "/bg-removed/halloumi-package.png",
-  "/bg-removed/feta-package.png",
-  "/bg-removed/pizzaella-package.png",
-  "/bg-removed/cottage-cheese-package.png",
+  "/bg-removed/baby-swiss-package.webp",
+  "/bg-removed/daddy-swiss-package.webp",
+  "/bg-removed/pondy-orange-package.webp",
+  "/bg-removed/grana-chery-package.webp",
+  "/bg-removed/burrata-package.webp",
+  "/bg-removed/mozzarella-package.webp",
+  "/bg-removed/bocconcini-package.webp",
+  "/bg-removed/ricotta-package.webp",
+  "/bg-removed/halloumi-package.webp",
+  "/bg-removed/feta-package.webp",
+  "/bg-removed/pizzaella-package.webp",
+  "/bg-removed/cottage-cheese-package.webp",
 ];
 
 export default function UserLogin() {

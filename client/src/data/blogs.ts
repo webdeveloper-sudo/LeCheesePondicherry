@@ -1,10 +1,10 @@
 // Import images
-import agedPondyOrange from "@/assets/images/products/aged-cheddar.jpg";
-import classicBrie from "@/assets/images/products/classic-brie.jpg";
-import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
-import babySwissTexture from "@/assets/images/products/baby-swiss-texture.png";
-import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.png";
-import granaCherryTexture from "@/assets/images/products/grana-chery-texture.png";
+import agedPondyOrange from "@/assets/images/products/aged-cheddar.webp";
+import classicBrie from "@/assets/images/products/classic-brie.webp";
+import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
+import babySwissTexture from "@/assets/images/products/baby-swiss-texture.webp";
+import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.webp";
+import granaCherryTexture from "@/assets/images/products/grana-chery-texture.webp";
 
 export interface BlogPost {
   id: string;
@@ -34,7 +34,7 @@ export const blogs: BlogPost[] = [
     date: "May 12, 2024",
     author: "Admin",
     authorRole: "Master Cheesemaker",
-    authorImage: "/images/team/chef-1.jpg",
+    authorImage: "/images/team/chef-1.webp",
     category: "Tradition",
     image: agedPondyOrange,
     excerpt:

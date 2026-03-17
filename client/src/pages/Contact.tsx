@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import CountryList from "country-list-with-dial-code-and-flag";
-import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import heroImage from "@/assets/images/hero-cheese-board.webp";
 import SubmissionSuccessModal from "@/components/ui/SubmissionSuccessModal";
 import {
   MapPin,
@@ -120,7 +120,7 @@ export default function ContactPage() {
 
       <section className="py-24 relative overflow-hidden">
         {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-5 bg-[url('/assets/pattern.png')] pointer-events-none" />
+        <div className="absolute inset-0 opacity-5 bg-[url('/assets/pattern.webp')] pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">

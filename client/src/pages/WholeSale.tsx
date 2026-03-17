@@ -5,9 +5,9 @@ import SubmissionSuccessModal from "@/components/ui/SubmissionSuccessModal";
 import { useState, useRef, useEffect } from "react";
 import { MotionHeading, MotionText } from "@/components/ui/MotionPrimitives";
 import { fadeUp } from "@/animations/variants";
-import fssai from "@/assets/icons/fssai.png";
-import chef from "@/assets/icons/chef.png";
-import coldchain from "@/assets/icons/cold-chain.png";
+import fssai from "@/assets/icons/fssai.webp";
+import chef from "@/assets/icons/chef.webp";
+import coldchain from "@/assets/icons/cold-chain.webp";
 import CountryList from "country-list-with-dial-code-and-flag";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 

@@ -172,7 +172,7 @@ const OrderHistory = () => {
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src =
-                            "/placeholder-cheese.png";
+                            "/placeholder-cheese.webp";
                         }}
                       />
                       <div className="absolute top-0 right-0 bg-[#2C5530] text-white text-[8px] font-bold px-1 rounded-bl">

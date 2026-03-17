@@ -12,7 +12,7 @@ export default function TopHeader() {
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-[#FAB519] py-3 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-md text-[#1D161A]">
       {/* Sparkle/Glitter Effects using pseudo-elements in CSS or simple divs */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.webp')] opacity-30 mix-blend-overlay pointer-events-none"></div>
 
       <div className=" mx-auto px-4 md:px-8 lg:px-16 py-1 flex flex-col md:flex-row items-center justify-end gap-3 md:gap-8 relative z-10">  
         {/* Center/Right: Offer & CTA */}

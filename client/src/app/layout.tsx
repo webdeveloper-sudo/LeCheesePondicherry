@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: "Le Pondicherry Cheese",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/og-image.webp",
         width: 1200,
         height: 630,
         alt: "Le Pondicherry Cheese Collection",
@@ -65,15 +65,15 @@ export const metadata: Metadata = {
     title: "Le Pondicherry Cheese | Handcrafted Artisan Cheese",
     description:
       "Premium artisan cheeses handcrafted in Pondicherry, inspired by French tradition.",
-    images: ["/images/og-image.jpg"],
+    images: ["/images/og-image.webp"],
   },
   icons: {
     icon: [
       { url: "/favicon.ico" },
-      { url: "/images/logo.jpg", sizes: "32x32", type: "image/jpeg" },
+      { url: "/images/logo.webp", sizes: "32x32", type: "image/webp" },
     ],
-    shortcut: "/images/logo.jpg",
-    apple: "/images/logo.jpg",
+    shortcut: "/images/logo.webp",
+    apple: "/images/logo.webp",
   },
   robots: {
     index: true,
@@ -93,7 +93,7 @@ const jsonLd = {
   "@type": "Organization",
   name: "Le Pondicherry Cheese",
   url: "https://lepondicheese.com",
-  logo: "https://lepondicheese.com/images/logo.jpg",
+  logo: "https://lepondicheese.com/images/logo.webp",
   description: "Handcrafted artisan cheese from Pondicherry, India.",
   address: {
     "@type": "PostalAddress",

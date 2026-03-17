@@ -1,9 +1,9 @@
 "use client";
 
 import { Link, useParams } from "react-router-dom";
-import agedCheddar from "@/assets/images/products/aged-cheddar.jpg";
-import classicBrie from "@/assets/images/products/classic-brie.jpg";
-import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
+import agedCheddar from "@/assets/images/products/aged-cheddar.webp";
+import classicBrie from "@/assets/images/products/classic-brie.webp";
+import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
 
 export default function StoryDetail() {
   const { slug } = useParams<{ slug: string }>();

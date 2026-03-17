@@ -1,4 +1,4 @@
-import heroImage from "@/assets/images/hero-cheese-board.jpg";
+import heroImage from "@/assets/images/hero-cheese-board.webp";
 import { BlogsGrid } from "./components/BlogsGrid";
 
 export default function AllBlogs() {

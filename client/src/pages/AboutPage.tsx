@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import cheesemakerImage from "@/assets/images/process-hero-new.jpg";
+import cheesemakerImage from "@/assets/images/process-hero-new.webp";
 import CompanyTimeline from "@/components/CompanyTimeline";
 import {
   MotionContainer,

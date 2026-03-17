@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import giftsHeroImage from "@/assets/images/gifts-hero-new.jpg";
-import agedCheddar from "@/assets/images/products/aged-cheddar.jpg";
-import classicBrie from "@/assets/images/products/classic-brie.jpg";
-import kombuchaRind from "@/assets/images/products/kombucha-rind.jpg";
+import giftsHeroImage from "@/assets/images/gifts-hero-new.webp";
+import agedCheddar from "@/assets/images/products/aged-cheddar.webp";
+import classicBrie from "@/assets/images/products/classic-brie.webp";
+import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
 import { GiftItems } from "@/components/GiftItems";
 import {
   MotionContainer,

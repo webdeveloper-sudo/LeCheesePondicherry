@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 import { motion } from "framer-motion";
 
 // Import background images from assets
-import cheeseElementOne from "@/assets/images/bg-elements/cheese_element_one.png";
-import cheeseElementTwo from "@/assets/images/bg-elements/cheese_element_two.png";
+import cheeseElementOne from "@/assets/images/bg-elements/cheese_element_one.webp";
+import cheeseElementTwo from "@/assets/images/bg-elements/cheese_element_two.webp";
 
 interface DecorativeWrapperProps {
   children: ReactNode;

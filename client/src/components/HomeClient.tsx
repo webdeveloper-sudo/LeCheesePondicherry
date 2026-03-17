@@ -7,17 +7,17 @@ import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import YourPicks from "@/components/YourPicks";
 import { useUserStore } from "@/store/useUserStore";
-import heroCheeseBoardImage from "@/assets/images/hero-cheese-board.jpg";
+import heroCheeseBoardImage from "@/assets/images/hero-cheese-board.webp";
 import heroVideo from "@/assets/videos/hero.mp4";
 import cheesemaker from "@/assets/images/cheesemaker.webp";
 import GiftsPage from "@/pages/GiftsPage";
 import { GiftItems } from "./GiftItems";
 import AllBlogs from "@/pages/blogs/AllBlogs";
 import { BlogsGrid } from "@/pages/blogs/components/BlogsGrid";
-import logo from "@/assets/images/logo.jpg";
+import logo from "@/assets/images/logo.webp";
 import DecorativeWrapper from "./DecorativeWrapper";
-import cheesesparks from "@/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.png";
-import cheesslice from "@/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.png";
+import cheesesparks from "@/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.webp";
+import cheesslice from "@/assets/images/bg-elements/—Pngtree—sliced cheese with crumbs_18128831.webp";
 import {
   MotionContainer,
   MotionHeading,
