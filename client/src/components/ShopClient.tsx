@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Search, X, ChevronDown, Check, ArrowUpDown } from "lucide-react";
 import {
@@ -14,8 +14,13 @@ import heroImage from "@/assets/images/hero-cheese-board.jpg";
 import { Loader } from "lucide-react";
 
 export default function ShopClient() {
-  const { addToCart, allProducts, loading: cartLoading, isServerDown } = useCart();
-  
+  const {
+    addToCart,
+    allProducts,
+    loading: cartLoading,
+    isServerDown,
+  } = useCart();
+
   const products = allProducts;
   const loading = cartLoading;
 
@@ -395,105 +400,33 @@ export default function ShopClient() {
       </section>
 
       {/* Subscription CTA */}
-      <section className="py-16 bg-[#FAF7F2]">
+      <section
+        className="py-16"
+        style={{
+          background:
+            "radial-gradient(circle,rgba(233, 215, 154, 0.77) 0%, rgba(249, 182, 25, 0.62) 100%)",
+          animation: "gradientBG 20s ease infinite",
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <h2
-            className="text-3xl md:text-4xl mb-4"
+            className="text-3xl md:text-4xl mb-4 font-bold text-[#1A1A1A]"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Never Run Out of Cheese
+            Wholesale & Partnerships
           </h2>
-          <p className="text-[#6B6B6B] max-w-2xl mx-auto mb-12">
-            Subscribe to our Monthly Cheese Club and receive 3-4 artisan cheeses
-            delivered fresh to your door. Save 15% on every order and discover
-            new flavors each month.
+          <p className="text-[#6B6B6B] max-w-2xl mx-auto mb-10 text-lg">
+            Elevate your menu with Pondicherry's finest handcrafted artisan
+            cheeses. We partner with premium restaurants, hotels, and cafes
+            across India.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {subscriptionPlans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`bg-white p-8 rounded-2xl shadow-lg border-2 transition-transform duration-300 hover:-translate-y-2 ${plan.featured ? "border-[#C9A961] scale-105 relative" : "border-transparent"}`}
-              >
-                {plan.featured && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FAB519] text-[#1D161A] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                    Popular
-                  </span>
-                )}
-                <div className="text-center mb-6">
-                  <h3
-                    className="text-2xl font-bold mb-2"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {plan.name.replace("Cheese Club ", "")}
-                  </h3>
-                  <div className="flex items-center justify-center gap-1">
-                    <span className="text-4xl font-bold text-[#2C5530]">
-                      ₹{plan.price.toLocaleString()}
-                    </span>
-                    <span className="text-[#6B6B6B]">/month</span>
-                  </div>
-                  <p className="text-sm text-[#888888] mt-2">
-                    {plan.shortDescription}
-                  </p>
-                </div>
-
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-2 text-sm text-[#6B6B6B]">
-                    <span className="text-[#C9A961] font-bold">✓</span>
-                    <span>
-                      {plan.id === "sub-explorer"
-                        ? "3"
-                        : plan.id === "sub-enthusiast"
-                          ? "4"
-                          : "5"}{" "}
-                      curated artisan cheeses
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2 text-sm text-[#6B6B6B]">
-                    <span className="text-[#C9A961] font-bold">✓</span>
-                    <span>Temperature-controlled national shipping</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handleSubscribe(plan.id)}
-                  className={`w-full py-4 rounded-lg font-bold transition-all duration-300 ${
-                    successId === plan.id
-                      ? "bg-green-600 text-white"
-                      : plan.featured
-                        ? "bg-[#FAB519] text-[#1D161A] hover:bg-[#FAB519]"
-                        : "bg-[#F5E6D3] text-[#2C5530] hover:bg-[#E8D5B8]"
-                  } ${subscribingId === plan.id ? "opacity-70 cursor-wait" : ""}`}
-                  disabled={subscribingId !== null}
-                >
-                  {subscribingId === plan.id ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Processing...
-                    </span>
-                  ) : successId === plan.id ? (
-                    "✓ Plan Added!"
-                  ) : (
-                    "Subscribe"
-                  )}
-                </button>
-              </div>
-            ))}
+          <div className="flex justify-center">
+            <Link
+              to="/wholesale"
+              className="btn btn-primary bg-[#2C5530] text-white hover:bg-[#1a3a20] px-10 py-4 text-lg rounded-full font-bold shadow-xl transition-all hover:scale-105"
+            >
+              Enquire for Wholesale
+            </Link>
           </div>
         </div>
       </section>

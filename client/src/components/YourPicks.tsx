@@ -158,7 +158,9 @@ export default function YourPicks({
         )}
 
         {/* Row 1: Top Picks */}
-        <Section
+       {
+        recommendedProducts.length > 3 && (
+          <Section
           title="Top Picks for You"
           icon={Star}
           items={recommendedProducts}
@@ -166,6 +168,8 @@ export default function YourPicks({
           linkTo="/shop"
           linkText="Explore Shop"
         />
+        )
+       }
 
         {showAllRows && (
           <>

@@ -21,7 +21,7 @@ import GiftsPage from "@/pages/GiftsPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import ProcessPage from "@/pages/ProcessPage";
 import ProductPage from "@/pages/products/SingleProductPage";
-import ShippingPage from "@/pages/RefundPolicyPage";
+import RefundPolicyPage from "@/pages/RefundPolicyPage";
 import TermsPage from "@/pages/TermsPage";
 import UserLoginPage from "@/app/user/login/page";
 import UserDashboardPage from "@/app/user/page";
@@ -75,7 +75,7 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/process" element={<ProcessPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
-          <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
           <Route path="/stories" element={<AllBlogs />} />
           <Route path="/stories/:slug" element={<SingleBlogDetails />} />
           <Route path="/terms" element={<TermsPage />} />

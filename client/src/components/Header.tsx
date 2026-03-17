@@ -27,7 +27,8 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
-  const { totalItems } = useCart();
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
+  const { totalItems, allProducts } = useCart();
   const { name, isAuthenticated, wishlistCount, role } = useUserStore();
   const userName = name ? name.split(" ")[0] : "User"; // Get first name
   const [isClient, setIsClient] = useState(false);
@@ -60,7 +61,10 @@ export default function Header() {
 
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
-      const filtered = products
+      // Use allProducts from context (dynamic or static)
+      const sourceProducts = allProducts.length > 0 ? allProducts : products;
+      
+      const filtered = sourceProducts
         .filter(
           (p) =>
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -71,15 +75,17 @@ export default function Header() {
     } else {
       setSuggestions([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, allProducts]);
 
   // Close search on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+      const isOutsideDesktop = searchRef.current && !searchRef.current.contains(target);
+      const isOutsideMobile = mobileSearchRef.current && !mobileSearchRef.current.contains(target);
+      
+      // Only close if it's outside BOTH potential search containers
+      if (isOutsideDesktop && isOutsideMobile) {
         setSearchOpen(false);
       }
     }
@@ -430,7 +436,7 @@ export default function Header() {
             <div className="w-4"></div>
           )}
           {/* Search */}
-          <div className="relative" ref={searchRef}>
+          <div className="relative" ref={mobileSearchRef}>
             <button
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors"

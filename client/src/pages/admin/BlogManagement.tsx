@@ -11,6 +11,7 @@ interface Blog {
   date: string;
   image: string;
   isPublished: boolean;
+  onHold?: boolean;
   slug?: string;
 }
 
@@ -31,7 +32,7 @@ export default function BlogManagement() {
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/blogs`,
+        `${import.meta.env.VITE_API_URL}/api/blogs?admin=true`,
       );
       if (response.data.success) {
         setBlogs(response.data.data);
@@ -174,6 +175,11 @@ export default function BlogManagement() {
                   >
                     {blog.isPublished !== false ? "Published" : "Draft"}
                   </span>
+                  {blog.onHold && (
+                    <span className="text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-600 uppercase tracking-wider">
+                      On Hold
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

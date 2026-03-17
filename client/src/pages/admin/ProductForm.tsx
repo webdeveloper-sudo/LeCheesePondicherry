@@ -144,7 +144,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
           data: img.data,
         })),
         images: existingImages, // Existing URLs to keep
+        onHold: formData.onHold === true, // Force boolean
       };
+
+      console.log("📤 Final Submission Payload [onHold]:", submissionData.onHold);
+
+      console.log("📤 Sending Product Update:", {
+        productId: product?._id,
+        onHold: submissionData.onHold,
+      });
 
       console.log("📦 Submission Data details (excluding base64):", {
         name: submissionData.name,

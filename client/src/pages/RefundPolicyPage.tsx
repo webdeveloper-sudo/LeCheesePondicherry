@@ -10,30 +10,28 @@ export default function RefundPolicyPage() {
   const lastUpdated = "March 11, 2026";
 
   return (
-    <div className="min-h-screen bg-pattern py-10">
+    <div className="bg-pattern py-10">
       <div className="container bg-[#FAF7F2]  border border-gray-200 mx-auto px-4 max-w-4xl">
         <MotionContainer stagger>
-          <MotionHeading
-            as="h1"
-            className="text-4xl md:text-5xl font-bold my-8 text-[#1A1A1A]"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Refund & Shipping Policy
-          </MotionHeading>
-
-          <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100">
-            <MotionText className="text-[#6B6B6B] mb-8 italic">
+          <div className="flex px-5 justify-between items-center">
+            <MotionHeading
+              as="h1"
+              className="text-4xl md:text-5xl font-bold my-8 text-green"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              Refund Policy
+            </MotionHeading>
+            <MotionText className="text-[#6B6B6B] md:block hidden text-end mb-8 italic">
               Last Updated: {lastUpdated}
             </MotionText>
+          </div>
 
+          <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100">
             <div className="space-y-12">
+              <MotionText className="text-[#6B6B6B] md:hidden block text-end mb-8 italic">
+                Last Updated: {lastUpdated}
+              </MotionText>
               <motion.section variants={fadeUp}>
-                <h2
-                  className="text-2xl font-bold mb-4 text-[#2C5530]"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
-                  3. Refund & Return Policy
-                </h2>
                 <p className="text-[#6B6B6B] leading-relaxed mb-6">
                   Due to the perishable nature of cheese and dairy products,
                   returns are limited.
@@ -105,7 +103,9 @@ export default function RefundPolicyPage() {
                         Refunds or replacements will be approved based on
                         verification
                       </li>
-                      <li>Refunds will be processed within 5–7 business days</li>
+                      <li>
+                        Refunds will be processed within 5–7 business days
+                      </li>
                       <li>
                         The amount will be credited to the original payment
                         method
@@ -131,7 +131,7 @@ export default function RefundPolicyPage() {
                   className="text-2xl font-bold mb-4 text-[#2C5530]"
                   style={{ fontFamily: "var(--font-heading)" }}
                 >
-                  4. Shipping Policy
+                  Shipping Policy
                 </h2>
                 <div className="space-y-6">
                   <div>

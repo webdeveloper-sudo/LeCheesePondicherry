@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import NewsletterForm from "./NewsletterForm";
 import logo from "@/assets/images/logo.jpg";
+import { Mail, Map, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -54,7 +55,7 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-xs">
+              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-sm">
                 Shop
               </h5>
               <ul className="space-y-4 text-sm text-white/90">
@@ -103,7 +104,7 @@ export default function Footer() {
 
             {/* Company */}
             <div>
-              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-xs">
+              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-sm">
                 Company
               </h5>
               <ul className="space-y-4 text-sm text-white/90">
@@ -152,13 +153,19 @@ export default function Footer() {
 
             {/* Contact */}
             <div className="flex flex-col items-center md:items-start">
-              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-xs">
+              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-sm">
                 Contact
               </h5>
               <address className="not-italic space-y-4 text-sm text-white/90">
-                <p>Marie Oulgaret, Auroville Road</p>
-                <p>Pondicherry - 605111, India</p>
-                <div className="pt-2">
+                <div className="flex gap-2 items-start">
+                  <Map className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
+                  <div>
+                    <p>Marie Oulgaret, Auroville Road</p>
+                    <p>Pondicherry - 605111, India</p>
+                  </div>
+                </div>
+                <div className="pt-2 flex gap-2 items-start">
+                  <Mail className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
                   <a
                     href="mailto:vp.expansions@hopemarket.in"
                     className="hover:text-[#C9A961] transition-colors block font-medium"
@@ -166,7 +173,8 @@ export default function Footer() {
                     vp.expansions@hopemarket.in
                   </a>
                 </div>
-                <div className="pt-1">
+                <div className="pt-1 flex gap-2 items-start">
+                  <Phone className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
                   <a
                     href="tel:+917200504628"
                     className="hover:text-[#C9A961] transition-colors block font-medium"
@@ -200,10 +208,10 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#C9A961] transition-all hover:scale-110"
+                    className="flex items-center justify-center w-10 h-10 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group"
                   >
                     <svg
-                      className="w-6 h-6"
+                      className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -223,10 +231,10 @@ export default function Footer() {
           <p>© 2026 Le Pondicherry Cheese. All rights reserved.</p>
           <div className="flex flex-wrap justify-center gap-6 mt-6 md:mt-0 font-medium">
             <Link
-              to="/shipping"
+              to="/refund-policy"
               className="hover:text-[#C9A961] transition-colors"
             >
-              Shipping & Returns
+              Refund Policy
             </Link>
             <Link
               to="/privacy"

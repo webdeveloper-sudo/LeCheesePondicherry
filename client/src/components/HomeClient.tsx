@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/data/products";
@@ -27,6 +27,10 @@ import {
 } from "@/components/ui/MotionPrimitives";
 import { fadeUp, staggerContainer, scaleIn } from "@/animations/variants";
 import { motion } from "framer-motion";
+import { FETCH_MODE } from "@/config";
+import { products as staticProducts } from "@/data/products";
+import axios from "axios";
+import { HomeBlogsGrid } from "./HomeBlogsGrid";
 
 interface HomeClientProps {
   featuredProducts: Product[];
@@ -87,6 +91,70 @@ Action: Item added to cart for checkout.
     // Clear success message after 3 seconds
     setTimeout(() => setSuccessId(null), 3000);
   };
+
+  const { preferences, wishlistIds = [] } = useUserStore();
+  const { items: cartItems } = useCart();
+
+  const [allProducts, setAllProducts] = useState<Product[]>(
+    FETCH_MODE === "static" ? staticProducts : [],
+  );
+  const [loading, setLoading] = useState(FETCH_MODE === "dynamic");
+
+  useEffect(() => {
+    if (FETCH_MODE !== "dynamic") return;
+
+    const fetchAllProducts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+        );
+        if (response.data) {
+          const fetchedData = response.data.data || response.data;
+          const mappedProducts = fetchedData.map((p: any) => {
+            let hash = 0;
+            const id = p._id || "";
+            for (let i = 0; i < id.length; i++) {
+              hash = id.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
+            return {
+              ...p,
+              id: p._id,
+              rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
+            };
+          });
+          setAllProducts(mappedProducts);
+        }
+      } catch (error) {
+        console.error("YourPicks: Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllProducts();
+  }, []);
+
+  // 1. Top Picks based on preferences
+  const recommendedProducts = (preferences || [])
+    .map((pref: any) =>
+      allProducts.find((p) => p.id === (pref.productId || pref.id || pref)),
+    )
+    .filter(Boolean)
+    .slice(0, 4);
+
+  // 2. From Your Cart
+  const cartProducts = cartItems
+    .map((item) => allProducts.find((p) => p.id === item.productId))
+    .filter(Boolean)
+    .slice(0, 4);
+
+  // 3. Your Wishlist
+  const wishlistProducts = wishlistIds
+    .map((id) => allProducts.find((p) => p.id === id))
+    .filter(Boolean)
+    .slice(0, 4);
+
+  const combinedProducts = [...cartProducts, ...wishlistProducts];
 
   return (
     <>
@@ -211,7 +279,8 @@ Action: Item added to cart for checkout.
       {/* Featured Products Section */}
 
       <div className="bg-pattern relative z-10 w-full">
-        {isAuthenticated() && role === "user" ? (
+        {(isAuthenticated() && role === "user" && wishlistCount >= 3) ||
+        preferences.length >= 3 ? (
           <div className="py-12 w-full">
             <div className="text-center mb-6 px-4">
               <h2
@@ -541,7 +610,7 @@ Action: Item added to cart for checkout.
             </MotionText>
 
             <motion.div className="pb-16" variants={fadeUp}>
-              <BlogsGrid />
+              <HomeBlogsGrid />
             </motion.div>
           </MotionContainer>
         </section>

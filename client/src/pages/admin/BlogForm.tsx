@@ -140,7 +140,13 @@ export default function BlogForm({
           text: formData.quoteText,
           author: formData.quoteAuthor,
         },
+        onHold: formData.onHold === true,
       };
+
+      console.log("📤 Sending Blog Update Payload:", {
+        blogId: existingBlog?._id,
+        onHold: payload.onHold,
+      });
 
       // Handle Main Image
       if (mainImage) {
