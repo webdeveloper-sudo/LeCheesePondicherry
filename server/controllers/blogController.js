@@ -8,7 +8,14 @@ const { uploadFile } = require("../utils/googleDrive");
  */
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({}).sort({ createdAt: -1 });
+    const filter = {};
+    if (req.query.admin !== "true") {
+      filter.$and = [
+        { isPublished: { $ne: false } },
+        { onHold: { $ne: true } }
+      ];
+    }
+    const blogs = await Blog.find(filter).sort({ date: -1 });
     res.status(200).json({
       success: true,
       count: blogs.length,
@@ -57,6 +64,7 @@ const getBlogBySlug = async (req, res) => {
  */
 const createBlog = async (req, res) => {
   console.log("🚀 Starting Blog Creation for:", req.body.title);
+  console.log("📦 Request Body onHold:", req.body.onHold);
   try {
     const {
       title,
@@ -73,6 +81,7 @@ const createBlog = async (req, res) => {
       galleryBase64, // Array
       quote,
       relatedPosts,
+      onHold,
     } = req.body;
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
@@ -159,6 +168,7 @@ const createBlog = async (req, res) => {
         : relatedPosts
           ? relatedPosts.split(",").map((p) => p.trim())
           : [],
+      onHold: onHold === "true" || onHold === true,
     };
 
     console.log("📝 Blog Data to Save:", JSON.stringify(blogData, null, 2));
@@ -187,6 +197,8 @@ const createBlog = async (req, res) => {
  */
 const updateBlog = async (req, res) => {
   try {
+    console.log("🔄 Updating Blog ID:", req.params.id);
+    console.log("📦 Request Body onHold:", req.body.onHold);
     let blog = await Blog.findById(req.params.id);
 
     if (!blog) {
@@ -204,6 +216,11 @@ const updateBlog = async (req, res) => {
       relatedPosts,
       ...updateData
     } = req.body;
+
+    if (updateData.onHold !== undefined) {
+      updateData.onHold = updateData.onHold === "true" || updateData.onHold === true;
+      console.log("✔️ Final updateData.onHold:", updateData.onHold);
+    }
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
@@ -284,10 +301,21 @@ const updateBlog = async (req, res) => {
         : relatedPosts.split(",").map((p) => p.trim());
     }
 
-    blog = await Blog.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    // Explicitly handle onHold to ensure it's not lost in spread
+    if (req.body.onHold !== undefined) {
+      const isHold = req.body.onHold === "true" || req.body.onHold === true;
+      updateData.onHold = isHold;
+      console.log(`📍 Blog ID ${req.params.id}: Explicitly setting onHold to:`, isHold);
+    }
+
+    blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(200).json({
       success: true,

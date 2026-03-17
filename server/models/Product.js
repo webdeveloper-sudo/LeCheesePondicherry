@@ -85,6 +85,10 @@ const productSchema = new mongoose.Schema(
         inStock: Boolean,
       },
     ],
+    onHold: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

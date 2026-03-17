@@ -8,7 +8,11 @@ const { createFolder, uploadFile } = require("../utils/googleDrive");
  */
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({}).sort({ createdAt: -1 });
+    const filter = {};
+    if (req.query.admin !== "true") {
+      filter.onHold = { $ne: true };
+    }
+    const products = await Product.find(filter).sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       count: products.length,
@@ -57,6 +61,7 @@ const getProductById = async (req, res) => {
  */
 const createProduct = async (req, res) => {
   console.log("🚀 Starting Product Creation for:", req.body.name);
+  console.log("📦 Request Body Keys:", Object.keys(req.body));
   try {
     const {
       name,
@@ -74,6 +79,7 @@ const createProduct = async (req, res) => {
       reviews,
       ingredients,
       variants,
+      onHold,
       imagesBase64, // Array of { name: string, mimeType: string, data: string }
     } = req.body;
 
@@ -130,6 +136,7 @@ const createProduct = async (req, res) => {
       reviews: Number(reviews) || 0,
       ingredients,
       variants,
+      onHold: onHold === "true" || onHold === true,
       googleDriveFolderId: mainFolderId,
       image: imageUrls.length > 0 ? imageUrls[0] : "",
       images: imageUrls, // These are the Drive URLs
@@ -158,6 +165,8 @@ const createProduct = async (req, res) => {
  */
 const updateProduct = async (req, res) => {
   try {
+    console.log("🔄 Updating Product ID:", req.params.id);
+    console.log("📦 Request Body onHold:", req.body.onHold);
     let product = await Product.findById(req.params.id);
 
     if (!product) {
@@ -175,6 +184,10 @@ const updateProduct = async (req, res) => {
       updateData.originalPrice = Number(updateData.originalPrice);
     if (updateData.rating) updateData.rating = Number(updateData.rating);
     if (updateData.reviews) updateData.reviews = Number(updateData.reviews);
+    if (updateData.onHold !== undefined) {
+      updateData.onHold = updateData.onHold === "true" || updateData.onHold === true;
+      console.log("✔️ Final updateData.onHold:", updateData.onHold);
+    }
 
     if (updateData.pairings) {
       updateData.pairings = Array.isArray(updateData.pairings)
@@ -215,10 +228,22 @@ const updateProduct = async (req, res) => {
     updateData.image = finalImages.length > 0 ? finalImages[0] : "";
     updateData.googleDriveFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
-    product = await Product.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    // Explicitly handle onHold to ensure it's not lost in spread
+    if (req.body.onHold !== undefined) {
+      const isHold = req.body.onHold === "true" || req.body.onHold === true;
+      updateData.onHold = isHold;
+      console.log(`📍 ID ${req.params.id}: Explicitly setting onHold to:`, isHold);
+    }
+
+    // Use a slightly different approach to ensure fields like onHold are definitely updated
+    product = await Product.findByIdAndUpdate(
+      req.params.id, 
+      { $set: updateData }, 
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(200).json({
       success: true,

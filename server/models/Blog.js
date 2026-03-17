@@ -67,6 +67,10 @@ const blogSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    onHold: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
