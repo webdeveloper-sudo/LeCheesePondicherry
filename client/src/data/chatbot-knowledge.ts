@@ -30,7 +30,7 @@ const rawData = [
     ["achariya group, agoc", "Achariya Group: Education, Tech & premium Food. [Learn More](https://achariya.in)", "Our Story, Food Park, Tech Head", "brand"],
 
     // SHIPPING & ORDERS
-    ["shipping, delivery, cost", "Pan-India cold-chain: ₹99 (Free over ₹1500). [Policy](/shipping)", "Track Order, Pincode, Express", "shipping"],
+    ["shipping, delivery, cost", "Shipping is calculated based on weight and region (starts at ₹50/kg for TN/Pondy). [Check FAQ](/faq)", "Track Order, Pincode, Express", "shipping"],
     ["track order, status", "Check email for tracking link or [Contact Us](/contact)", "Shipping Info, Refund, Help", "shipping"],
 
     // HELP

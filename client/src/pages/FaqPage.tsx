@@ -37,7 +37,7 @@ const faqs = [
       },
       {
         q: "What are the shipping charges?",
-        a: "Shipping is FREE for orders above ₹1500. For orders below ₹1500, a flat fee of ₹99 is charged.",
+        a: "Shipping is calculated based on total weight and your delivery region. (e.g., TN & Pondicherry starts at ₹50/kg, while other regions vary between ₹70-₹110/kg).",
       },
       {
         q: "Which cities do you deliver to?",

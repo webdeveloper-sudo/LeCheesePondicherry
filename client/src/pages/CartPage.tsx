@@ -18,31 +18,13 @@ export default function CartPage() {
     toggleSelectAll,
     totalItems,
   } = useCart();
-  const { isAuthenticated, addresses } = useUserStore();
+  const { isAuthenticated } = useUserStore();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [isGuestPuducherry, setIsGuestPuducherry] = useState(false);
 
   const discount = 0;
 
-  const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
-  const isPuducherry = isAuthenticated()
-    ? defaultAddr
-      ? (defaultAddr.city || "").toLowerCase().includes("puducherry") ||
-        (defaultAddr.city || "").toLowerCase().includes("pondicherry") ||
-        (defaultAddr.state || "").toLowerCase().includes("puducherry") ||
-        (defaultAddr.state || "").toLowerCase().includes("pondicherry")
-      : false
-    : isGuestPuducherry;
 
-  const calculateDeliveryCharge = (weight: number, pudu: boolean) => {
-    if (weight === 0) return 0;
-    const slabs = Math.ceil(weight / 200);
-    return pudu ? 50 + (slabs - 1) * 30 : 100 + (slabs - 1) * 50;
-  };
-
-  const shipping = calculateDeliveryCharge(totalWeight, isPuducherry);
-  const taxAmount = Math.round(subtotal * 0.05);
-  const total = subtotal - discount + shipping + taxAmount;
+  const total = subtotal - discount;
 
   const selectedCount = items.filter((item) => item.selected !== false).length;
   const isAllSelected = selectedCount === items.length;
@@ -376,53 +358,7 @@ export default function CartPage() {
                     ₹{subtotal.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between text-[#6B6B6B] items-center">
-                  <div className="flex items-center gap-1.5">
-                    <span>Shipping</span>
-                    <div className="relative inline-block">
-                      <button
-                        onClick={() => setShowTooltip(!showTooltip)}
-                        className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 hover:border-[#2C5530] hover:text-[#2C5530] transition-colors"
-                        title="Click for info"
-                      >
-                        i
-                      </button>
-                      {showTooltip && (
-                        <div className="absolute bottom-full left-0 mb-2 p-3 bg-gray-900 text-white text-[11px] rounded-xl shadow-xl w-64 z-50 leading-relaxed animate-in fade-in zoom-in slide-in-from-bottom-2">
-                          <div className="relative">
-                            We are packing your order with specialized packaging
-                            and trying to deliver you without 0% quality loss.
-                            <div className="absolute -bottom-4 left-1 w-2 h-2 bg-gray-900 rotate-45" />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <span className="text-[#1A1A1A]">
-                    ₹{shipping.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#6B6B6B]">
-                  <span>Tax and Charges</span>
-                  <span className="text-[#1A1A1A]">
-                    ₹{taxAmount.toLocaleString()}
-                  </span>
-                </div>
-                {isPuducherry && (
-                  <div className="text-[10px] font-bold text-[#2C5530] bg-green-50 p-2 rounded-lg border border-green-100 animate-in fade-in slide-in-from-top-1">
-                    Special 50% discount for Puducherrians only.
-                  </div>
-                )}
-                {!isAuthenticated() && !isGuestPuducherry && (
-                  <div className="pt-2 text-center">
-                    <button
-                      onClick={() => setIsGuestPuducherry(true)}
-                      className="text-xs text-[#2C5530] underline hover:text-[#C9A961] transition-colors"
-                    >
-                      Are you located in Puducherry?
-                    </button>
-                  </div>
-                )}
+                {/* Shipping and Tax calculated only on Checkout for accuracy */}
                 <div className="flex justify-between text-lg font-bold pt-3 border-t text-[#1A1A1A]">
                   <span>Total</span>
                   <span className="text-[#2C5530]">

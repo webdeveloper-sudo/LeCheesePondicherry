@@ -21,6 +21,8 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
+import { calculateShipping } from "@/lib/shippingUtils";
+
 
 declare global {
   interface Window {
@@ -50,6 +52,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderResult, setOrderResult] = useState<any>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltipTax, setShowTooltipTax] = useState(false);
 
     const { addToast } = useToastStore();
   // Address state
@@ -80,13 +83,7 @@ export default function CheckoutPage() {
     shipping.state.toLowerCase().includes("puducherry") ||
     shipping.state.toLowerCase().includes("pondicherry");
 
-  const calculateDeliveryCharge = (weight: number, pudu: boolean) => {
-    if (weight === 0) return 0;
-    const slabs = Math.ceil(weight / 200);
-    return pudu ? 50 + (slabs - 1) * 30 : 100 + (slabs - 1) * 50;
-  };
-
-  const deliveryCharge = calculateDeliveryCharge(totalWeight, isPuducherry);
+  const deliveryCharge = calculateShipping(totalWeight, shipping.state, shipping.city);
   const taxAmount = Math.round(subtotal * 0.04);
   const total = subtotal - discount + deliveryCharge + taxAmount;
 
@@ -976,7 +973,8 @@ export default function CheckoutPage() {
                       <span>Delivery</span>
                       <div className="relative inline-block">
                         <button
-                          onClick={() => setShowTooltip(!showTooltip)}
+                          onMouseEnter={() => setShowTooltip(!showTooltip)}
+                          onMouseLeave={() => setShowTooltip(!showTooltip)}
                           className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 hover:border-[#2C5530] hover:text-[#2C5530] transition-colors"
                           title="Click for info"
                         >
@@ -999,7 +997,27 @@ export default function CheckoutPage() {
                     </span>
                   </div>
                   <div className="flex justify-between text-sm text-[#6B6B6B]">
-                    <span>Tax and Charges</span>
+                    <div className="flex items-center gap-1.5">
+                      <span>Tax and Charges</span>
+                      <div className="relative inline-block">
+                        <button
+                          onMouseEnter={() => setShowTooltipTax(!showTooltipTax)}
+                          onMouseLeave={() => setShowTooltipTax(!showTooltipTax)}
+                          className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 hover:border-[#2C5530] hover:text-[#2C5530] transition-colors"
+                          title="Click for info"
+                        >
+                          i
+                        </button>
+                        {showTooltipTax && (
+                          <div className="absolute bottom-full left-0 mb-2 p-3 bg-gray-900 text-white text-[11px] rounded-xl shadow-xl w-64 z-50 leading-relaxed animate-in fade-in zoom-in slide-in-from-bottom-2">
+                            <div className="relative">
+                            payment and tax charges
+                              <div className="absolute -bottom-4 left-1 w-2 h-2 bg-gray-900 rotate-45" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     <span className="font-bold text-[#1A1A1A]">
                       ₹{taxAmount.toLocaleString()}
                     </span>
