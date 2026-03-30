@@ -37,6 +37,7 @@ import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import YourOrders from "./pages/user/YourOrders";
 import NotFoundPage from "./pages/NotFoundPage";
+import ReturnPolicyPage from "./pages/ReturnPolicyPage";
 
 export default function App() {
   const location = useLocation();
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/gifts" element={<GiftsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/return" element={<ReturnPolicyPage />} />
           <Route path="/process" element={<ProcessPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
           <Route path="/refund-policy" element={<RefundPolicyPage />} />
