@@ -15,27 +15,33 @@ import { fadeUp } from "@/animations/variants";
 export default function ProcessPage() {
   const steps = [
     {
-      title: "Sourcing the Finest Milk",
-      description:
-        "We source fresh, local milk from trusted farms within 50km of our facility in Pondicherry.",
+      title: "Step 1: Fresh Milk Collection",
+      description: "Milk is collected at dawn from trusted local farms.",
       icon: cow,
     },
     {
-      title: "Hand-Ladling Curds",
-      description:
-        "Our cheesemakers use traditional French methods, hand-ladling curds to preserve the delicate texture.",
+      title: "Step 2: Gentle Heating & Culture Addition",
+      description: "We use natural cultures to develop flavour and texture.",
       icon: curd,
     },
     {
-      title: "Affinage in the Caves",
-      description:
-        "The cheese is aged in temperature-controlled caves, where it develops its unique character and flavor profile.",
+      title: "Step 3: Curd Cutting & Hand Stirring",
+      description: "Curds are cut and stirred manually for perfect consistency.",
+      icon: curd,
+    },
+    {
+      title: "Step 4: Shaping & Pressing",
+      description: "Each cheese is shaped in small moulds to ensure quality.",
+      icon: curd,
+    },
+    {
+      title: "Step 5: Natural Ageing",
+      description: "Our Swiss and hard cheeses are aged for weeks or months under controlled humidity.",
       icon: caves,
     },
     {
-      title: "Quality Excellence",
-      description:
-        "Every wheel is inspected and tested before it leaves our facility to ensure it meets our Hope standards.",
+      title: "Step 6: Hand-Cutting & Packing",
+      description: "Every batch is tested, cut, and packed with care.",
       icon: quality,
     },
   ];

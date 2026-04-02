@@ -16,11 +16,11 @@ export default function AllBlogs() {
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            The Cheese Journal
+            The Cheese Journal - From Curd to Culture
           </h1>
           <p className="text-xl text-white/90 max-w-2xl mx-auto font-medium">
-            Stories of tradition, recipes, and the artisan life from the heart
-            of Pondicherry.
+            Stories of tradition, craft, and the slow art of affinage from the
+            artisan cellars of Pondicherry.
           </p>
         </div>
       </section>

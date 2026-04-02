@@ -183,14 +183,13 @@ Action: Item added to cart for checkout.
                 className="text-3xl max-w-6xl mx-auto sm:text-5xl lg:text-7xl font-extrabold text-white "
                 style={{ textShadow: "2px 2px 8px rgba(0,0,0, 0.8)" }}
               >
-                Savor the Story. Taste the Tradition.
+                Crafting Dairy Excellence - From Our Farms to Your Table
               </MotionHeading>
 
               {/* White paragraph */}
               <MotionText className="mt-4 md:mt-5 max-w-4xl mx-auto text-[14px] text-white/95 leading-relaxed">
-                Hand-crafted, aged, and perfected—discover the world's most
-                irresistible artisan cheeses, delivered from our farm to your
-                table.
+                Where Responsible Farming Meets Refined Dairy Innovation. Artisanal
+                Cheese • Premium Dairy Processing • Timeless Craft
               </MotionText>
 
               {/* Optional CTA */}
@@ -357,18 +356,20 @@ Action: Item added to cart for checkout.
                 className="text-2xl md:text-5xl mb-6 text-white-prominent"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                Born from a Dream in Pondicherry
+                About Us: Le Pondicherry Cheese
               </MotionHeading>
               <MotionText className="text-white/90 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
-                Le Pondicherry Cheese is built on simple principles: good milk,
-                clean handling, and careful cheesemaking. Our focus is on
-                producing cheeses with dependable texture, flavour, and
-                performance in real kitchens.
+                Le Pondicherry Cheese is an artisanal cheese brand born in the
+                historic coastal town of Pondicherry where rich dairy heritage
+                meets refined European cheese-making traditions. Each cheese is
+                handcrafted in small batches, using fresh, locally sourced cow’s
+                milk, time-honoured techniques, and carefully controlled ageing
+                processes.
               </MotionText>
               <MotionText className="hidden md:block text-white/90 mb-8 leading-relaxed">
-                We prioritise control, hygiene, and consistency across our
-                production, ensuring that every cheese meets the same quality
-                expectations.
+                We believe in purity above all. That’s why our cheeses are made
+                with zero preservatives, no artificial additives and clean,
+                honest ingredients only.
               </MotionText>
               <Link to="/about">
                 <MotionButton className="btn btn-primary rounded-full px-8">
@@ -602,11 +603,11 @@ Action: Item added to cart for checkout.
               className="text-3xl md:text-4xl text-center mb-4"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              The Cheese Journal
+              The Cheese Journal - From Curd to Culture
             </MotionHeading>
             <MotionText className="text-center text-[#6B6B6B] max-w-2xl mx-auto mb-12">
-              Stories of tradition, recipes, and the artisan life from the heart
-              of Pondicherry.
+              Stories of tradition, craft, and the slow art of affinage from the
+              artisan cellars of Pondicherry.
             </MotionText>
 
             <motion.div className="pb-16" variants={fadeUp}>

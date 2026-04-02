@@ -61,7 +61,7 @@ export const products: Product[] = [
     name: "Baby Swiss",
     shortDescription: "Mild & Gently Sweet",
     description:
-      "Baby Swiss is aged for three months, resulting in a mild flavour and smooth texture with small eyes.",
+      "A young Swiss-style cheese with a delicate sweetness and mellow nuttiness. It has the classic Swiss characteristics but with a creamier, smoother texture.",
     price: 420,
     originalPrice: 550,
     image: babySwissPackage,
@@ -114,7 +114,7 @@ export const products: Product[] = [
     name: "Pondy Orange",
     shortDescription: "Smooth, Mature & Versatile",
     description:
-      "Pondy Orange is a semi-hard cheese aged for around six months to develop balanced flavour and smooth texture. Suitable for slicing, melting, and everyday cooking.",
+      "A Pondicherry-made Cheddar-style cheese inspired by classic English cheddar-making methods. Pondy Orange gets its name from its rich golden-orange hue and sharp, tangy flavour profile.",
     price: 420,
     originalPrice: 560,
     image: pondyOrangePackage,
@@ -268,7 +268,7 @@ export const products: Product[] = [
     name: "Halloumi",
     shortDescription: "The Grilling Cheese – High Heat Stable",
     description:
-      "Halloumi is a heat-stable cheese made for high-temperature cooking. It softens when heated but does not melt, forming a golden crust when grilled or pan-fried. Its firm texture and clean flavour make it ideal for hot dishes.",
+      "A Mediterranean-style firm cheese known for its ability to hold shape under heat - the perfect grilling cheese.",
     price: 360,
     originalPrice: 480,
     image: halloumiPackage,
