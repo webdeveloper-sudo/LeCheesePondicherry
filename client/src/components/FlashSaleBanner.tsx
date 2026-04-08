@@ -34,7 +34,7 @@ export default function FlashSaleBanner() {
   const formatTime = (val: number) => val.toString().padStart(2, "0");
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-[#FAB519] py-3 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-md text-[#1D161A]">
+    <div className="relative overflow-hidden bg-gradient-to-r from-brand-gold py-3 via-brand-gold-subtle to-brand-gold bg-[length:200%_100%] animate-shimmer shadow-md text-text-primary">
       {/* Sparkle/Glitter Effects using pseudo-elements in CSS or simple divs */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.webp')] opacity-30 mix-blend-overlay pointer-events-none"></div>
 
@@ -52,7 +52,7 @@ export default function FlashSaleBanner() {
             <span className="text-[10px] sm:text-xs font-bold uppercase tracking-v-wide opacity-80">
               Ends in:
             </span>
-            <div className="flex items-center gap-1 font-mono font-bold text-base sm:text-lg text-[#1a3a20]">
+            <div className="flex items-center gap-1 font-mono font-bold text-base sm:text-lg text-brand-green-dark">
               <span>{formatTime(timeLeft.hours)}</span>
               <span className="animate-pulse">:</span>
               <span>{formatTime(timeLeft.minutes)}</span>
@@ -78,7 +78,7 @@ export default function FlashSaleBanner() {
 
           <Link
             to="/shop"
-            className="bg-[#2C5530] text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:bg-[#1f3d23] hover:scale-105 transition-all duration-300 border-2 border-[#2C5530] flex items-center gap-2"
+            className="bg-brand-green text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:bg-brand-green-dark hover:scale-105 transition-all duration-300 border-2 border-brand-green flex items-center gap-2"
           >
             Buy Now
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

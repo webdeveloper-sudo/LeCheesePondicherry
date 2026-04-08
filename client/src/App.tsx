@@ -38,6 +38,9 @@ import OrderStatusPage from "./pages/OrderStatusPage";
 import YourOrders from "./pages/user/YourOrders";
 import NotFoundPage from "./pages/NotFoundPage";
 import ReturnPolicyPage from "./pages/ReturnPolicyPage";
+import OurFacilityPage from "./pages/portfolio/OurFacility";
+import GalleryPage from "./pages/portfolio/Gallery";
+import TestimonialsPage from "./pages/portfolio/TestimonialsPage";
 
 export default function App() {
   const location = useLocation();
@@ -57,7 +60,7 @@ export default function App() {
     <CartProvider>
       {/* {isRouting && <LoaderComponent fullScreen={true} size="lg" label="Loading..." />} */}
       {!isAdminPath && (
-        <div className="mb-[110px] sm:mb-[130px] md:mb-[145px]">
+        <div className="mb-[110px] sm:mb-[130px] md:mb-[135px]">
           <Header />
         </div>
       )}
@@ -81,6 +84,9 @@ export default function App() {
           <Route path="/stories" element={<AllBlogs />} />
           <Route path="/stories/:slug" element={<SingleBlogDetails />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/portfolio/facility" element={<OurFacilityPage />} />
+          <Route path="/portfolio/gallery" element={<GalleryPage />} />
+          <Route path="/portfolio/testimonials" element={<TestimonialsPage />} />
           <Route path="/user/login" element={<UserLoginPage />} />
           <Route path="/wholesale" element={<WholesalePage />} />
           <Route path="/user" element={<UserDashboardPage />} />

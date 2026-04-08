@@ -6,7 +6,8 @@ import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useUserStore } from "@/store/useUserStore";
 import { useToastStore } from "@/store/useToastStore";
-import { Heart } from "lucide-react";
+import { BookOpenText, CookingPot, Heart, UtensilsCrossed, X } from "lucide-react";
+import ProductCard from "./ProductCard";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -30,6 +31,7 @@ export default function ProductDetailClient({
   const [addedToCart, setAddedToCart] = useState(false);
   const [mainImage, setMainImage] = useState(product.image);
   const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
+  const [selectedDish, setSelectedDish] = useState<any>(null);
 
   const inWishlist = isInWishlist(product.id);
 
@@ -95,22 +97,22 @@ export default function ProductDetailClient({
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <nav className="bg-[#FAF7F2] py-4">
+      <nav className="bg-bg-cream-light py-4">
         <div className="container mx-auto px-4">
-          <ol className="flex flex-wrap items-center text-sm text-[#6B6B6B]">
+          <ol className="flex flex-wrap items-center text-sm text-text-secondary">
             <li>
-              <Link to="/" className="hover:text-[#C9A961]">
+              <Link to="/" className="hover:text-brand-gold-subtle">
                 Home
               </Link>
             </li>
             <li className="mx-2">/</li>
             <li>
-              <Link to="/shop" className="hover:text-[#C9A961]">
+              <Link to="/shop" className="hover:text-brand-gold-subtle">
                 Shop
               </Link>
             </li>
             <li className="mx-2">/</li>
-            <li className="text-[#1A1A1A]">{product.name}</li>
+            <li className="text-text-primary">{product.name}</li>
           </ol>
         </div>
       </nav>
@@ -120,7 +122,7 @@ export default function ProductDetailClient({
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="relative">
-              <div className="aspect-square bg-[#FAF7F2] rounded-lg overflow-hidden relative">
+              <div className="aspect-square bg-bg-cream-light rounded-lg overflow-hidden relative">
                 <img
                   src={mainImage}
                   alt={product.name}
@@ -155,7 +157,7 @@ export default function ProductDetailClient({
                       onClick={() => setMainImage(img)}
                       className={`w-20 h-20 flex-shrink-0 rounded-md border-2 transition-all cursor-pointer overflow-hidden relative ${
                         mainImage === img
-                          ? "border-[#C9A961]"
+                          ? "border-brand-gold-subtle"
                           : "border-transparent hover:border-gray-300"
                       }`}
                     >
@@ -192,27 +194,67 @@ export default function ProductDetailClient({
                     </svg>
                   ))}
                 </div>
-                <span className="text-sm text-[#6B6B6B]">
-                  ({product.reviews} reviews)
+                <span className="text-sm text-text-secondary">
+                  ({product.reviewCount} reviews)
                 </span>
               </div>
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-3xl font-bold text-[#2C5530]">
+                <span className="text-3xl font-bold text-brand-green">
                   ₹{selectedPrice.toLocaleString()}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-lg text-[#6B6B6B] line-through">
+                  <span className="text-lg text-text-secondary line-through">
                     ₹{product.originalPrice.toLocaleString()}
                   </span>
                 )}
               </div>
 
-              {/* Description */}
-              <p className="text-[#6B6B6B] mb-6 leading-relaxed">
-                {product.description}
-              </p>
+              {/* Product Info Block */}
+              <div className="space-y-6 mb-8 border-t border-gray-100">
+                {product.pairings && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-900  mb-2 flex gap-2">
+                      <CookingPot size={18} /> <span>Best Pairings</span>
+                    </p>
+                    <p className="text-text-secondary ms-7 leading-relaxed text-sm">
+                      {product.pairings}
+                    </p>
+                  </div>
+                )}
+
+                {/* {product.ingredients && product.ingredients.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">
+                      Key Ingredients
+                    </h3>
+                    <p className="text-text-secondary leading-relaxed text-sm">
+                      {product.ingredients.join(", ")}
+                    </p>
+                  </div>
+                )} */}
+
+                {product.tastingNotes?.texture && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-900  mb-2 flex gap-2">
+                      <UtensilsCrossed size={18} /> <span>Texture</span>
+                    </p>
+                    <p className="text-text-secondary ms-7 leading-relaxed text-sm">
+                      {product.tastingNotes.texture}
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <p className="text-sm font-medium text-gray-900  mb-2 flex gap-2">
+                    <BookOpenText size={18} /> <span>Description</span>
+                  </p>
+                  <p className="text-text-secondary ms-7 leading-relaxed text-sm">
+                    {product.description}
+                  </p>
+                </div>
+              </div>
 
               {/* Weight Selection */}
               <div className="mb-6">
@@ -224,8 +266,8 @@ export default function ProductDetailClient({
                       onClick={() => setSelectedWeight(option.label)}
                       className={`px-4 py-2 rounded-md border-2 text-sm font-bold transition-all ${
                         selectedWeight === option.label
-                          ? "border-[#2C5530] bg-[#2C5530] text-white"
-                          : "border-[#2C5530] bg-white text-[#2C5530] hover:bg-green-50"
+                          ? "border-brand-green bg-brand-green text-white"
+                          : "border-brand-green bg-white text-brand-green hover:bg-green-50"
                       }`}
                     >
                       {option.label}
@@ -242,7 +284,7 @@ export default function ProductDetailClient({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-xl"
+                    className="w-10 h-10 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-xl"
                   >
                     −
                   </button>
@@ -251,7 +293,7 @@ export default function ProductDetailClient({
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-xl"
+                    className="w-10 h-10 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-xl"
                   >
                     +
                   </button>
@@ -293,7 +335,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Trust Badges */}
-              <div className="flex flex-wrap gap-4 text-sm text-[#6B6B6B]">
+              {/* <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
                 <div className="flex items-center gap-2">
                   <svg
                     className="w-5 h-5 text-green-600"
@@ -326,16 +368,16 @@ export default function ProductDetailClient({
                   </svg>
                   100% satisfaction guarantee
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Tabs Section */}
-      <section className="py-12 bg-[#FAF7F2]">
+      {/* <section className="py-12 bg-bg-cream-light">
         <div className="container mx-auto px-4">
-          {/* Tab Headers */}
+         
           <div className="flex flex-wrap border-b border-gray-300 mb-8">
             {["description", "tasting", "pairings"].map((tab) => (
               <button
@@ -343,8 +385,8 @@ export default function ProductDetailClient({
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-3 font-medium capitalize transition-colors ${
                   activeTab === tab
-                    ? "border-b-2 border-[#C9A961] text-[#1A1A1A]"
-                    : "text-[#6B6B6B] hover:text-[#1A1A1A]"
+                    ? "border-b-2 border-brand-gold-subtle text-text-primary"
+                    : "text-text-secondary hover:text-text-primary"
                 }`}
               >
                 {tab === "tasting" ? "Tasting Notes" : tab}
@@ -352,11 +394,10 @@ export default function ProductDetailClient({
             ))}
           </div>
 
-          {/* Tab Content */}
           <div className="max-w-3xl">
             {activeTab === "description" && (
               <div className="prose prose-lg">
-                <p className="text-[#6B6B6B] leading-relaxed mb-4">
+                <p className="text-text-secondary leading-relaxed mb-4">
                   {product.description}
                 </p>
                 {product.ingredients && (
@@ -367,7 +408,9 @@ export default function ProductDetailClient({
                     >
                       Ingredients
                     </h3>
-                    <p className="text-[#6B6B6B]">{product.ingredients}</p>
+                    <p className="text-text-secondary">
+                      {product.ingredients.join(", ")}
+                    </p>
                   </>
                 )}
               </div>
@@ -377,41 +420,24 @@ export default function ProductDetailClient({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {Object.entries(product.tastingNotes).map(([key, value]) => (
                   <div key={key} className="bg-white p-4 rounded-lg">
-                    <h4 className="font-semibold capitalize mb-2 text-[#2C5530]">
+                    <h4 className="font-semibold capitalize mb-2 text-brand-green">
                       {key}
                     </h4>
-                    <p className="text-[#6B6B6B] text-sm">{value}</p>
+                    <p className="text-text-secondary text-sm">{value}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            {activeTab === "pairings" && product.pairings && (
-              <div>
-                <h3
-                  className="text-lg font-semibold mb-4"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
-                  Perfect Pairings
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {product.pairings.map((pairing, i) => (
-                    <span
-                      key={i}
-                      className="bg-white px-4 py-2 rounded-full text-sm text-[#6B6B6B] border border-gray-200"
-                    >
-                      {pairing}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+                <p className="text-text-secondary leading-relaxed">
+                  {product.pairings}
+                </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Related Products */}
-      <section className="py-12">
+      <section className="py-12 bg-gray-200">
         <div className="container mx-auto px-4">
           <h2
             className="text-2xl md:text-3xl mb-8"
@@ -420,35 +446,174 @@ export default function ProductDetailClient({
             You May Also Like
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map((p) => (
-              <Link
-                key={p.id}
-                to={`/products/${p.id}`}
-                className="product-card bg-white rounded-lg overflow-hidden border border-gray-100 group"
-              >
-                <div className="aspect-square bg-[#FAF7F2] relative overflow-hidden">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3
-                    className="font-medium mb-1"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {p.name}
-                  </h3>
-                  <p className="text-[#2C5530] font-semibold">
-                    ₹{p.price.toLocaleString()}
-                  </p>
-                </div>
-              </Link>
+            {relatedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                description={product.shortDescription}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                image={product.image}
+                rating={product.rating}
+                reviews={product.reviewCount}
+              />
             ))}
           </div>
         </div>
       </section>
+
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <h2
+            className="text-2xl md:text-3xl mb-8 font-bold text-gray-800"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+           Best Pairing Recipes
+          </h2>
+          {product.bestPairingDishes && product.bestPairingDishes.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {product.bestPairingDishes.map((dish: any, i: number) => (
+                <div 
+                  key={i} 
+                  onClick={() => setSelectedDish(dish)}
+                  className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all group cursor-pointer"
+                >
+                  <div className="aspect-[16/10] overflow-hidden relative">
+                    <img 
+                      src={dish.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600"} 
+                      alt={dish.dishName}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white/90 text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest">View Recipe</span>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-2 text-brand-gold-subtle text-[10px] font-bold uppercase">
+                      <UtensilsCrossed size={12} /> {dish.originCountry || "Artisan Suggestion"}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-green transition-colors">
+                      {dish.dishName}
+                    </h3>
+                    <p className="text-sm text-text-secondary line-clamp-2">
+                      {dish.shortDescription}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-text-secondary italic">Stay tuned! We're curating the best pairings for this cheese.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="py-12 bg-bg-cream-light">
+        <div className="container mx-auto px-4">
+          <h2
+            className="text-2xl md:text-3xl mb-8 font-bold text-gray-800"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+           Customer Experiences
+          </h2>
+          {product.reviews && product.reviews.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {product.reviews.map((rev: any, i: number) => (
+                <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${i * 100}ms` }}>
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex gap-4">
+                      <div className="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-lg">
+                        {rev.username?.charAt(0) || "U"}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">{rev.username || "Anonymous"}</p>
+                        <p className="text-xs text-text-secondary">{rev.restaurantName ? `${rev.restaurantName} • ` : ""}{rev.userArea}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-0.5 text-brand-gold-subtle">
+                      {[...Array(5)].map((_, j) => (
+                        <svg key={j} className={`w-4 h-4 ${j < rev.rating ? 'fill-current' : 'text-gray-200'}`} viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed italic relative">
+                    <span className="text-4xl text-gray-100 absolute -top-4 -left-2 font-serif">"</span>
+                    {rev.comment}
+                    <span className="text-4xl text-gray-100 absolute -bottom-8 right-0 font-serif">"</span>
+                  </p>
+                  <p className="text-[10px] text-gray-400 mt-4 uppercase tracking-widest">
+                    {new Date(rev.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-text-secondary italic mb-4">No reviews yet. Be the first to share your experience!</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Recipe Details Modal */}
+      {selectedDish && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in-95 duration-500">
+            <button 
+              onClick={() => setSelectedDish(null)}
+              className="absolute top-4 right-4 z-10 p-2 bg-gray-600 hover:bg-gray-400 text-black md:text-white rounded-full backdrop-blur-md transition-colors"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="md:w-5/12 h-64 md:h-auto">
+              <img src={selectedDish.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800"} alt={selectedDish.dishName} className="w-full h-full object-cover" />
+            </div>
+            
+            <div className="md:w-7/12 p-8 overflow-y-auto">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="px-3 py-1 bg-brand-green/10 text-brand-green text-[10px] font-bold uppercase tracking-widest rounded-full">
+                  {selectedDish.difficultyLevel}
+                </span>
+                <span className="text-xs text-text-secondary flex items-center gap-1">
+                   {selectedDish.prepTime}
+                </span>
+              </div>
+              
+              <h2 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-heading)" }}>{selectedDish.dishName}</h2>
+              <p className="text-sm text-text-secondary mb-6 leading-relaxed">{selectedDish.whyItPairsWell}</p>
+              
+              <div className="grid grid-cols-1 gap-8">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-3 border-b border-gray-100 pb-2">Ingredients</h3>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {selectedDish.ingredients.map((ing: string, i: number) => (
+                      <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-brand-gold-subtle rounded-full" /> {ing}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-3 border-b border-gray-100 pb-2">Cooking Process</h3>
+                  <div className="space-y-4">
+                    {selectedDish.steps.map((step: string, i: number) => (
+                      <div key={i} className="flex gap-4">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-green text-white text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
+                        <p className="text-sm text-text-secondary leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

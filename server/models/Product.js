@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    reviews: {
+    reviewCount: {
       type: Number,
       default: 0,
     },
@@ -73,7 +73,8 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
     ingredients: {
-      type: String,
+      type: [String],
+      default: [],
     },
     googleDriveFolderId: {
       type: String,
@@ -89,6 +90,32 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    bestPairingDishes: [
+      {
+        dishName: String,
+        image: String,
+        shortDescription: String,
+        originCountry: String,
+        ingredients: [String],
+        steps: [String],
+        prepTime: String,
+        difficultyLevel: String,
+        whyItPairsWell: String,
+      },
+    ],
+    reviews: [
+      {
+        rating: Number,
+        comment: String,
+        username: String,
+        restaurantName: String,
+        userArea: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

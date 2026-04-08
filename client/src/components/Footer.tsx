@@ -5,20 +5,20 @@ import { Mail, Map, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2C5530] text-white">
+    <footer className="bg-brand-green-subtle text-white">
       {/* Newsletter Section */}
       {/* <div className="bg-[#F5E6D3] py-16">
         <div className="container mx-auto px-4 text-center">
           <h3
-            className="text-3xl text-[#1A1A1A] mb-4 font-bold"
+            className="text-3xl text-text-primary mb-4 font-bold"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             The Perfect Gift for Cheese Lovers
           </h3>
-          <p className="text-[#1A1A1A] mb-6 max-w-md mx-auto font-medium">
+          <p className="text-text-primary mb-6 max-w-md mx-auto font-medium">
             Get exclusive recipes, pairing guides, and early access to new
             flavors.
-            <span className="font-bold text-[#2C5530]">
+            <span className="font-bold text-brand-green">
               {" "}
               10% off your first order!
             </span>
@@ -36,7 +36,7 @@ export default function Footer() {
             {/* Brand */}
             <div className="flex flex-col items-center md:items-start">
               <Link to="/">
-                <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-full border-2 border-[#C9A961] shadow-lg mb-6 hover:scale-105 transition-transform duration-300">
+                <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-full border-2 border-brand-gold-subtle shadow-lg mb-6 hover:scale-105 transition-transform duration-300">
                   <img
                     src={logo}
                     alt="Le Pondicherry Cheese Logo"
@@ -48,7 +48,7 @@ export default function Footer() {
                 Handcrafted in Pondicherry, inspired by French tradition.
                 Premium artisan cheeses made with passion and local ingredients.
               </p>
-              <p className="text-sm font-medium text-[#C9A961] bg-white/5 py-1 px-3 rounded-full">
+              <p className="text-sm font-medium text-brand-gold-subtle bg-white/5 py-1 px-3 rounded-full">
                 Part of AGOC - Achariya Group
               </p>
             </div>
@@ -62,7 +62,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/shop"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     All Cheeses
                   </Link>
@@ -70,7 +70,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/shop?category=aged"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Aged Cheeses
                   </Link>
@@ -78,7 +78,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/shop?category=soft"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Soft Cheeses
                   </Link>
@@ -86,7 +86,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/gifts"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Gift Collections
                   </Link>
@@ -94,7 +94,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/shop?category=subscription"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Subscription Boxes
                   </Link>
@@ -104,14 +104,14 @@ export default function Footer() {
 
             {/* Company */}
             <div>
-              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-sm">
+              <h5 className="footer-header font-bold mb-6 text-brand-gold-subtle uppercase tracking-widest text-sm">
                 Company
               </h5>
               <ul className="space-y-4 text-sm text-white/90">
                 <li>
                   <Link
                     to="/about"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     About Us
                   </Link>
@@ -119,7 +119,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/process"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Artisan Process
                   </Link>
@@ -127,7 +127,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/faq"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     FAQ
                   </Link>
@@ -135,7 +135,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/contact"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Visit Us
                   </Link>
@@ -143,7 +143,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/wholesale"
-                    className="hover:text-[#C9A961] transition-colors"
+                    className="hover:text-brand-gold-subtle transition-colors"
                   >
                     Wholesale
                   </Link>
@@ -153,31 +153,31 @@ export default function Footer() {
 
             {/* Contact */}
             <div className="flex flex-col items-center md:items-start">
-              <h5 className="footer-header font-bold mb-6 text-[#C9A961] uppercase tracking-widest text-sm">
+              <h5 className="footer-header font-bold mb-6 text-brand-gold-subtle uppercase tracking-widest text-sm">
                 Contact
               </h5>
               <address className="not-italic space-y-4 text-sm text-white/90">
                 <div className="flex gap-2 items-start">
-                  <Map className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
+                  <Map className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
                   <div>
                     <p>Marie Oulgaret, Auroville Road</p>
                     <p>Pondicherry - 605111, India</p>
                   </div>
                 </div>
                 <div className="pt-2 flex gap-2 items-start">
-                  <Mail className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
+                  <Mail className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
                   <a
                     href="mailto:vp.expansions@hopemarket.in"
-                    className="hover:text-[#C9A961] transition-colors block font-medium"
+                    className="hover:text-brand-gold-subtle transition-colors block font-medium"
                   >
                     vp.expansions@hopemarket.in
                   </a>
                 </div>
                 <div className="pt-1 flex gap-2 items-start">
-                  <Phone className="flex items-center justify-center w-7 p-1 h-7 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
+                  <Phone className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
                   <a
                     href="tel:+917200504628"
-                    className="hover:text-[#C9A961] transition-colors block font-medium"
+                    className="hover:text-brand-gold-subtle transition-colors block font-medium"
                   >
                     +91 72005 04628
                   </a>
@@ -208,7 +208,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 rounded-full  backdrop-blur-sm border border-white/40 text-[#C9A961] hover:bg-[#C9A961] hover:text-[#2C5530] hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group"
+                    className="flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group"
                   >
                     <svg
                       className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
@@ -232,25 +232,25 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center gap-6 mt-6 md:mt-0 font-medium">
             <Link
               to="/refund-policy"
-              className="hover:text-[#C9A961] transition-colors"
+              className="hover:text-brand-gold-subtle transition-colors"
             >
               Refund Policy
             </Link>
             <Link
               to="/return"
-              className="hover:text-[#C9A961] transition-colors"
+              className="hover:text-brand-gold-subtle transition-colors"
             >
               Return Policy
             </Link>
             <Link
               to="/privacy"
-              className="hover:text-[#C9A961] transition-colors"
+              className="hover:text-brand-gold-subtle transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               to="/terms"
-              className="hover:text-[#C9A961] transition-colors"
+              className="hover:text-brand-gold-subtle transition-colors"
             >
               Terms of Service
             </Link>

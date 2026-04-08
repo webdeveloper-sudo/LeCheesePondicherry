@@ -76,10 +76,12 @@ const createProduct = async (req, res) => {
       tastingNotes,
       pairings,
       rating,
-      reviews,
+      reviewCount,
       ingredients,
       variants,
       onHold,
+      bestPairingDishes,
+      reviews,
       imagesBase64, // Array of { name: string, mimeType: string, data: string }
     } = req.body;
 
@@ -100,16 +102,34 @@ const createProduct = async (req, res) => {
               mainFolderId,
             );
             imageUrls.push(url);
-          } else {
-            console.warn(
-              `Skipping upload for ${img.name} because main folder ID is missing in .env`,
-            );
           }
         } catch (uploadError) {
-          console.error(
-            `❌ Image upload failed for ${img.name}:`,
-            uploadError.message,
-          );
+          console.error(`❌ Image upload failed for ${img.name}:`, uploadError.message);
+        }
+      }
+    }
+
+    // 2.5 Handle Best Pairing Dishes images
+    if (bestPairingDishes && Array.isArray(bestPairingDishes)) {
+      for (let i = 0; i < bestPairingDishes.length; i++) {
+        const dish = bestPairingDishes[i];
+        if (dish.data && mainFolderId) {
+          try {
+            console.log(`📂 Uploading image for dish: ${dish.dishName || i}`);
+            const url = await uploadFile(
+              `dish_${Date.now()}_${i}.jpg`,
+              dish.imageMimeType || "image/jpeg",
+              dish.data,
+              mainFolderId,
+            );
+            dish.image = url;
+          } catch (uploadError) {
+            console.error(`❌ Dish image upload failed for ${dish.dishName || i}:`, uploadError.message);
+          } finally {
+            // ALWAYS delete Base64 strings so we don't save them to MongoDB
+            delete dish.data;
+            delete dish.imageMimeType;
+          }
         }
       }
     }
@@ -128,18 +148,20 @@ const createProduct = async (req, res) => {
       featured: featured === "true" || featured === true,
       tastingNotes,
       pairings: Array.isArray(pairings)
-        ? pairings
+        ? pairings.join(", ")
         : pairings
-          ? pairings.split(",").map((p) => p.trim())
-          : [],
+          ? pairings.split(",").map((p) => p.trim()).join(", ")
+          : "",
       rating: Number(rating) || 0,
-      reviews: Number(reviews) || 0,
+      reviewCount: Number(reviewCount) || 0,
       ingredients,
       variants,
       onHold: onHold === "true" || onHold === true,
       googleDriveFolderId: mainFolderId,
       image: imageUrls.length > 0 ? imageUrls[0] : "",
-      images: imageUrls, // These are the Drive URLs
+      images: imageUrls,
+      bestPairingDishes: bestPairingDishes || [],
+      reviews: reviews || [],
     };
 
     const product = await Product.create(productData);
@@ -150,6 +172,7 @@ const createProduct = async (req, res) => {
       data: product,
     });
   } catch (error) {
+    console.error("❌ CREATE PRODUCT ERROR:", error);
     res.status(500).json({
       success: false,
       message: "Failed to create product",
@@ -183,7 +206,7 @@ const updateProduct = async (req, res) => {
     if (updateData.originalPrice)
       updateData.originalPrice = Number(updateData.originalPrice);
     if (updateData.rating) updateData.rating = Number(updateData.rating);
-    if (updateData.reviews) updateData.reviews = Number(updateData.reviews);
+    if (updateData.reviewCount) updateData.reviewCount = Number(updateData.reviewCount);
     if (updateData.onHold !== undefined) {
       updateData.onHold = updateData.onHold === "true" || updateData.onHold === true;
       console.log("✔️ Final updateData.onHold:", updateData.onHold);
@@ -191,8 +214,8 @@ const updateProduct = async (req, res) => {
 
     if (updateData.pairings) {
       updateData.pairings = Array.isArray(updateData.pairings)
-        ? updateData.pairings
-        : updateData.pairings.split(",").map((p) => p.trim());
+        ? updateData.pairings.join(", ")
+        : updateData.pairings;
     }
 
     // Handle image uploads if provided
@@ -200,8 +223,10 @@ const updateProduct = async (req, res) => {
       ? [...existingImages]
       : product.images || [];
 
+    const driveFolderId = product.googleDriveFolderId || process.env.GOOGLE_DRIVE_FOLDER_ID;
+
     if (imagesBase64 && Array.isArray(imagesBase64)) {
-      const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+      const mainFolderId = driveFolderId;
       const newImageUrls = [];
 
       for (const img of imagesBase64) {
@@ -221,6 +246,31 @@ const updateProduct = async (req, res) => {
         }
       }
       finalImages = [...finalImages, ...newImageUrls];
+    }
+
+    // Handle Best Pairing Dishes images in update
+    if (updateData.bestPairingDishes && Array.isArray(updateData.bestPairingDishes)) {
+      const mainFolderId = driveFolderId;
+      for (let i = 0; i < updateData.bestPairingDishes.length; i++) {
+        const dish = updateData.bestPairingDishes[i];
+        if (dish.data && mainFolderId) {
+          try {
+            const url = await uploadFile(
+              `dish_update_${Date.now()}_${i}.jpg`,
+              dish.imageMimeType || "image/jpeg",
+              dish.data,
+              mainFolderId,
+            );
+            dish.image = url;
+          } catch (uploadError) {
+            console.error(`❌ Dish image upload failed for updated dish:`, uploadError.message);
+          } finally {
+            // ALWAYS delete Base64 strings regardless of success or failure
+            delete dish.data;
+            delete dish.imageMimeType;
+          }
+        }
+      }
     }
 
     // Update main image to the first one in the list
@@ -250,6 +300,7 @@ const updateProduct = async (req, res) => {
       data: product,
     });
   } catch (error) {
+    console.error("❌ UPDATE PRODUCT ERROR:", error);
     res.status(500).json({
       success: false,
       message: "Failed to update product",

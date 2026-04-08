@@ -53,7 +53,7 @@ export default function OrderStatusPage() {
         }
 
         const orderData = JSON.parse(savedOrder);
-        const res = await orderAPI.verifyPayment(cfOrderId, orderData);
+        const res: any = await orderAPI.verifyPayment(cfOrderId, orderData);
 
         if (!isSubscribed) return;
 
@@ -95,12 +95,12 @@ export default function OrderStatusPage() {
   }, [searchParams, isAuthenticated]);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] py-20 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-bg-cream-light py-20 flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center border border-gray-100">
         {status === "loading" && (
           <div className="space-y-6">
-            <div className="w-20 h-20 border-4 border-[#C9A961] border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <h2 className="text-2xl font-bold text-[#1A1A1A]">
+            <div className="w-20 h-20 border-4 border-brand-gold-subtle border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <h2 className="text-2xl font-bold text-text-primary">
               Verifying Payment...
             </h2>
             <p className="text-gray-500">
@@ -108,7 +108,7 @@ export default function OrderStatusPage() {
               with the bank.
             </p>
             {retryCount > 0 && (
-              <p className="text-sm text-[#2C5530] font-medium animate-pulse">
+              <p className="text-sm text-brand-green font-medium animate-pulse">
                 Verification in progress (Attempt {retryCount}/{maxRetries})...
               </p>
             )}
@@ -132,23 +132,23 @@ export default function OrderStatusPage() {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-black text-[#1A1A1A]">
+            <h2 className="text-3xl font-black text-text-primary">
               Payment Successful!
             </h2>
             <p className="text-gray-600 leading-relaxed">
               Your order <strong>#{orderId}</strong> is confirmed. You'll
               receive an email with the details shortly.
             </p>
-            <div className="bg-[#FAF7F2] p-4 rounded-2xl text-left text-sm space-y-2">
+            <div className="bg-bg-cream-light p-4 rounded-2xl text-left text-sm space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-500">Amount Paid:</span>
-                <span className="font-bold text-[#2C5530]">
+                <span className="font-bold text-brand-green">
                   ₹{orderDetails?.finalAmount?.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Transaction ID:</span>
-                <span className="font-medium text-[#1A1A1A]">
+                <span className="font-medium text-text-primary">
                   {orderDetails?.transactionId || "N/A"}
                 </span>
               </div>
@@ -187,7 +187,7 @@ export default function OrderStatusPage() {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-black text-[#1A1A1A]">
+            <h2 className="text-3xl font-black text-text-primary">
               Payment Failed
             </h2>
             <div className="bg-red-50 p-4 rounded-xl border border-red-100">

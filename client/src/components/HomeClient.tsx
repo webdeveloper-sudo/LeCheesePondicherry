@@ -31,6 +31,7 @@ import { FETCH_MODE } from "@/config";
 import { products as staticProducts } from "@/data/products";
 import axios from "axios";
 import { HomeBlogsGrid } from "./HomeBlogsGrid";
+import TestimonialsSlider from "./portfolio/TestimonialsSlider";
 
 interface HomeClientProps {
   featuredProducts: Product[];
@@ -159,62 +160,123 @@ Action: Item added to cart for checkout.
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[70vh] md:h-[86vh] bg-[#000] w-full min-h-[500px] md:min-h-[588px] overflow-hidden">
+      <section className="relative h-[85vh] md:h-[92vh] bg-black w-full min-h-[560px] overflow-hidden">
         {/* Background Video */}
         <video
           src={heroVideo}
-          className="absolute inset-0 w-full h-full object-cover md:object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           loop
           muted
           playsInline
         />
 
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-black/10"></div>
+        {/* Cinematic gradient overlay — symmetric for centered layout */}
+        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
 
-        {/* Content */}
-        <div className="relative z-10 h-full w-full flex items-center justify-start">
-          <MotionContainer className="w-full px-6 md:px-16 lg:px-48" stagger>
-            <div className=" text-center md:text-center">
-              {/* Gold glass-effect heading */}
+        {/* Content — centered */}
+        <div className="relative z-10 h-full w-full flex items-center justify-center">
+          <MotionContainer className="w-full px-6 md:px-16 text-center max-w-4xl mx-auto" stagger>
+            <div className="flex flex-col items-center">
+
+              {/* Gold eyebrow label */}
+              <motion.div
+                variants={fadeUp}
+                className="inline-flex items-center gap-3 mb-6"
+              >
+                <span className="h-px w-8 bg-brand-gold opacity-80" />
+                <span className="text-brand-gold uppercase tracking-[0.25em] text-xs font-semibold">
+                  Le Pondicherry Cheese
+                </span>
+                <span className="h-px w-8 bg-brand-gold opacity-80" />
+              </motion.div>
+
+              {/* Main Heading */}
               <MotionHeading
                 as="h1"
-                className="text-3xl max-w-6xl mx-auto sm:text-5xl lg:text-7xl font-extrabold text-white "
-                style={{ textShadow: "2px 2px 8px rgba(0,0,0, 0.8)" }}
+                className="text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-heading text-white leading-[1.1] mb-6 text-center"
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  textShadow: "0 4px 24px rgba(0,0,0,0.5)",
+                }}
               >
-                Crafting Dairy Excellence - From Our Farms to Your Table
+                Crafting Dairy{" "}
+                <span className="text-brand-gold italic">Excellence</span>
+                <br />
+                From Farm to Table
               </MotionHeading>
 
-              {/* White paragraph */}
-              <MotionText className="mt-4 md:mt-5 max-w-4xl mx-auto text-[14px] text-white/95 leading-relaxed">
-                Where Responsible Farming Meets Refined Dairy Innovation. Artisanal
-                Cheese • Premium Dairy Processing • Timeless Craft
+              {/* Gold divider — centered */}
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center justify-center gap-3 mb-6"
+              >
+                <span className="h-px w-12 bg-white/20" />
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
+                <span className="h-px w-12 bg-white/20" />
+              </motion.div>
+
+              {/* Subtitle */}
+              <MotionText className="text-white/80 text-base md:text-md leading-relaxed mb-10 max-w-2xl text-center">
+                Where Responsible Farming Meets Refined Dairy Innovation.
+                Artisanal cheese, crafted in small batches with{" "}
+                <span className="text-brand-gold font-medium">zero preservatives</span> and honest ingredients.
               </MotionText>
 
-              {/* Optional CTA */}
+              {/* CTA Buttons — centered */}
               <motion.div
-                className="mt-6 md:mt-7 flex  gap-4 justify-center md:justify-center"
+                className="flex flex-wrap gap-4 justify-center"
                 variants={fadeUp}
               >
-                <MotionButton
-                  className="px-10 py-2 
-            bg-gradient-to-r from-yellow-400 to-amber-200
-            text-sm shadow-lg rounded-full md:flex gap-1 items-center"
+                <Link
+                  to="/shop"
+                  className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
                 >
-                  Shop <span className="hidden md:block">Our</span> Cheeses
-                </MotionButton>
-                <MotionButton
-                  className="px-6 py-2
-            border-2 border-yellow-400
-            text-white shadow-lg rounded-full flex gap-1 items-center"
+                  Shop Our Cheeses
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                < Link
+                  to="/about"
+                  className="group inline-flex items-center gap-2 border border-white/40 text-white hover:border-brand-gold hover:text-brand-gold font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 backdrop-blur-sm hover:-translate-y-0.5"
                 >
-                  Contact <span className="hidden md:block">Us</span>
-                </MotionButton>
+                  Our Story
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
               </motion.div>
+
+              {/* Trust badges — centered */}
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-wrap gap-6 justify-center mt-12 pt-8 border-t border-white/10 w-full max-w-lg"
+              >
+                {["FSSAI Certified", "Zero Preservatives", "100% Vegetarian"].map((badge) => (
+                  <span key={badge} className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-wider">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0" />
+                    {badge}
+                  </span>
+                ))}
+              </motion.div>
+
             </div>
           </MotionContainer>
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        >
+          <span className="text-white/40 text-[10px] uppercase tracking-widest">Scroll</span>
+          <svg className="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </motion.div>
       </section>
 
       {/* <div className="relative">
@@ -253,7 +315,7 @@ Action: Item added to cart for checkout.
             </Link>
             <Link
               to="/about"
-              className="btn text-lg px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-[#2C5530] font-semibold"
+              className="btn text-lg px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-brand-green font-semibold"
             >
               Our Story
             </Link>
@@ -278,8 +340,12 @@ Action: Item added to cart for checkout.
       {/* Featured Products Section */}
 
       <div className="bg-pattern relative z-10 w-full">
-        {(isAuthenticated() && role === "user" && wishlistCount >= 3) ||
-        preferences.length >= 3 ? (
+        {isAuthenticated() &&
+        role === "user" &&
+        (preferences?.length || 0) +
+          (cartItems?.length || 0) +
+          (wishlistCount || 0) >
+          3 ? (
           <div className="py-12 w-full">
             <div className="text-center mb-6 px-4">
               <h2
@@ -288,7 +354,7 @@ Action: Item added to cart for checkout.
               >
                 Discover Our Signature Collection
               </h2>
-              <p className="text-[#6B6B6B] max-w-2xl mx-auto">
+              <p className="text-text-secondary max-w-2xl mx-auto">
                 Handcrafted cheeses made using traditional French techniques and
                 the finest local ingredients
               </p>
@@ -301,13 +367,16 @@ Action: Item added to cart for checkout.
           <section className="py-12 md:py-20 w-full overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
               <div className="text-center mb-8 md:mb-12">
+                <MotionText className="text-brand-gold uppercase tracking-wider mb-2 font-medium">
+                  Discover
+                </MotionText>
                 <h2
                   className="text-3xl md:text-4xl mb-4 block"
                   style={{ fontFamily: "var(--font-heading)" }}
                 >
-                  Discover Our Signature Collection
+                   Our Signature Collection
                 </h2>
-                <p className="text-[#6B6B6B] max-w-2xl mx-auto break-words">
+                <p className="text-GRAY-800 max-w-2xl mx-auto break-words">
                   Handcrafted cheeses made using traditional French techniques
                   and the finest local ingredients
                 </p>
@@ -325,15 +394,19 @@ Action: Item added to cart for checkout.
                     originalPrice={product.originalPrice}
                     image={product.image}
                     rating={product.rating}
-                    reviews={product.reviews}
+                    reviewCount={product.reviewCount}
                   />
                 ))}
               </div>
               <div className="text-center mt-10 md:mt-12">
-                <Link to="/shop">
-                  <button className="btn btn-secondary w-full sm:w-auto">
-                    View All Cheeses
-                  </button>
+                <Link
+                  to="/shop"
+                  className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
+                >
+                  View All Cheeses
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
                 </Link>
               </div>
             </div>
@@ -342,21 +415,21 @@ Action: Item added to cart for checkout.
       </div>
 
       {/* Story Teaser Section */}
-      <section className="py-12 md:py-20 bg-[#2C5530] text-white">
+      <section className="py-12 md:py-20 bg-brand-green-subtle text-white">
         <MotionContainer className="container mx-auto px-6 md:px-8" stagger>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <MotionContainer
               className="order-2 lg:order-1 text-center lg:text-left"
               stagger
             >
-              <MotionText className="text-[#FAB519] uppercase tracking-wider mb-2 font-medium">
+              <MotionText className="text-brand-gold uppercase tracking-wider mb-2 font-medium">
                 Our Story
               </MotionText>
               <MotionHeading
-                className="text-2xl md:text-5xl mb-6 text-white-prominent"
+                className="text-2xl md:text-4xl mb-6 text-white-prominent"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                About Us: Le Pondicherry Cheese
+                Le Pondicherry Cheese
               </MotionHeading>
               <MotionText className="text-white/90 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
                 Le Pondicherry Cheese is an artisanal cheese brand born in the
@@ -371,14 +444,18 @@ Action: Item added to cart for checkout.
                 with zero preservatives, no artificial additives and clean,
                 honest ingredients only.
               </MotionText>
-              <Link to="/about">
-                <MotionButton className="btn btn-primary rounded-full px-8">
-                  Discover Our Journey
-                </MotionButton>
+              <Link
+                to="/about"
+                className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
+              >
+                Discover Our Journey
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </MotionContainer>
             <div className="order-1 lg:order-2">
-              <div className="aspect-video md:aspect-[4/3] bg-[#F5E6D3] rounded-2xl overflow-hidden relative shadow-2xl">
+              <div className="aspect-video md:aspect-[4/3] bg-bg-cream rounded-2xl overflow-hidden relative shadow-2xl">
                 <MotionImage
                   src={cheesemaker}
                   alt="Cheesemaker"
@@ -389,117 +466,10 @@ Action: Item added to cart for checkout.
           </div>
         </MotionContainer>
       </section>
-      {/* Wholesale Partnership CTA */}
-      <section className="p-2 py-10 bg-pattern">
-        <div className=" mx-auto px-2">
-          <MotionContainer
-            className=" p-8 md:p-12  text-white text-center"
-            stagger
-          >
-            <MotionHeading
-              className="text-3xl md:text-4xl mb-4  text-black"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Wholesale & Partnerships
-            </MotionHeading>
-            <MotionText className="text-black mb-8 max-w-2xl mx-auto">
-              Elevate your menu with Pondicherry's finest handcrafted artisan
-              cheeses. We partner with premium restaurants, hotels, and cafes
-              across India.
-            </MotionText>
-            <Link to="/wholesale">
-              <MotionButton className="btn btn-primary bg-[#2C5530] hover:bg-[#1a3a20]">
-                Bulk Inquiry
-              </MotionButton>
-            </Link>
-          </MotionContainer>
-        </div>
-      </section>
 
       {/* Testimonials */}
-      <section
-        className="py-12 md:py-20 overflow-hidden"
-        style={{
-          background:
-            "radial-gradient(circle,rgba(233, 215, 154, 0.77) 0%, rgba(249, 182, 25, 0.62) 100%)",
-          animation: "gradientBG 20s ease infinite",
-        }}
-      >
-        <div className="container mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center font-medium">
-            <div className="hidden lg:flex justify-center items-center p-10 mx-auto">
-              <img
-                src={cheesslice}
-                alt="Cheese Slice"
-                className="w-full max-w-sm object-cover"
-              />
-            </div>
-            <div>
-              <div className="text-center lg:text-left mb-8 md:mb-12">
-                <MotionText className="text-[#2C5530] uppercase tracking-wider mb-4 font-bold">
-                  Our Quality
-                </MotionText>
-                <MotionHeading
-                  className="text-2xl md:text-4xl mb-4 text-[#1A1A1A]"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
-                  What Our Customers Say
-                </MotionHeading>
-                <MotionText className="text-[#6B6B6B] max-w-2xl mx-auto lg:mx-0 mb-8 md:mb-12 text-sm md:text-base">
-                  We prioritize quality, hygiene, and consistency in our
-                  production.
-                </MotionText>
-              </div>
-              <div className="max-w-xl mx-auto lg:mx-0">
-                {testimonials.slice(0, 1).map((testimonial: any) => (
-                  <motion.div
-                    key={testimonial.id}
-                    className="bg-white p-6 md:p-8 rounded-2xl shadow-xl"
-                    variants={fadeUp}
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                  >
-                    <div className="text-[#FAB519] mb-4">
-                      <svg
-                        className="w-8 h-8 md:w-10 md:h-10"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                      </svg>
-                    </div>
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="w-4 h-4 md:w-5 md:h-5 text-[#FAB519] fill-current"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3-.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <p className="text-[#1A1A1A] text-base md:text-lg mb-6 italic">
-                      "{testimonial.quote}"
-                    </p>
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-[#FAB519]/20 rounded-full flex items-center justify-center text-[#2C5530] font-bold">
-                        {testimonial.author.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-[#1A1A1A]">
-                          {testimonial.author}
-                        </p>
-                        <p className="text-xs text-[#6B6B6B]">
-                          {testimonial.location}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+      <section className="overflow-hidden ">
+        <TestimonialsSlider />
       </section>
 
       {/* Brand Promise Section */}
@@ -510,7 +480,7 @@ Action: Item added to cart for checkout.
             stagger
           >
             <div className="text-center">
-              <MotionText className="text-[#FAB519] uppercase tracking-wider mb-4 font-bold">
+              <MotionText className="text-brand-gold uppercase tracking-wider mb-4 font-medium">
                 Our Heritage
               </MotionText>
               <MotionHeading
@@ -534,25 +504,25 @@ Action: Item added to cart for checkout.
                   title: "Artisan Crafted",
                   desc: "Every wheel aged to perfection by master cheesemakers",
                   icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
-                  color: "#FAB519",
-                  iconColor: "#2C5530",
-                  border: "border border-[#FAB519]",
+                  color: "var(--color-brand-gold)",
+                  iconColor: "var(--color-brand-green)",
+                  border: "border border-brand-gold",
                 },
                 {
                   title: "Local Ingredients",
                   desc: "Fresh milk from trusted local farms, supporting our community",
                   icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064",
-                  color: "#2C5530",
-                  iconColor: "#FAB519",
-                  border: "border border-[#FAB519]",
+                  color: "var(--color-brand-green)",
+                  iconColor: "var(--color-brand-gold)",
+                  border: "border border-brand-gold",
                 },
                 {
                   title: "French Tradition",
                   desc: "Techniques passed through generations, perfected in Pondicherry",
                   icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
-                  color: "#FAB519",
-                  iconColor: "#2C5530",
-                  border: "border border-[#FAB519]",
+                  color: "var(--color-brand-gold)",
+                  iconColor: "var(--color-brand-green)",
+                  border: "border border-brand-gold",
                 },
               ].map((item, i) => (
                 <motion.div
@@ -603,9 +573,9 @@ Action: Item added to cart for checkout.
               className="text-3xl md:text-4xl text-center mb-4"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              The Cheese Journal - From Curd to Culture
+              The Cheese Journal
             </MotionHeading>
-            <MotionText className="text-center text-[#6B6B6B] max-w-2xl mx-auto mb-12">
+            <MotionText className="text-center text-text-secondary max-w-2xl mx-auto mb-12">
               Stories of tradition, craft, and the slow art of affinage from the
               artisan cellars of Pondicherry.
             </MotionText>
@@ -616,6 +586,34 @@ Action: Item added to cart for checkout.
           </MotionContainer>
         </section>
       </div>
+      {/* Wholesale Partnership CTA */}
+
+      <section className="py-16 bg-yellow-gradient">
+        <div className="container mx-auto px-4 text-center">
+          <h2
+            className="text-3xl md:text-4xl mb-4 font-bold text-text-primary"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            Wholesale & Partnerships
+          </h2>
+          <p className="text-text-secondary max-w-2xl mx-auto mb-10 text-lg">
+            Elevate your menu with Pondicherry's finest handcrafted artisan
+            cheeses. We partner with premium restaurants, hotels, and cafes
+            across India.
+          </p>
+          <div className="flex justify-center">
+            <Link
+              to="/wholesale"
+              className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
+            >
+              Enquire for Wholesale
+              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

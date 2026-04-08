@@ -12,6 +12,7 @@ import {
   Map,
   Mail,
   Phone,
+  ChevronDown,
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import FlashSaleBanner from "./FlashSaleBanner";
@@ -103,14 +104,23 @@ export default function Header() {
   const navLinks = [
     { href: "/shop", label: "Shop" },
     { href: "/about", label: "About Us" },
-    { href: "/process", label: "Artisan Process" },
+    {
+      label: "Portfolio",
+      subItems: [
+        { href: "/portfolio/facility", label: "Our Facility" },
+        { href: "/portfolio/gallery", label: "Gallery" },
+        { href: "/portfolio/testimonials", label: "Testimonials" },
+      ],
+    },
     { href: "/wholesale", label: "Wholesale" },
     { href: "/stories", label: "Journal" },
     { href: "/contact", label: "Contact" },
   ];
 
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
   return (
-    <header className="fixed mb-10 top-0 z-50 w-full bg-white shadow-sm">
+    <header className="fixed  top-0 z-50 w-full bg-white shadow-sm">
       {/* <FlashSaleBanner /> */}
 
       {/* Desktop menu => */}
@@ -120,7 +130,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link to="/" className="flex-shrink-0">
               <span
-                className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#2C5530] truncate"
+                className="text-lg sm:text-xl lg:text-2xl font-semibold text-brand-green truncate"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 Le Pondicherry Cheese
@@ -131,13 +141,37 @@ export default function Header() {
             <nav className="hidden lg:flex items-center">
               <ul className="flex items-center gap-6 xl:gap-8">
                 {navLinks.slice(0, 3).map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      to={link.href}
-                      className="nav-link text-xs xl:text-sm uppercase tracking-wider"
-                    >
-                      {link.label}
-                    </Link>
+                  <li key={link.label} className="relative group">
+                    {link.subItems ? (
+                      <div className="flex flex-col items-center">
+                        <button className="nav-link text-xs xl:text-sm uppercase tracking-wider flex items-center gap-1 cursor-pointer">
+                          {link.label}
+                          <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+                        </button>
+                        {/* Dropdown Menu */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                          <ul className="bg-white shadow-xl border border-brand-green/5 py-2 w-48 rounded-lg animate-in fade-in slide-in-from-top-2">
+                            {link.subItems.map((subItem) => (
+                              <li key={subItem.href}>
+                                <Link
+                                  to={subItem.href}
+                                  className="block px-4 py-2 text-xs uppercase tracking-widest text-brand-green hover:bg-bg-cream-light hover:text-brand-gold transition-colors font-medium"
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        to={link.href!}
+                        className="nav-link text-xs xl:text-sm uppercase tracking-wider"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -159,9 +193,9 @@ export default function Header() {
               </Link>
               <ul className="flex items-center gap-6 xl:gap-8">
                 {navLinks.slice(3, 6).map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
-                      to={link.href}
+                      to={link.href!}
                       className="nav-link text-xs xl:text-sm uppercase tracking-wider"
                     >
                       {link.label}
@@ -179,7 +213,7 @@ export default function Header() {
                   <div className="relative" ref={searchRef}>
                     <button
                       onClick={() => setSearchOpen(!searchOpen)}
-                      className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors"
+                      className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
                     >
                       <svg
                         className="w-5 h-5"
@@ -209,11 +243,11 @@ export default function Header() {
                               e.key === "Enter" &&
                               handleSearchSubmit(searchQuery)
                             }
-                            className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#C9A961]"
+                            className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-brand-gold"
                           />
                           <button
                             onClick={() => handleSearchSubmit(searchQuery)}
-                            className="bg-[#2C5530] text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-[#1a3a20] transition-colors"
+                            className="bg-brand-green text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-green-dark transition-colors"
                           >
                             Go
                           </button>
@@ -233,7 +267,7 @@ export default function Header() {
                                       setSearchOpen(false);
                                       setSearchQuery("");
                                     }}
-                                    className="w-full flex items-center gap-3 p-2 hover:bg-[#FAF7F2] rounded-md transition-colors text-left group"
+                                    className="w-full flex items-center gap-3 p-2 hover:bg-bg-cream-light rounded-md transition-colors text-left group"
                                   >
                                     <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                                       <img
@@ -243,10 +277,10 @@ export default function Header() {
                                       />
                                     </div>
                                     <div>
-                                      <p className="text-sm font-semibold text-[#1A1A1A] group-hover:text-[#2C5530]">
+                                      <p className="text-sm font-semibold text-text-primary group-hover:text-brand-green">
                                         {product.name}
                                       </p>
-                                      <p className="text-[10px] text-[#6B6B6B] uppercase">
+                                      <p className="text-[10px] text-text-secondary uppercase">
                                         {product.category}
                                       </p>
                                     </div>
@@ -263,7 +297,7 @@ export default function Header() {
                   {/* Wishlist */}
                   <Link
                     to="/wishlist"
-                    className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
+                    className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
                   >
                     <Heart
                       size={20}
@@ -281,7 +315,7 @@ export default function Header() {
                   {/* Cart */}
                   <Link
                     to="/cart"
-                    className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
+                    className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
                   >
                     <svg
                       className="w-5 h-5"
@@ -297,7 +331,7 @@ export default function Header() {
                       />
                     </svg>
                     {totalItems > 0 && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-[#FAB519] text-[#1D161A] text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+                      <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-brand-gold text-text-primary text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
                         {totalItems}
                       </span>
                     )}
@@ -311,9 +345,9 @@ export default function Header() {
               {isClient && isAuthenticated() ? (
                 <Link
                   to={role === "user" ? "/user" : "/admin/dashboard"}
-                  className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors flex items-center gap-1.5 font-medium text-sm"
+                  className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1.5 font-medium text-sm"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[#2C5530] text-white flex items-center justify-center text-xs">
+                  <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center text-xs">
                     {userName.charAt(0)}
                   </div>
                   <span className="hidden lg:inline">{userName}</span>
@@ -321,7 +355,7 @@ export default function Header() {
               ) : (
                 <Link
                   to="/user/login"
-                  className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors flex items-center gap-1 text-sm font-medium"
+                  className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1 text-sm font-medium"
                 >
                   <User size={18} className="sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">Sign In</span>
@@ -368,7 +402,7 @@ export default function Header() {
         <div className="flex justify-between items-center -mt-9 border-b pe-3 border-gray-300">
           <Link to="/" className="flex items-center gap-3">
             <motion.div
-              className=" w-24 h-24 xl:w-28 xl:h-28 mx-4 border border-[#FADD9D] border-2 relative top-12 overflow-hidden rounded-full p-1 bg-white shadow-sm"
+              className=" w-24 h-24 xl:w-28 xl:h-28 mx-4 border border-brand-gold-subtle border-2 relative top-12 overflow-hidden rounded-full p-1 bg-white shadow-sm"
               variants={logoVariants}
               initial="initial"
               animate="animate"
@@ -411,13 +445,13 @@ export default function Header() {
         </div>
 
         {/* Right Icons */}
-        <div className="flex items-center justify-end gap-2 py-3   bg-gradient-to-r from-[#FAB519] py-1 px-4 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-md text-[#1D161A]">
+        <div className="flex items-center justify-end gap-2 py-3 bg-gradient-to-r from-brand-gold py-1 px-4 via-brand-gold-subtle to-brand-gold bg-[length:200%_100%] animate-shimmer shadow-md text-text-primary">
           {role === "user" || !isAuthenticated() ? (
             <>
               {/* Wishlist */}
               <Link
                 to="/wishlist"
-                className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
+                className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
               >
                 <Heart
                   size={20}
@@ -439,7 +473,7 @@ export default function Header() {
           <div className="relative" ref={mobileSearchRef}>
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors"
+              className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
             >
               <svg
                 className="w-5 h-5"
@@ -468,11 +502,11 @@ export default function Header() {
                     onKeyDown={(e) =>
                       e.key === "Enter" && handleSearchSubmit(searchQuery)
                     }
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#C9A961]"
+                    className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-brand-gold"
                   />
                   <button
                     onClick={() => handleSearchSubmit(searchQuery)}
-                    className="bg-[#2C5530] text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-[#1a3a20] transition-colors"
+                    className="bg-brand-green text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-green-dark transition-colors"
                   >
                     Go
                   </button>
@@ -522,7 +556,7 @@ export default function Header() {
           {/* Cart */}
           <Link
             to="/cart"
-            className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors relative"
+            className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
           >
             <svg
               className="w-5 h-5"
@@ -538,7 +572,7 @@ export default function Header() {
               />
             </svg>
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-[#FAB519] text-[#1D161A] text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+              <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-brand-gold text-text-primary text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
                 {totalItems}
               </span>
             )}
@@ -547,9 +581,9 @@ export default function Header() {
           {isClient && isAuthenticated() ? (
             <Link
               to={role === "user" ? "/user" : "/admin/dashboard"}
-              className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors flex items-center gap-1.5 font-medium text-sm"
+              className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1.5 font-medium text-sm"
             >
-              <div className="w-8 h-8 rounded-full bg-[#2C5530] text-white flex items-center justify-center text-xs">
+              <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center text-xs">
                 {userName.charAt(0)}
               </div>
               <span className="hidden lg:inline">{userName}</span>
@@ -557,7 +591,7 @@ export default function Header() {
           ) : (
             <Link
               to="/user/login"
-              className="p-1.5 sm:p-2 hover:text-[#C9A961] transition-colors flex items-center gap-1 text-sm font-medium"
+              className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1 text-sm font-medium"
             >
               <User size={18} className="sm:w-5 sm:h-5" />
               <span className="">Sign In</span>
@@ -575,12 +609,12 @@ export default function Header() {
 
       {/* Sidebar Canvas */}
       <div
-        className={`lg:hidden fixed inset-y-0 right-0 w-[85vw] max-w-[350px] bg-[#FAF7F2] z-[100] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`lg:hidden fixed inset-y-0 right-0 w-[85vw] max-w-[350px] bg-bg-cream-light z-[100] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Canvas Header */}
-        <div className="flex justify-between items-center p-4 border-b border-[#2C5530]/10 bg-white">
+        <div className="flex justify-between items-center p-4 border-b border-brand-green/10 bg-white">
           <span
-            className="text-xl font-semibold text-[#2C5530]"
+            className="text-xl font-semibold text-brand-green"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Menu
@@ -590,7 +624,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(false)}
           >
             <svg
-              className="w-6 h-6 text-[#2C5530]"
+              className="w-6 h-6 text-brand-green"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -609,21 +643,53 @@ export default function Header() {
         <nav className="p-6 overflow-y-auto flex-1">
           <ul className="flex flex-col gap-2">
             {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  to={link.href}
-                  style={{ fontFamily: "var(--font-heading)" }}
-                  className="text-xl font-semibold py-4 px-2 hover:text-[#C9A961] border-b border-[#2C5530]/10 transition-colors block text-[#2C5530]"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
+              <li key={link.label}>
+                {link.subItems ? (
+                  <div className="flex flex-col">
+                    <button
+                      onClick={() => setActiveDropdown(activeDropdown === link.label ? null : link.label)}
+                      style={{ fontFamily: "var(--font-heading)" }}
+                      className="w-full text-left text-xl font-semibold py-4 px-2 hover:text-brand-gold border-b border-brand-green/10 transition-colors flex justify-between items-center text-brand-green"
+                    >
+                      {link.label}
+                      <ChevronDown size={20} className={`transition-transform duration-300 ${activeDropdown === link.label ? "rotate-180" : ""}`} />
+                    </button>
+                    {activeDropdown === link.label && (
+                      <ul className="bg-white/50 pl-4 py-2 flex flex-col gap-1">
+                        {link.subItems.map((subItem) => (
+                          <li key={subItem.href}>
+                            <Link
+                              to={subItem.href}
+                              style={{ fontFamily: "var(--font-heading)" }}
+                              className="text-lg font-medium py-3 px-2 text-brand-green/80 hover:text-brand-gold block"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                setActiveDropdown(null);
+                              }}
+                            >
+                              {subItem.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    to={link.href!}
+                    style={{ fontFamily: "var(--font-heading)" }}
+                    className="text-xl font-semibold py-4 px-2 hover:text-brand-gold border-b border-brand-green/10 transition-colors block text-brand-green"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
 
           {/* Contact */}
-          <div className="flex flex-col items-center md:items-start bg-green p-5 rounded-xl">
+          <div className="flex flex-col items-center md:items-start bg-brand-green p-5 rounded-xl">
             {/* <h5 className="footer-header text-left font-bold mb-6 text-green uppercase tracking-widest text-xs">
               Reach Us
             </h5> */}
@@ -635,7 +701,7 @@ export default function Header() {
               <div className="pt-2">
                 <a
                   href="mailto:hello@lepondicheese.com"
-                  className="hover:text-[#C9A961] transition-colors block font-medium flex gap-2 items-start"
+                  className="hover:text-brand-gold transition-colors block font-medium flex gap-2 items-start"
                 >
                   <Mail size={18} />
                   hello@lepondicheese.com
@@ -644,7 +710,7 @@ export default function Header() {
               <div className="pt-1">
                 <a
                   href="tel:+919150121331"
-                  className="hover:text-[#C9A961] transition-colors block font-medium flex gap-2 items-start"
+                  className="hover:text-brand-gold transition-colors block font-medium flex gap-2 items-start"
                 >
                   <Phone size={18} />
                   +91 91501 21331

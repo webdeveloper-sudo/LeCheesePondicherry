@@ -128,7 +128,7 @@ export default function YourPicks({
               originalPrice={product.originalPrice}
               image={product.image}
               rating={product.rating}
-              reviews={product.reviews}
+              reviewCount={product.reviewCount}
             />
           ))}
         </MotionContainer>

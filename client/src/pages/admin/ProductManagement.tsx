@@ -132,7 +132,7 @@ const ProductManagement: React.FC = () => {
                   ))}
                 </div>
                 <span className="text-xs text-[#6B6B6B]">
-                  ({product.reviews || 0})
+                  ({product.reviewCount || 0})
                 </span>
               </div>
 

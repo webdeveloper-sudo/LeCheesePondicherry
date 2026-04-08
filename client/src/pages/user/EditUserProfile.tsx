@@ -221,11 +221,11 @@ export default function EditUserProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] py-12">
+    <div className="min-h-screen bg-bg-cream-light py-12">
       <div className="container mx-auto px-4 max-w-4xl">
         <button
           onClick={() => navigate("/user")}
-          className="flex items-center gap-2 text-[#2C5530] font-semibold mb-8 hover:underline"
+          className="flex items-center gap-2 text-brand-green font-semibold mb-8 hover:underline"
         >
           <ArrowLeft size={20} /> Back to Dashboard
         </button>
@@ -234,12 +234,12 @@ export default function EditUserProfile() {
           {/* Sidebar */}
           {/* <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-[#1A1A1A] mb-6 flex items-center gap-2">
-                <ShieldCheck className="text-[#2C5530]" size={24} /> Account
+              <h2 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <ShieldCheck className="text-brand-green" size={24} /> Account
                 Settings
               </h2>
               <nav className="space-y-2">
-                <button className="w-full text-left px-4 py-3 rounded-xl bg-[#F5E6D3] text-[#2C5530] font-bold transition-all">
+                <button className="w-full text-left px-4 py-3 rounded-xl bg-bg-cream text-brand-green font-bold transition-all">
                   Personal Details
                 </button>
                 <button className="w-full text-left px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 transition-all">
@@ -256,7 +256,7 @@ export default function EditUserProfile() {
           <div className="lg:col-span-2 space-y-8">
             {/* Personal Details */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-              <h3 className="text-2xl font-bold text-[#1A1A1A] mb-6">
+              <h3 className="text-2xl font-bold text-text-primary mb-6">
                 Personal Details
               </h3>
 
@@ -281,7 +281,7 @@ export default function EditUserProfile() {
                       className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl outline-none transition-all ${
                         errors.name
                           ? "border-red-300 ring-4 ring-red-50"
-                          : "border-gray-100 focus:border-[#2C5530]"
+                          : "border-gray-100 focus:border-brand-green"
                       }`}
                       value={personalInfo.name}
                       onChange={(e) =>
@@ -355,7 +355,7 @@ export default function EditUserProfile() {
                           className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl outline-none transition-all ${
                             errors.mobile
                               ? "border-red-300 ring-4 ring-red-50"
-                              : "border-gray-100 focus:border-[#2C5530]"
+                              : "border-gray-100 focus:border-brand-green"
                           }`}
                           value={personalInfo.mobile}
                           onChange={(e) =>
@@ -377,7 +377,7 @@ export default function EditUserProfile() {
                   <button
                     onClick={handleUpdatePersonalInfo}
                     disabled={loading}
-                    className="bg-[#2C5530] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                    className="bg-brand-green text-white px-8 py-3 rounded-xl font-bold hover:bg-brand-green-dark transition-all disabled:opacity-50"
                   >
                     {loading ? "Saving..." : "Save Changes"}
                   </button>
@@ -388,7 +388,7 @@ export default function EditUserProfile() {
             {/* Address Management (Amazon-Style) */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold text-[#1A1A1A]">
+                <h3 className="text-2xl font-bold text-text-primary">
                   Your Addresses
                 </h3>
                 {!showAddressForm && (
@@ -398,6 +398,8 @@ export default function EditUserProfile() {
                       setAddressForm({
                         type: "home",
                         addressLine1: "",
+                        city: "",
+                        state: "",
                         pincode: "",
                         countryCode: "+91",
                         mobile: "",
@@ -405,7 +407,7 @@ export default function EditUserProfile() {
                       });
                       setShowAddressForm(true);
                     }}
-                    className="flex items-center gap-2 text-[#2C5530] font-bold hover:bg-[#2C5530] hover:text-white px-4 py-2 rounded-lg border border-[#2C5530] transition-all"
+                    className="flex items-center gap-2 text-brand-green font-bold hover:bg-brand-green hover:text-white px-4 py-2 rounded-lg border border-brand-green transition-all"
                   >
                     <Plus size={20} /> Add New
                   </button>
@@ -414,7 +416,7 @@ export default function EditUserProfile() {
 
               {/* Address Form (Modal/Inline) */}
               {showAddressForm && (
-                <div className="bg-[#FAF7F2] border border-[#F5E6D3] rounded-2xl p-6 mb-8 animate-in fade-in slide-in-from-top-4">
+                <div className="bg-bg-cream-light border border-bg-cream rounded-2xl p-6 mb-8 animate-in fade-in slide-in-from-top-4">
                   <div className="flex items-center justify-between mb-6">
                     <h4 className="font-bold text-lg">
                       {editingAddressId ? "Edit Address" : "Add New Address"}
@@ -440,8 +442,8 @@ export default function EditUserProfile() {
                           }
                           className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all capitalize font-medium ${
                             addressForm.type === type
-                              ? "bg-[#2C5530] text-white border-[#2C5530]"
-                              : "bg-white text-gray-500 border-gray-200 hover:border-[#2C5530]"
+                              ? "bg-brand-green text-white border-brand-green"
+                              : "bg-white text-gray-500 border-gray-200 hover:border-brand-green"
                           }`}
                         >
                           {type === "home" && <Home size={16} />}
@@ -458,7 +460,7 @@ export default function EditUserProfile() {
                       </label>
                       <textarea
                         rows={2}
-                        className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-[#2C5530] resize-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-brand-green resize-none"
                         value={addressForm.addressLine1}
                         onChange={(e) =>
                           setAddressForm({
@@ -476,7 +478,7 @@ export default function EditUserProfile() {
                         </label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-[#2C5530]"
+                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-brand-green"
                           value={addressForm.city}
                           onChange={(e) =>
                             setAddressForm({
@@ -492,7 +494,7 @@ export default function EditUserProfile() {
                         </label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-[#2C5530]"
+                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-brand-green"
                           value={addressForm.state}
                           onChange={(e) =>
                             setAddressForm({
@@ -511,7 +513,7 @@ export default function EditUserProfile() {
                         </label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-[#2C5530]"
+                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-brand-green"
                           value={addressForm.pincode}
                           onChange={(e) =>
                             setAddressForm({
@@ -527,7 +529,7 @@ export default function EditUserProfile() {
                         </label>
                         <input
                           type="tel"
-                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-[#2C5530]"
+                          className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-brand-green"
                           value={addressForm.mobile}
                           onChange={(e) =>
                             setAddressForm({
@@ -550,7 +552,7 @@ export default function EditUserProfile() {
                             isDefault: e.target.checked,
                           })
                         }
-                        className="w-4 h-4 text-[#2C5530] focus:ring-[#2C5530] border-gray-300 rounded"
+                        className="w-4 h-4 text-brand-green focus:ring-brand-green border-gray-300 rounded"
                       />
                       <label
                         htmlFor="isDefault"
@@ -564,7 +566,7 @@ export default function EditUserProfile() {
                       <button
                         onClick={handleSaveAddress}
                         disabled={loading}
-                        className="flex-1 bg-[#2C5530] text-white py-3 rounded-xl font-bold hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                        className="flex-1 bg-brand-green text-white py-3 rounded-xl font-bold hover:bg-brand-green-dark transition-all disabled:opacity-50"
                       >
                         {loading ? "Saving..." : "Save Address"}
                       </button>
@@ -587,12 +589,12 @@ export default function EditUserProfile() {
                       key={addr._id}
                       className={`relative p-6 rounded-2xl border transition-all ${
                         addr.isDefault
-                          ? "bg-white border-[#2C5530] shadow-md ring-1 ring-[#2C5530]"
-                          : "bg-gray-50 border-gray-100 hover:border-[#2C5530]"
+                          ? "bg-white border-brand-green shadow-md ring-1 ring-brand-green"
+                          : "bg-gray-50 border-gray-100 hover:border-brand-green"
                       }`}
                     >
                       {addr.isDefault && (
-                        <div className="absolute top-0 right-6 translate-y-[-50%] bg-[#2C5530] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                        <div className="absolute top-0 right-6 translate-y-[-50%] bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
                           Default
                         </div>
                       )}
@@ -600,12 +602,12 @@ export default function EditUserProfile() {
                       <div className="flex items-start justify-between">
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <span className="p-1.5 bg-white rounded-lg border border-gray-100 text-[#2C5530]">
+                            <span className="p-1.5 bg-white rounded-lg border border-gray-100 text-brand-green">
                               {addr.type === "home" && <Home size={14} />}
                               {addr.type === "work" && <Briefcase size={14} />}
                               {addr.type === "other" && <MapPin size={14} />}
                             </span>
-                            <span className="font-bold text-[#1A1A1A] capitalize">
+                            <span className="font-bold text-text-primary capitalize">
                               {addr.type}
                             </span>
                           </div>
@@ -629,7 +631,7 @@ export default function EditUserProfile() {
                         <div className="flex flex-col gap-2">
                           <button
                             onClick={() => openEditAddress(addr)}
-                            className="p-2 text-gray-400 hover:text-[#2C5530] hover:bg-white rounded-lg transition-all"
+                            className="p-2 text-gray-400 hover:text-brand-green hover:bg-white rounded-lg transition-all"
                           >
                             <Edit2 size={18} />
                           </button>
@@ -645,7 +647,7 @@ export default function EditUserProfile() {
                       {!addr.isDefault && (
                         <button
                           onClick={() => handleSetDefault(addr._id)}
-                          className="mt-4 text-xs font-bold text-[#C9A961] hover:underline"
+                          className="mt-4 text-xs font-bold text-brand-gold-subtle hover:underline"
                         >
                           Set as default
                         </button>

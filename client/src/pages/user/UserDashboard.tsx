@@ -38,17 +38,17 @@ export default function UserDashboard() {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2C5530]"></div>
+      <div className="min-h-screen flex items-center justify-center bg-bg-cream-light">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] py-12">
+    <div className="min-h-screen bg-bg-cream-light py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-4 flex flex-col md:flex-row items-center gap-6">
-          <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-[#F5E6D3] shadow-sm">
+          <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-bg-cream shadow-sm">
             {photoURL ? (
               <img
                 src={photoURL}
@@ -56,19 +56,19 @@ export default function UserDashboard() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-[#2C5530] text-white flex items-center justify-center text-3xl font-bold">
+              <div className="w-full h-full bg-brand-green text-white flex items-center justify-center text-3xl font-bold">
                 {name?.charAt(0) || "U"}
               </div>
             )}
           </div>
 
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-[#1A1A1A] font-heading mb-1">
+            <h1 className="text-3xl font-bold text-text-primary font-heading mb-1">
               Welcome, {name}
             </h1>
             <p className="text-gray-500 mb-3">{email}</p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
-              <p className="text-sm text-[#C9A961] font-medium flex items-center gap-1">
+              <p className="text-sm text-brand-gold-subtle font-medium flex items-center gap-1">
                 <MapPin size={14} />{" "}
                 {addresses && addresses.length > 0
                   ? `${addresses.length} Address${addresses.length > 1 ? "es" : ""} Saved`
@@ -76,7 +76,7 @@ export default function UserDashboard() {
               </p>
               <Link
                 to="/user/editprofile"
-                className="text-xs font-bold text-[#2C5530] hover:underline uppercase tracking-wider"
+                className="text-xs font-bold text-brand-green hover:underline uppercase tracking-wider"
               >
                 Manage Addresses
               </Link>
@@ -86,7 +86,7 @@ export default function UserDashboard() {
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <Link
               to="/user/editprofile"
-              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all text-[#1A1A1A]"
+              className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all text-text-primary"
             >
               <Settings size={18} /> Edit Profile
             </Link>
@@ -102,17 +102,17 @@ export default function UserDashboard() {
         {/* Dashboard Sections */}
         <div className="">
           <div className="lg:col-span-2 space-y-12">
-            <div className="bg-[#FFFFFF] rounded-xl  grid grid-cols-1 lg:grid-cols-2 gap-6 shadow-md p-6">
+            <div className="bg-white rounded-xl  grid grid-cols-1 lg:grid-cols-2 gap-6 shadow-md p-6">
               <Link to="/orders" className="flex items-center justify-content-center border border-gray-300 p-6 rounded-xl gap-3">
-                <div className="p-2 bg-[#F5E6D3] rounded-lg text-[#2C5530]">
+                <div className="p-2 bg-bg-cream rounded-lg text-brand-green">
                   <ShoppingBag size={20} />
                 </div>
-                <h2 className="text-2xl font-bold text-[#1A1A1A] font-heading">
+                <h2 className="text-2xl font-bold text-text-primary font-heading">
                   Your Orders
                 </h2>
               </Link>
               <Link to="/cart" className="flex items-center justify-content-center border border-gray-300 p-6 rounded-xl gap-3">
-                <div className="p-2 bg-[#F5E6D3] rounded-lg text-[#2C5530]">
+                <div className="p-2 bg-bg-cream rounded-lg text-brand-green">
                    <svg
                     className="w-5 h-5"
                     fill="none"
@@ -127,7 +127,7 @@ export default function UserDashboard() {
                     />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-[#1A1A1A] font-heading">
+                <h2 className="text-2xl font-bold text-text-primary font-heading">
                   Your Cart
                 </h2>
               </Link>
@@ -178,12 +178,12 @@ function OrderHistory() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold font-heading text-[#1A1A1A]">
+        <h2 className="text-2xl font-bold font-heading text-text-primary">
           Your Orders
         </h2>
         <Link
           to="/shop"
-          className="text-sm font-bold text-[#2C5530] hover:underline"
+          className="text-sm font-bold text-brand-green hover:underline"
         >
           New Purchase
         </Link>
@@ -191,7 +191,7 @@ function OrderHistory() {
 
       {orders.length === 0 ? (
         <div className="bg-white p-8 rounded-2xl border-2 border-dashed border-gray-100 text-center">
-          <p className="text-[#6B6B6B] mb-4">
+          <p className="text-text-secondary mb-4">
             You haven't placed any orders yet.
           </p>
           <Link to="/shop" className="btn btn-primary px-8">
@@ -203,20 +203,20 @@ function OrderHistory() {
           {orders.map((order) => (
             <div
               key={order._id}
-              className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-[#C9A961] transition-all"
+              className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-brand-gold-subtle transition-all"
             >
               <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div>
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                     Order ID
                   </p>
-                  <p className="font-bold text-[#1A1A1A]">{order.orderId}</p>
+                  <p className="font-bold text-text-primary">{order.orderId}</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                     Date
                   </p>
-                  <p className="font-bold text-[#1A1A1A]">
+                  <p className="font-bold text-text-primary">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -224,7 +224,7 @@ function OrderHistory() {
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                     Total
                   </p>
-                  <p className="font-bold text-[#2C5530]">
+                  <p className="font-bold text-brand-green">
                     ₹{order.finalAmount}
                   </p>
                 </div>
@@ -252,16 +252,16 @@ function OrderHistory() {
                 {order.items.map((item: any, idx: number) => (
                   <div
                     key={idx}
-                    className="flex-shrink-0 flex items-center gap-2 bg-[#FAF7F2] p-2 rounded-xl border border-gray-100"
+                    className="flex-shrink-0 flex items-center gap-2 bg-bg-cream-light p-2 rounded-xl border border-gray-100"
                   >
-                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xs font-bold text-[#2C5530]">
+                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xs font-bold text-brand-green">
                       {item.quantity}x
                     </div>
                     <div className="pr-2">
-                      <p className="text-xs font-bold text-[#1A1A1A] line-clamp-1">
+                      <p className="text-xs font-bold text-text-primary line-clamp-1">
                         {item.productName}
                       </p>
-                      <p className="text-[9px] text-[#6B6B6B]">{item.weight}</p>
+                      <p className="text-[9px] text-text-secondary">{item.weight}</p>
                     </div>
                   </div>
                 ))}
@@ -273,7 +273,7 @@ function OrderHistory() {
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                     <p className="text-xs font-medium text-gray-600">
                       Track:{" "}
-                      <span className="text-[#1A1A1A] font-bold">
+                      <span className="text-text-primary font-bold">
                         {order.trackingNumber}
                       </span>{" "}
                       via {order.courierPartner}

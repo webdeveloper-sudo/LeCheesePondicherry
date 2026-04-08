@@ -22,8 +22,6 @@ export default function CartPage() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const discount = 0;
-
-
   const total = subtotal - discount;
 
   const selectedCount = items.filter((item) => item.selected !== false).length;
@@ -36,12 +34,12 @@ export default function CartPage() {
           <div className="max-w-md mx-auto">
             <div className="text-6xl mb-6">🧀</div>
             <h1
-              className="text-3xl font-bold mb-4 text-[#1A1A1A]"
+              className="text-3xl font-bold mb-4 text-text-primary"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               Your Cart is Empty
             </h1>
-            <p className="text-[#6B6B6B] mb-8">
+            <p className="text-text-secondary mb-8">
               Looks like you haven't added any delicious cheeses yet. Explore
               our collection and find your perfect match!
             </p>
@@ -55,15 +53,14 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen py-12 bg-[#FAF7F2]">
+    <div className="min-h-screen py-12 bg-bg-cream-light">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <h1
-            className="text-3xl md:text-4xl font-bold text-[#1A1A1A]"
+            className="text-3xl md:text-4xl font-bold text-text-primary"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Shopping Cart ({totalItems}{" "}
-            {totalItems === 1 ? "item" : "items"})
+            Shopping Cart ({totalItems} {totalItems === 1 ? "item" : "items"})
           </h1>
 
           {items.length > 0 && (
@@ -73,11 +70,11 @@ export default function CartPage() {
                 id="select-all"
                 checked={isAllSelected}
                 onChange={(e) => toggleSelectAll(e.target.checked)}
-                className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+                className="w-5 h-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer"
               />
               <label
                 htmlFor="select-all"
-                className="text-sm font-semibold text-[#1A1A1A] cursor-pointer"
+                className="text-sm font-semibold text-text-primary cursor-pointer"
               >
                 Select All ({items.length})
               </label>
@@ -90,7 +87,7 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item, index) => {
               const product = getProduct(item.productId);
-              
+
               if (!product) {
                 return (
                   <div
@@ -102,12 +99,22 @@ export default function CartPage() {
                         type="checkbox"
                         checked={item.selected !== false}
                         onChange={() => toggleSelectItem(index)}
-                        className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+                        className="w-5 h-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer"
                       />
                     </div>
                     <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="w-12 h-12"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                     </div>
                     <div className="flex-1">
@@ -116,37 +123,55 @@ export default function CartPage() {
                           <p className="text-lg font-semibold text-gray-400 italic">
                             Product details not found
                           </p>
-                          <p className="text-xs text-gray-400 mt-1">ID: {item.productId}</p>
-                          <p className="text-sm font-medium text-gray-600 mt-2">Weight: {item.weight}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            ID: {item.productId}
+                          </p>
+                          <p className="text-sm font-medium text-gray-600 mt-2">
+                            Weight: {item.weight}
+                          </p>
                         </div>
                         <button
                           onClick={() => removeFromCart(index)}
-                          className="text-[#6B6B6B] hover:text-red-500 transition-colors"
+                          className="text-text-secondary hover:text-red-500 transition-colors"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
                           </svg>
                         </button>
                       </div>
                       <div className="mt-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => updateQuantity(index, item.quantity - 1)}
-                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                            onClick={() =>
+                              updateQuantity(index, item.quantity - 1)
+                            }
+                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-text-primary"
                           >
                             −
                           </button>
-                          <span className="w-8 text-center font-medium text-[#1A1A1A]">
+                          <span className="w-8 text-center font-medium text-text-primary">
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(index, item.quantity + 1)}
-                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                            onClick={() =>
+                              updateQuantity(index, item.quantity + 1)
+                            }
+                            className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-text-primary"
                           >
                             +
                           </button>
                         </div>
-                        <p className="text-lg font-semibold text-[#2C5530]">
+                        <p className="text-lg font-semibold text-brand-green">
                           ₹{(item.price * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -168,12 +193,12 @@ export default function CartPage() {
                       type="checkbox"
                       checked={item.selected !== false}
                       onChange={() => toggleSelectItem(index)}
-                      className="w-5 h-5 rounded border-gray-300 text-[#2C5530] focus:ring-[#2C5530] cursor-pointer"
+                      className="w-5 h-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer"
                     />
                   </div>
 
                   {/* Product Image */}
-                  <div className="w-24 h-24 md:w-32 md:h-32 bg-[#FAF7F2] rounded-lg overflow-hidden relative flex-shrink-0">
+                  <div className="w-24 h-24 md:w-32 md:h-32 bg-bg-cream-light rounded-lg overflow-hidden relative flex-shrink-0">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -187,7 +212,7 @@ export default function CartPage() {
                       <div>
                         <Link
                           to={`/products/${product.id}`}
-                          className="text-lg font-semibold hover:text-[#C9A961] transition-colors text-[#1A1A1A]"
+                          className="text-lg font-semibold hover:text-brand-gold-subtle transition-colors text-text-primary"
                           style={{ fontFamily: "var(--font-heading)" }}
                         >
                           {product.name}
@@ -213,8 +238,8 @@ export default function CartPage() {
                                   }
                                   className={`px-3 py-1 text-xs font-semibold rounded-full border transition-all ${
                                     isSelected
-                                      ? "bg-[#2C5530] text-white border-[#2C5530]"
-                                      : "bg-white text-[#2C5530] border-[#2C5530] hover:bg-green-50"
+                                      ? "bg-brand-green text-white border-brand-green"
+                                      : "bg-white text-brand-green border-brand-green hover:bg-green-50"
                                   }`}
                                 >
                                   {opt.label}
@@ -223,13 +248,10 @@ export default function CartPage() {
                             })}
                           </div>
                         </div>
-                        {/* <p className="text-xs text-[#888888] mt-1 italic">
-                          {product.shortDescription}
-                        </p> */}
                       </div>
                       <button
                         onClick={() => removeFromCart(index)}
-                        className="text-[#6B6B6B] hover:text-red-500 transition-colors"
+                        className="text-text-secondary hover:text-red-500 transition-colors"
                       >
                         <svg
                           className="w-5 h-5"
@@ -254,25 +276,25 @@ export default function CartPage() {
                           onClick={() =>
                             updateQuantity(index, item.quantity - 1)
                           }
-                          className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                          className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-text-primary"
                         >
                           −
                         </button>
-                        <span className="w-8 text-center font-medium text-[#1A1A1A]">
+                        <span className="w-8 text-center font-medium text-text-primary">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() =>
                             updateQuantity(index, item.quantity + 1)
                           }
-                          className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-[#C9A961] text-[#1A1A1A]"
+                          className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:border-brand-gold-subtle text-text-primary"
                         >
                           +
                         </button>
                       </div>
 
                       {/* Price */}
-                      <p className="text-lg font-semibold text-[#2C5530]">
+                      <p className="text-lg font-semibold text-brand-green">
                         ₹{(item.price * item.quantity).toLocaleString()}
                       </p>
                     </div>
@@ -284,7 +306,7 @@ export default function CartPage() {
             {/* Continue Shopping */}
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 text-[#6B6B6B] hover:text-[#C9A961] transition-colors"
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-brand-gold-subtle transition-colors"
             >
               <svg
                 className="w-5 h-5"
@@ -307,7 +329,7 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <div className="bg-white p-6 rounded-lg shadow-sm sticky top-24">
               <h2
-                className="text-xl font-semibold mb-6 text-[#1A1A1A]"
+                className="text-xl font-semibold mb-6 text-text-primary"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 Order Summary
@@ -330,7 +352,7 @@ export default function CartPage() {
                           className="flex justify-between items-center text-xs group"
                         >
                           <div className="flex-1 truncate">
-                            <span className="font-medium text-[#1A1A1A]">
+                            <span className="font-medium text-text-primary">
                               {item.quantity}x
                             </span>{" "}
                             {product.name}
@@ -352,16 +374,16 @@ export default function CartPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex justify-between text-[#6B6B6B] border-t pt-3">
+                <div className="flex justify-between text-text-secondary border-t pt-3">
                   <span>Subtotal</span>
-                  <span className="text-[#1A1A1A]">
+                  <span className="text-text-primary">
                     ₹{subtotal.toLocaleString()}
                   </span>
                 </div>
                 {/* Shipping and Tax calculated only on Checkout for accuracy */}
-                <div className="flex justify-between text-lg font-bold pt-3 border-t text-[#1A1A1A]">
+                <div className="flex justify-between text-lg font-bold pt-3 border-t text-text-primary">
                   <span>Total</span>
-                  <span className="text-[#2C5530]">
+                  <span className="text-brand-green">
                     ₹{total.toLocaleString()}
                   </span>
                 </div>
@@ -386,7 +408,7 @@ export default function CartPage() {
 
               {/* Trust Badges */}
               <div className="mt-6 pt-6 border-t">
-                <div className="flex items-center gap-2 text-sm text-[#6B6B6B] mb-2">
+                <div className="flex items-center gap-2 text-sm text-text-secondary mb-2">
                   <svg
                     className="w-5 h-5 text-green-600"
                     fill="none"
@@ -402,7 +424,7 @@ export default function CartPage() {
                   </svg>
                   Order confirmation via WhatsApp
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#6B6B6B]">
+                <div className="flex items-center gap-2 text-sm text-text-secondary">
                   <svg
                     className="w-5 h-5 text-green-600"
                     fill="none"

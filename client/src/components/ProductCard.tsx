@@ -15,7 +15,7 @@ interface ProductCardProps {
   originalPrice?: number;
   image: string;
   rating?: number;
-  reviews?: number;
+  reviewCount?: number;
 }
 
 export default function ProductCard({
@@ -26,7 +26,7 @@ export default function ProductCard({
   originalPrice,
   image,
   rating = 4.5,
-  reviews = 0,
+  reviewCount = 0,
 }: ProductCardProps) {
   const { isInWishlist, toggleWishlist, trackProductView } = useUserStore();
   const { addToast } = useToastStore();
@@ -89,7 +89,7 @@ export default function ProductCard({
       {/* Image Container */}
       <Link
         to={`/products/${id}`}
-        className="block relative aspect-square overflow-hidden bg-[#FAF7F2]"
+        className="block relative aspect-square overflow-hidden bg-bg-cream-light"
         onClick={handleProductClick}
       >
         <img
@@ -100,10 +100,10 @@ export default function ProductCard({
           loading="lazy"
         />
         {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-[#1A1A1A] px-4 py-2 rounded-md text-sm font-medium shadow-lg">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-brand-gold text-[#1A1A1A] px-5 py-2 rounded-full text-xs font-semibold shadow-lg">
             Quick View
-          </button>
+          </span>
         </div>
       </Link>
 
@@ -112,7 +112,7 @@ export default function ProductCard({
         {/* Product Name */}
         <Link to={`/products/${id}`} onClick={handleProductClick}>
           <h3
-            className="text-lg font-medium text-[#1A1A1A] mb-1 hover:text-[#C9A961] transition-colors"
+            className="text-lg font-medium text-text-primary mb-1 hover:text-brand-gold-subtle transition-colors"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             {name}
@@ -120,14 +120,14 @@ export default function ProductCard({
         </Link>
 
         {/* Description */}
-        <p className="md:text-sm text-[12px] text-[#6B6B6B] mb-2 line-clamp-2">
+        <p className="md:text-sm text-[12px] text-text-secondary mb-2 line-clamp-2">
           {description}
         </p>
 
         {/* Rating */}
         {rating > 0 && (
           <div className="flex items-center space-y-2 gap-1 mb-2">
-            <div className="flex text-[#C9A961]">
+            <div className="flex text-brand-gold-subtle">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
@@ -138,33 +138,34 @@ export default function ProductCard({
                 </svg>
               ))}
             </div>
-            {reviews > 0 && (
-              <span className="text-xs text-[#6B6B6B]">({reviews})</span>
+            {reviewCount > 0 && (
+              <span className="text-xs text-text-secondary">({reviewCount})</span>
             )}
           </div>
         )}
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="md:text-lg text-[15px] font-semibold text-[#2C5530]">
+          <span className="md:text-lg text-[15px] font-semibold text-brand-green">
             ₹{price.toLocaleString()}
           </span>
           {originalPrice && (
-            <span className="md:text-sm text-[13px] text-[#6B6B6B] line-through">
+            <span className="md:text-sm text-[13px] text-text-secondary line-through">
               ₹{originalPrice.toLocaleString()}
             </span>
           )}
         </div>
 
-        {/* Add to Cart Button - pushed to bottom with mt-auto */}
+        {/* View Details Button */}
         <Link
           to={`/products/${id}`}
-          className="block w-full mt-auto"
+          className="group/btn mt-auto inline-flex items-center justify-center gap-2 w-full bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-xs md:text-sm py-2.5 rounded-full transition-all duration-300 shadow hover:-translate-y-0.5"
           onClick={handleProductClick}
         >
-          <button className="w-full  btn-secondary text-[13px] md:text-sm  py-2 group-hover:bg-[#C9A961] group-hover:text-black group-hover:border-[#C9A961]">
-            View Details
-          </button>
+          View Details
+          <svg className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
         </Link>
       </div>
     </motion.div>

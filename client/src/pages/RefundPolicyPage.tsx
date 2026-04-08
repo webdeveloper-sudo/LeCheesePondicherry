@@ -11,7 +11,7 @@ export default function RefundPolicyPage() {
 
   return (
     <div className="bg-pattern py-10">
-      <div className="container bg-[#FAF7F2]  border border-gray-200 mx-auto px-4 max-w-4xl">
+      <div className="container bg-bg-cream-light  border border-gray-200 mx-auto px-4 max-w-4xl">
         <MotionContainer stagger>
           <div className="flex px-5 justify-between items-center">
             <MotionHeading
@@ -21,31 +21,31 @@ export default function RefundPolicyPage() {
             >
               Refund Policy
             </MotionHeading>
-            <MotionText className="text-[#6B6B6B] md:block hidden text-end mb-8 italic">
+            <MotionText className="text-text-secondary md:block hidden text-end mb-8 italic">
               Last Updated: {lastUpdated}
             </MotionText>
           </div>
 
           <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100">
             <div className="space-y-12">
-              <MotionText className="text-[#6B6B6B] md:hidden block text-end mb-8 italic">
+              <MotionText className="text-text-secondary md:hidden block text-end mb-8 italic">
                 Last Updated: {lastUpdated}
               </MotionText>
               <motion.section variants={fadeUp}>
-                <p className="text-[#6B6B6B] leading-relaxed mb-6">
+                <p className="text-text-secondary leading-relaxed mb-6">
                   Due to the perishable nature of cheese and dairy products,
                   returns are limited.
                 </p>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Eligible Refund Situations
                     </h3>
-                    <p className="text-[#6B6B6B] mb-2">
+                    <p className="text-text-secondary mb-2">
                       Refunds may be considered if:
                     </p>
-                    <ul className="list-disc pl-5 text-[#6B6B6B] space-y-1">
+                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
                       <li>The product arrives damaged during transit</li>
                       <li>The product is spoiled upon delivery</li>
                       <li>The wrong item was delivered</li>
@@ -55,7 +55,7 @@ export default function RefundPolicyPage() {
                         order placed
                       </li>
                     </ul>
-                    <p className="text-[#6B6B6B] mt-4 font-medium">
+                    <p className="text-text-secondary mt-4 font-medium">
                       Customers must notify us within 24 hours of receiving the
                       product, along with clear photo or video evidence of the
                       issue.
@@ -63,13 +63,13 @@ export default function RefundPolicyPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Non-Refundable Situations
                     </h3>
-                    <p className="text-[#6B6B6B] mb-2">
+                    <p className="text-text-secondary mb-2">
                       Refunds cannot be provided for:
                     </p>
-                    <ul className="list-disc pl-5 text-[#6B6B6B] space-y-1">
+                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
                       <li>
                         Incorrect shipping address or contact details provided
                         by the customer
@@ -88,13 +88,13 @@ export default function RefundPolicyPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Refund Process
                     </h3>
-                    <p className="text-[#6B6B6B] mb-2">
+                    <p className="text-text-secondary mb-2">
                       Once the claim is verified:
                     </p>
-                    <ul className="list-disc pl-5 text-[#6B6B6B] space-y-1">
+                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
                       <li>
                         Our team will review the request and may contact you for
                         additional information
@@ -114,10 +114,10 @@ export default function RefundPolicyPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Order Cancellation
                     </h3>
-                    <p className="text-[#6B6B6B] leading-relaxed">
+                    <p className="text-text-secondary leading-relaxed">
                       Orders may be cancelled before they are dispatched. Once
                       the order has been shipped, cancellations may not be
                       possible due to the perishable nature of the products.
@@ -128,46 +128,46 @@ export default function RefundPolicyPage() {
 
               <motion.section variants={fadeUp}>
                 <h2
-                  className="text-2xl font-bold mb-4 text-[#2C5530]"
+                  className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
                 >
                   Shipping Policy
                 </h2>
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Shipping Locations
                     </h3>
-                    <p className="text-[#6B6B6B]">
+                    <p className="text-text-secondary">
                       We currently ship across India. Some remote locations may
                       have delivery limitations.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Order Processing
                     </h3>
-                    <p className="text-[#6B6B6B]">
+                    <p className="text-text-secondary">
                       Orders are typically processed within 1–2 business days
                       after payment confirmation.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Delivery Timeline
                     </h3>
-                    <p className="text-[#6B6B6B] mb-2">
+                    <p className="text-text-secondary mb-2">
                       Estimated delivery times:
                     </p>
-                    <ul className="list-disc pl-5 text-[#6B6B6B] space-y-1">
+                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
                       <li>Pondicherry: Within 24 hours</li>
                       <li>Tamil Nadu: 2–4 business days</li>
                       <li>Rest of India: Within 5–7 business days</li>
                       <li>Metro Cities: 2–4 business days</li>
                     </ul>
-                    <p className="text-xs text-[#6B6B6B] mt-2 italic">
+                    <p className="text-xs text-text-secondary mt-2 italic">
                       Delivery timelines may vary slightly depending on
                       location, logistics operations, and external factors
                       beyond our control.
@@ -175,18 +175,18 @@ export default function RefundPolicyPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
                       Shipping Charges
                     </h3>
-                    <p className="text-[#6B6B6B] mb-2">
+                    <p className="text-text-secondary mb-2">
                       Shipping charges are calculated based on:
                     </p>
-                    <ul className="list-disc pl-5 text-[#6B6B6B] space-y-1">
+                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
                       <li>Order weight</li>
                       <li>Delivery location</li>
                       <li>Shipping method</li>
                     </ul>
-                    <p className="text-[#6B6B6B] mt-2 text-justify">
+                    <p className="text-text-secondary mt-2 text-justify">
                       The final shipping cost will be displayed at checkout
                       prior to payment confirmation. Applicable payment gateway
                       processing fees and delivery charges, where applicable,
@@ -195,7 +195,7 @@ export default function RefundPolicyPage() {
                     </p>
                   </div>
 
-                  <div className="p-6 bg-[#2C5530] text-white rounded-lg">
+                  <div className="p-6 bg-brand-green text-white rounded-lg">
                     <h3
                       className="text-xl font-bold mb-3"
                       style={{ fontFamily: "var(--font-heading)" }}

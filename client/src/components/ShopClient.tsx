@@ -11,7 +11,9 @@ import {
 } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import heroImage from "@/assets/images/hero-cheese-board.webp";
+import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
 import { Loader } from "lucide-react";
+import { useShopStore } from "@/store/useShopStore";
 
 export default function ShopClient() {
   const {
@@ -24,11 +26,18 @@ export default function ShopClient() {
   const products = allProducts;
   const loading = cartLoading;
 
-  const [searchParams] = useSearchParams();
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("featured");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const {
+    activeCategory,
+    setActiveCategory,
+    sortBy,
+    setSortBy,
+    searchTerm,
+    setSearchTerm,
+    isSearchOpen,
+    setIsSearchOpen,
+    clearFilters,
+  } = useShopStore();
+
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -39,16 +48,18 @@ export default function ShopClient() {
   const [subscribingId, setSubscribingId] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
 
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     const query = searchParams.get("search");
     if (query) {
       setSearchTerm(query);
-      setActiveCategory("all"); // Reset category when searching
+      setActiveCategory("all"); // Reset category when searching from URL
       setIsSearchOpen(true);
-    } else {
-      setSearchTerm("");
     }
-  }, [searchParams]);
+    // We don't clear the searchTerm if it's NOT in the params, 
+    // because that's when we want the PERSISTENT store to take over.
+  }, [searchParams, setSearchTerm, setActiveCategory, setIsSearchOpen]);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -151,7 +162,7 @@ export default function ShopClient() {
           </div>
         </div>
         <div className="flex-1 flex justify-center items-center py-20">
-          <Loader className="animate-spin text-[#2C5530]" size={48} />
+          <Loader className="animate-spin text-brand-green" size={48} />
         </div>
       </div>
     );
@@ -159,24 +170,8 @@ export default function ShopClient() {
 
   return (
     <div className="min-h-screen bg-pattern">
-      {/* Hero Section */}
-      <section
-        className="relative h-[40vh] min-h-[400px] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
-        <div className="absolute inset-0 hero-overlay" />
-        <div className="relative z-10 text-center text-white max-w-3xl mx-auto px-4">
-          <h1
-            className="text-4xl md:text-5xl font-bold mb-4 text-white-prominent"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Shop Artisan Cheeses
-          </h1>
-          <p className="text-xl text-white-prominent max-w-2xl mx-auto">
-            Premium quality, delivered fresh to your door
-          </p>
-        </div>
-      </section>
+      {/* Hero Banner */}
+      <BannerAndBreadCrumb title="Shop Artisan Cheeses" img={heroImage} />
 
       {/* Shop Content */}
       <section className="py-12">
@@ -192,8 +187,8 @@ export default function ShopClient() {
                     onClick={() => setActiveCategory(cat.id)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       activeCategory === cat.id
-                        ? "bg-[#2C5530] text-white"
-                        : "bg-gray-100 text-[#1A1A1A] hover:bg-gray-200"
+                        ? "bg-brand-green text-white"
+                        : "bg-gray-100 text-text-primary hover:bg-gray-200"
                     }`}
                   >
                     {cat.name}
@@ -208,7 +203,7 @@ export default function ShopClient() {
                 {/* Category Mobile Tabs Dropdown */}
                 <button
                   onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:border-[#C9A961] transition-all min-w-[140px] justify-between"
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:border-brand-gold-subtle transition-all min-w-[140px] justify-between"
                 >
                   <div className="flex items-center gap-2">
                     <span className="truncate max-w-[120px]">
@@ -218,7 +213,7 @@ export default function ShopClient() {
                   </div>
                   <ChevronDown
                     size={16}
-                    className={`text-[#6B6B6B] transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
+                    className={`text-text-secondary transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
@@ -231,15 +226,15 @@ export default function ShopClient() {
                           setActiveCategory(cat.id);
                           setIsCategoryOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#FAF7F2] flex items-center justify-between group transition-colors ${
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-bg-cream-light flex items-center justify-between group transition-colors ${
                           activeCategory === cat.id
-                            ? "text-[#2C5530] font-medium bg-[#FAF7F2]"
-                            : "text-[#4A4A4A]"
+                            ? "text-brand-green font-medium bg-bg-cream-light"
+                            : "text-text-secondary"
                         }`}
                       >
                         <span className="truncate">{cat.name}</span>
                         {activeCategory === cat.id && (
-                          <Check size={16} className="text-[#C9A961]" />
+                          <Check size={16} className="text-brand-gold-subtle" />
                         )}
                       </button>
                     ))}
@@ -259,7 +254,7 @@ export default function ShopClient() {
                         placeholder="Search cheeses..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-4 pr-10 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-[#C9A961] focus:ring-1 focus:ring-[#C9A961]"
+                        className="w-full pl-4 pr-10 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-brand-gold-subtle focus:ring-1 focus:ring-brand-gold-subtle"
                       />
                       <button
                         onClick={() => {
@@ -274,7 +269,7 @@ export default function ShopClient() {
                   ) : (
                     <button
                       onClick={() => setIsSearchOpen(true)}
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 hover:border-[#C9A961] hover:text-[#C9A961] transition-all"
+                      className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 hover:border-brand-gold-subtle hover:text-brand-gold-subtle transition-all"
                     >
                       <Search size={18} />
                     </button>
@@ -286,10 +281,10 @@ export default function ShopClient() {
               <div className="relative" ref={sortRef}>
                 <button
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:border-[#C9A961] transition-all min-w-[160px] justify-between"
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium hover:border-brand-gold-subtle transition-all min-w-[160px] justify-between"
                 >
                   <div className="flex items-center gap-2">
-                    <ArrowUpDown size={16} className="text-[#6B6B6B]" />
+                    <ArrowUpDown size={16} className="text-text-secondary" />
                     <span>
                       {sortBy === "featured" && "Featured"}
                       {sortBy === "price-low" && "Price: Low to High"}
@@ -299,7 +294,7 @@ export default function ShopClient() {
                   </div>
                   <ChevronDown
                     size={16}
-                    className={`text-[#6B6B6B] transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`}
+                    className={`text-text-secondary transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
@@ -317,15 +312,15 @@ export default function ShopClient() {
                           setSortBy(option.value);
                           setIsSortOpen(false);
                         }}
-                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#FAF7F2] flex items-center justify-between group transition-colors ${
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-bg-cream-light flex items-center justify-between group transition-colors ${
                           sortBy === option.value
-                            ? "text-[#2C5530] font-medium bg-[#FAF7F2]"
-                            : "text-[#4A4A4A]"
+                            ? "text-brand-green font-medium bg-bg-cream-light"
+                            : "text-text-secondary"
                         }`}
                       >
                         <span>{option.label}</span>
                         {sortBy === option.value && (
-                          <Check size={16} className="text-[#C9A961]" />
+                          <Check size={16} className="text-brand-gold-subtle" />
                         )}
                       </button>
                     ))}
@@ -338,23 +333,19 @@ export default function ShopClient() {
 
         {/* Results Count & Clear Search */}
         <div className="container flex justify-between items-center ">
-          <p className="text-sm text-[#6B6B6B] mb-8">
-            Showing {sortedProducts.length}{" "}
-            {sortedProducts.length === 1 ? "product" : "products"}
-            {searchTerm && (
-              <span>
-                {" "}
-                for "<span className="font-semibold">{searchTerm}</span>"
-              </span>
-            )}
+          <p className="text-sm text-text-secondary mb-8">
+         {
+          categories.find((cat) => cat.id === activeCategory)?.description
+         }
           </p>
           {searchTerm && (
             <button
               onClick={() => {
                 setSearchTerm("");
+                setIsSearchOpen(false);
                 window.history.replaceState(null, "", "/shop");
               }}
-              className="text-sm text-[#2C5530] hover:underline font-medium"
+              className="text-sm text-brand-green hover:underline font-medium"
             >
               Clear Search
             </button>
@@ -373,7 +364,7 @@ export default function ShopClient() {
               originalPrice={product.originalPrice}
               image={product.image}
               rating={product.rating}
-              reviews={product.reviews}
+              reviewCount={product.reviewCount}
             />
           ))}
         </div>
@@ -381,14 +372,13 @@ export default function ShopClient() {
         {/* Empty State */}
         {sortedProducts.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-xl text-[#6B6B6B]">
+            <p className="text-xl text-text-secondary">
               No products found
               {searchTerm ? " matching your search" : " in this category"}.
             </p>
             <button
               onClick={() => {
-                setActiveCategory("all");
-                setSearchTerm("");
+                clearFilters();
                 window.history.replaceState(null, "", "/shop");
               }}
               className="mt-4 btn btn-secondary"
@@ -399,23 +389,17 @@ export default function ShopClient() {
         )}
       </section>
 
-      {/* Subscription CTA */}
       <section
-        className="py-16"
-        style={{
-          background:
-            "radial-gradient(circle,rgba(233, 215, 154, 0.77) 0%, rgba(249, 182, 25, 0.62) 100%)",
-          animation: "gradientBG 20s ease infinite",
-        }}
+        className="py-16 bg-yellow-gradient"
       >
         <div className="container mx-auto px-4 text-center">
           <h2
-            className="text-3xl md:text-4xl mb-4 font-bold text-[#1A1A1A]"
+            className="text-3xl md:text-4xl mb-4 font-bold text-text-primary"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Wholesale & Partnerships
           </h2>
-          <p className="text-[#6B6B6B] max-w-2xl mx-auto mb-10 text-lg">
+          <p className="text-text-secondary max-w-2xl mx-auto mb-10 text-lg">
             Elevate your menu with Pondicherry's finest handcrafted artisan
             cheeses. We partner with premium restaurants, hotels, and cafes
             across India.
@@ -423,7 +407,7 @@ export default function ShopClient() {
           <div className="flex justify-center">
             <Link
               to="/wholesale"
-              className="btn btn-primary bg-[#2C5530] text-white hover:bg-[#1a3a20] px-10 py-4 text-lg rounded-full font-bold shadow-xl transition-all hover:scale-105"
+              className="btn btn-primary bg-brand-green text-white hover:bg-brand-green-dark px-10 py-4 text-lg rounded-full font-bold shadow-xl transition-all hover:scale-105"
             >
               Enquire for Wholesale
             </Link>

@@ -56,7 +56,7 @@ export default function CompanyTimeline({ data }: CompanyTimelineProps) {
   return (
     <div
       ref={timelineRef}
-      className="relative py-20 border-t border-[#D4AF37] bg-gradient-to-b from-[#FAF7F2] to-[#F5E8C7]"
+      className="relative py-20 bg-bg-cream-light"
     >
       <div className="container mx-auto px-4">
         <div className="text-center">
@@ -210,7 +210,7 @@ function TimelineItem({
         <div className="w-5/12 flex justify-center">
           <motion.div
             className="text-6xl font-bold text-[#2C5530] opacity-100"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: "var(--font-heading)" }}
             whileHover={{ opacity: 0.4, scale: 1.1 }}
           >
             {item.year}
@@ -244,7 +244,7 @@ function MobileTimelineItem({ item, index, Icon }: any) {
       <div className="flex-1 bg-white p-4 shadow-md border-l-4 border-[#FAB519]">
         <p
           className="text-2xl font-bold text-[#D4AF37] mb-2"
-          style={{ fontFamily: "Playfair Display, serif" }}
+          style={{ fontFamily: "var(--font-heading)" }}
         >
           {item.year}
         </p>

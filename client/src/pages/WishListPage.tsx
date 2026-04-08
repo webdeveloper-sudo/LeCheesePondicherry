@@ -109,9 +109,9 @@ export default function WishlistPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+      <div className="min-h-screen bg-bg-cream-light flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5530] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto mb-4"></div>
           <p className="text-gray-600">Loading your wishlist...</p>
         </div>
       </div>
@@ -119,12 +119,12 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-bg-cream-light">
       {/* Header */}
       <div className="bg-white py-10">
         <div className="container mx-auto px-4 py-8">
           <h1
-            className="text-3xl font-bold text-[#2C5530]"
+            className="text-3xl font-bold text-brand-green"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             My Wishlist
@@ -150,9 +150,12 @@ export default function WishlistPage() {
             </p>
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 bg-[#2C5530] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#1a3a20] transition-colors"
+              className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
             >
-              Explore Shop <ArrowRight size={20} />
+              Explore Shop
+              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
         ) : (
@@ -170,7 +173,7 @@ export default function WishlistPage() {
                 {/* Product Image */}
                 <Link
                   to={`/products/${product.id}`}
-                  className="block relative aspect-square bg-[#FAF7F2] overflow-hidden group"
+                  className="block relative aspect-square bg-bg-cream-light overflow-hidden group"
                 >
                   <img
                     src={product.image}
@@ -183,7 +186,7 @@ export default function WishlistPage() {
                 <div className="p-4">
                   <Link to={`/products/${product.id}`}>
                     <h3
-                      className="text-lg font-medium text-[#1A1A1A] mb-1 hover:text-[#C9A961] transition-colors"
+                      className="text-lg font-medium text-text-primary mb-1 hover:text-brand-gold-subtle transition-colors"
                       style={{ fontFamily: "var(--font-heading)" }}
                     >
                       {product.name}
@@ -196,7 +199,7 @@ export default function WishlistPage() {
 
                   {/* Price */}
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg font-semibold text-[#2C5530]">
+                    <span className="text-lg font-semibold text-brand-green">
                       ₹{product.price.toLocaleString()}
                     </span>
                     {product.originalPrice && (
@@ -211,7 +214,7 @@ export default function WishlistPage() {
                     <button
                       onClick={() => handleMoveToCart(product.id)}
                       disabled={movingToCart === product.id}
-                      className="flex-1 flex items-center justify-center gap-2 bg-[#2C5530] text-white py-2.5 rounded-lg font-medium hover:bg-[#1a3a20] transition-colors disabled:opacity-50"
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-xs py-2.5 rounded-full transition-all duration-300 disabled:opacity-50 hover:-translate-y-0.5"
                     >
                       {movingToCart === product.id ? (
                         "Adding..."

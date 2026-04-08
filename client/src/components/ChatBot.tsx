@@ -170,7 +170,7 @@ Action Required: Please reply to ${text} as soon as possible.
             {isOpen && (
                 <div className="bg-white w-80 md:w-96 h-[500px]  rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
                     {/* Header */}
-                    <div className="bg-[#2C5530] p-4 text-white flex justify-between items-center shadow-lg">
+                    <div className="bg-brand-green-subtle p-4 text-white flex justify-between items-center shadow-lg">
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 bg-[#FAB519] rounded-full flex items-center justify-center text-[10px] font-bold text-white border border-white/20">
                                 LPC
@@ -221,7 +221,7 @@ Action Required: Please reply to ${text} as soon as possible.
                                                         href={match[2]}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-[#2C5530] font-bold underline hover:text-[#FAB519] transition-colors"
+                                                        className="text-brand-green-subtle font-bold underline hover:text-[#FAB519] transition-colors"
                                                     >
                                                         {match[1]}
                                                     </a>
@@ -239,7 +239,7 @@ Action Required: Please reply to ${text} as soon as possible.
                                             <button
                                                 key={idx}
                                                 onClick={() => handleSend(s)}
-                                                className="text-[11px] px-3 py-1.5 bg-white border border-[#FAB519]/30 text-[#2C5530] rounded-full hover:bg-[#FAB519] hover:text-white transition-all shadow-sm font-medium"
+                                                className="text-[11px] px-3 py-1.5 bg-white border border-[#FAB519]/30 text-brand-green-subtle rounded-full hover:bg-[#FAB519] hover:text-white transition-all shadow-sm font-medium"
                                             >
                                                 {s}
                                             </button>
@@ -259,12 +259,12 @@ Action Required: Please reply to ${text} as soon as possible.
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                                 placeholder="Ask about our cheese or shipping..."
-                                className="flex-1 text-sm bg-gray-50 border border-transparent rounded-full px-4 py-2.5 focus:bg-white focus:ring-2 focus:ring-[#2C5530]/10 focus:border-[#2C5530]/20 outline-none transition-all"
+                                className="flex-1 text-sm bg-gray-50 border border-transparent rounded-full px-4 py-2.5 focus:bg-white focus:ring-2 focus:ring-brand-green-subtle/10 focus:border-brand-green-subtle/20 outline-none transition-all"
                             />
                             <button
                                 onClick={() => handleSend()}
                                 disabled={!inputValue.trim()}
-                                className="bg-[#2C5530] text-white p-2.5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#2C5530]/20 disabled:opacity-50 disabled:scale-100"
+                                className="bg-brand-green-subtle text-white p-2.5 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-brand-green-subtle/20 disabled:opacity-50 disabled:scale-100"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -280,7 +280,7 @@ Action Required: Please reply to ${text} as soon as possible.
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-[#2C5530] text-white p-4 border-2 border-[#FAB519] border rounded-full shadow-lg hover:scale-110 hover:rotate-12 transition-all group relative"
+                    className="bg-brand-green-subtle text-white p-4 border-2 border-[#FAB519] border rounded-full shadow-lg hover:scale-110 hover:rotate-12 transition-all group relative"
                 >
                     <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />

@@ -5,6 +5,8 @@ import SubmissionSuccessModal from "@/components/ui/SubmissionSuccessModal";
 import { useState, useRef, useEffect } from "react";
 import { MotionHeading, MotionText } from "@/components/ui/MotionPrimitives";
 import { fadeUp } from "@/animations/variants";
+import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import wholesaleBanner from "@/assets/images/process-hero-new.webp";
 import fssai from "@/assets/icons/fssai.webp";
 import chef from "@/assets/icons/chef.webp";
 import coldchain from "@/assets/icons/cold-chain.webp";
@@ -79,22 +81,9 @@ export default function WholesalePage() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#FAF7F2]">
-      {/* Hero Section */}
-      <section className="bg-[#2C5530] py-20 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1
-            className="text-4xl md:text-5xl font-bold mb-6"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Wholesale & Partnerships
-          </h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            Elevate your menu with Pondicherry's finest handcrafted artisan
-            cheeses.
-          </p>
-        </div>
-      </section>
+      <div className="min-h-screen bg-bg-cream-light">
+      {/* Hero Banner */}
+      <BannerAndBreadCrumb title="Wholesale & Partnerships" img={wholesaleBanner} />
 
       {/* Signature Collection Intro Section */}
       {/* <section className="py-12 md:py-20 bg-pattern relative z-10 w-full">
@@ -108,7 +97,7 @@ export default function WholesalePage() {
               Discover Our Signature Collection
             </MotionHeading>
             <MotionText
-              className="text-[#6B6B6B] max-w-2xl mx-auto break-words"
+              className="text-text-secondary max-w-2xl mx-auto break-words"
               variants={fadeUp}
             >
               Handcrafted cheeses made using traditional French techniques and
@@ -124,12 +113,12 @@ export default function WholesalePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
             <div>
               <h2
-                className="text-3xl font-bold mb-6 text-[#1A1A1A]"
+                className="text-3xl font-bold mb-6 text-text-primary"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 For Restaurants, Hotels & Cafes
               </h2>
-              <p className="text-[#6B6B6B] mb-6 leading-relaxed">
+              <p className="text-text-secondary mb-6 leading-relaxed">
                 Le Pondicherry Cheese currently partners with over 50 premium
                 dining establishments across India. We provide master-crafted
                 cheeses that serve as the centerpiece for gourmet cheese boards,
@@ -137,38 +126,44 @@ export default function WholesalePage() {
               </p>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start gap-3">
-                  <span className="text-[#C9A961] font-bold">✓</span>
-                  <span className="text-[#1A1A1A]">
+                  <span className="text-brand-gold-subtle font-bold">✓</span>
+                  <span className="text-text-primary">
                     Bulk pricing tiers for high-volume partners.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#C9A961] font-bold">✓</span>
-                  <span className="text-[#1A1A1A]">
+                  <span className="text-brand-gold-subtle font-bold">✓</span>
+                  <span className="text-text-primary">
                     Custom maturation profiles for signature menu items.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#C9A961] font-bold">✓</span>
-                  <span className="text-[#1A1A1A]">
+                  <span className="text-brand-gold-subtle font-bold">✓</span>
+                  <span className="text-text-primary">
                     Cold-chain logistics managed by AGOC Food Park.
                   </span>
                 </li>
               </ul>
-              <Link to="/contact" className="btn btn-primary">
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
+              >
                 Request Price List
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
-            <div className="bg-white p-8 md:p-10 rounded-sm shadow-xl border border-green relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C9A961] to-transparent opacity-50"></div>
+            <div className="bg-white p-8 md:p-10 rounded-sm shadow-xl border border-gray-200 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-gold-subtle to-transparent opacity-50"></div>
 
               <h3
-                className="text-3xl font-bold mb-2 text-[#2C5530]"
+                className="text-3xl font-bold mb-2 text-brand-green"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 Wholesale Inquiry
               </h3>
-              <p className="text-md py-2 mb-6 text-[#6B6B6B]">
+              <p className="text-md py-2 mb-6 text-text-secondary">
                 Fill out the form and our wholesale team will reach out within 24 hours.
               </p>
 
@@ -176,24 +171,24 @@ export default function WholesalePage() {
                 {/* Business Name + Type */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-[#1A1A1A]/80 uppercase tracking-wide">
+                    <label className="block text-sm font-semibold text-text-primary/80 uppercase tracking-wide">
                       Business Name
                     </label>
                     <input
                       name="businessName"
                       type="text"
                       required
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle transition-all"
                       placeholder="Your business name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-[#1A1A1A]/80 uppercase tracking-wide">
+                    <label className="block text-sm font-semibold text-text-primary/80 uppercase tracking-wide">
                       Business Type
                     </label>
                     <select
                       name="businessType"
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all text-gray-700"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle transition-all text-gray-700"
                     >
                       <option>Restaurant / Cafe</option>
                       <option>Hotel / Resort</option>
@@ -205,21 +200,21 @@ export default function WholesalePage() {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-[#1A1A1A]/80 uppercase tracking-wide">
+                  <label className="block text-sm font-semibold text-text-primary/80 uppercase tracking-wide">
                     Contact Email
                   </label>
                   <input
                     name="email"
                     type="email"
                     required
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle transition-all"
                     placeholder="vp.expansions@hopemarket.in"
                   />
                 </div>
 
                 {/* Mobile Number with Country Code */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-[#1A1A1A]/80 uppercase tracking-wide">
+                  <label className="block text-sm font-semibold text-text-primary/80 uppercase tracking-wide">
                     Mobile Number
                   </label>
                   <div className="flex gap-2">
@@ -228,7 +223,7 @@ export default function WholesalePage() {
                       <button
                         type="button"
                         onClick={() => { setDropdownOpen(!dropdownOpen); setSearch(""); }}
-                        className="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-[#C9A961] focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 transition-all text-sm h-full"
+                        className="flex items-center gap-1.5 px-3 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-brand-gold-subtle focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 transition-all text-sm h-full"
                         style={{ minWidth: "92px" }}
                       >
                         <span className="text-xl leading-none">{selectedCountry?.flag}</span>
@@ -247,7 +242,7 @@ export default function WholesalePage() {
                               placeholder="Search country or code..."
                               value={search}
                               onChange={(e) => setSearch(e.target.value)}
-                              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50"
+                              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50"
                             />
                           </div>
                           <ul className="max-h-56 overflow-y-auto divide-y divide-gray-50">
@@ -264,7 +259,7 @@ export default function WholesalePage() {
                                       setSearch("");
                                     }}
                                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors text-left ${
-                                      dialCode === country.dialCode ? "bg-[#C9A961]/10 font-semibold" : ""
+                                      dialCode === country.dialCode ? "bg-brand-gold-subtle/10 font-semibold" : ""
                                     }`}
                                   >
                                     <span className="text-xl leading-none w-7 text-center">{country.flag}</span>
@@ -283,7 +278,7 @@ export default function WholesalePage() {
                       name="mobile"
                       type="tel"
                       maxLength={15}
-                      className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all"
+                      className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle transition-all"
                       placeholder="9876543210"
                       pattern="[0-9\s\-()]+"
                     />
@@ -292,21 +287,21 @@ export default function WholesalePage() {
 
                 {/* Volume */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-[#1A1A1A]/80 uppercase tracking-wide">
+                  <label className="block text-sm font-semibold text-text-primary/80 uppercase tracking-wide">
                     Expected Monthly Volume
                   </label>
                   <input
                     name="volume"
                     type="text"
                     placeholder="e.g., 10kg – 25kg"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] transition-all"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle transition-all"
                   />
                 </div>
 
 
                 <button
                   type="submit"
-                  className={`btn btn-primary w-full md:w-auto min-w-[200px] py-4 text-base tracking-wide shadow-md hover:shadow-xl transition-all duration-300 ${status === "loading" ? "opacity-80 cursor-wait" : ""}`}
+                  className={`group inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5 w-full md:w-auto min-w-[200px] ${status === "loading" ? "opacity-80 cursor-wait" : ""}`}
                   disabled={status === "loading"}
                 >
                   {status === "loading" ? (
@@ -330,23 +325,23 @@ export default function WholesalePage() {
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
               <img src={coldchain} className="w-32 h-32 my-2 mx-auto" />
               <h4 className="font-bold mb-2 mt-4">Cold-Chain Reliability</h4>
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-sm text-text-secondary">
                 Our logistics network ensures every batch arrives at your
                 kitchen between 2°C and 4°C.
               </p>
             </div>
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
               <img src={chef} className="w-32 h-32 mx-auto my-2" />
-              <h4 className="font-bold mb-2 mt-4">Masterclass Training</h4>
-              <p className="text-sm text-[#6B6B6B]">
-                We provide staff training on cheese handling, pairing, and
-                presentation for all partners.
+              <h4 className="font-bold mb-2 mt-4">Customized Bulk Supply</h4>
+              <p className="text-sm text-text-secondary">
+                Bespoke cheese portions and maturation profiles tailored
+                specifically to your menu and volume requirements.
               </p>
             </div>
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
               <img src={fssai} className="w-32 h-32 mx-auto rounded-[100%]" />
               <h4 className="font-bold mb-2 mt-4">FSSAI Certified</h4>
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-sm text-text-secondary">
                 Fully compliant with Indian food safety standards and
                 export-ready documentation.
               </p>

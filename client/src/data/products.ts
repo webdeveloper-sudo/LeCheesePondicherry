@@ -39,7 +39,26 @@ export interface Product {
   images?: string[];
   category: string;
   rating: number;
-  reviews: number;
+  reviewCount: number;
+  bestPairingDishes?: {
+    dishName: string;
+    image: string;
+    shortDescription: string;
+    originCountry: string;
+    ingredients: string[];
+    steps: string[];
+    prepTime: string;
+    difficultyLevel: string;
+    whyItPairsWell: string;
+  }[];
+  reviews?: {
+    rating: number;
+    comment: string;
+    username: string;
+    restaurantName: string;
+    userArea: string;
+    createdAt: string;
+  }[];
   weight: string;
   inStock: boolean;
   featured?: boolean;
@@ -51,8 +70,8 @@ export interface Product {
     flavor: string;
     finish: string;
   };
-  pairings?: string[];
-  ingredients?: string;
+  pairings?: string;
+  ingredients?: string[];
 }
 
 export const products: Product[] = [
@@ -68,7 +87,59 @@ export const products: Product[] = [
     images: [babySwissPackage, babySwissTexture, babySwissPairing],
     category: "aged",
     rating: 5,
-    reviews: 45,
+    reviewCount: 45,
+    bestPairingDishes: [
+      {
+        dishName: "Classic Cheese Quiche",
+        image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&q=80&w=600",
+        shortDescription: "A savory French tart with a rich custard filling and melted Baby Swiss.",
+        originCountry: "France",
+        prepTime: "45 mins",
+        difficultyLevel: "Intermediate",
+        whyItPairsWell: "The nuttiness of the Swiss cheese balances the richness of the egg custard perfectly.",
+        ingredients: ["Baby Swiss", "Store-bought crust", "4 Eggs", "Milk", "Onions"],
+        steps: [
+          "Preheat oven to 375°F (190°C).",
+          "Layer shredded Baby Swiss and sauteed onions in the crust.",
+          "Whisk eggs and milk, pour over the cheese.",
+          "Bake for 35-40 minutes until golden."
+        ]
+      },
+      {
+        dishName: "Swiss Mushroom Burger",
+        image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600",
+        shortDescription: "Juicy beef patty topped with sauteed mushrooms and creamy Baby Swiss.",
+        originCountry: "USA",
+        prepTime: "20 mins",
+        difficultyLevel: "Easy",
+        whyItPairsWell: "The mild sweetness of Baby Swiss doesn't overpower the earthy mushroom flavors.",
+        ingredients: ["Beef Patty", "Mushrooms", "Baby Swiss slices", "Brioche Bun"],
+        steps: [
+          "Grill beef patty to desired doneness.",
+          "Saute mushrooms in butter and garlic.",
+          "Place Swiss slice on patty until melted.",
+          "Assemble burger with mushrooms on top."
+        ]
+      }
+    ],
+    reviews: [
+      {
+        rating: 5,
+        comment: "Absolutely the best Swiss cheese I've had in Pondicherry. Truly artisanal!",
+        username: "Sarah Jenkins",
+        restaurantName: "The Promenade",
+        userArea: "White Town",
+        createdAt: "2024-03-15T10:00:00Z"
+      },
+      {
+        rating: 4,
+        comment: "Great texture and very mild. Perfect for my morning sandwiches.",
+        username: "Amit Kumar",
+        restaurantName: "Cafe Xtasi",
+        userArea: "Heritage Town",
+        createdAt: "2024-03-20T14:30:00Z"
+      }
+    ],
     weight: "200g",
     inStock: true,
     featured: true,
@@ -79,8 +150,8 @@ export const products: Product[] = [
       flavor: "Mild and slightly sweet",
       finish: "Clean and mellow",
     },
-    pairings: ["Sandwiches", "Baking"],
-    ingredients: "Cow milk, cultures, salt, Veg Rennet",
+    pairings: "Sandwiches, Baking",
+    ingredients: ["Cow milk", "cultures", "salt", "Veg Rennet"],
   },
   {
     id: "daddy-swiss",
@@ -94,7 +165,7 @@ export const products: Product[] = [
     images: [daddySwissPackage, daddySwissTexture, daddySwissPairing],
     category: "aged",
     rating: 5,
-    reviews: 32,
+    reviewCount: 32,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -105,8 +176,8 @@ export const products: Product[] = [
       flavor: "Fuller and savoury",
       finish: "Long and satisfying",
     },
-    pairings: ["Cooking", "Melting", "Hot dishes"],
-    ingredients: "Cow milk, cultures, salt, Veg rennet",
+    pairings: "Cooking, Melting, Hot dishes",
+    ingredients: ["Cow milk", "cultures", "salt", "Veg rennet"],
   },
   // PondyOrange (Aged 6 Months)
   {
@@ -121,7 +192,7 @@ export const products: Product[] = [
     images: [pondyOrangePackage, pondyOrangeTexture, pondyOrangePairing],
     category: "aged",
     rating: 4,
-    reviews: 28,
+    reviewCount: 28,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -132,8 +203,8 @@ export const products: Product[] = [
       flavor: "Rich and savoury",
       finish: "Clean and satisfying",
     },
-    pairings: ["Sandwiches", "Sauces", "Burgers", "Pastas"],
-    ingredients: "Cow milk, cultures, salt, veg rennet",
+    pairings: "Sandwiches, Sauces, Burgers, Pastas",
+    ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
     id: "grana-chery",
@@ -147,7 +218,7 @@ export const products: Product[] = [
     images: [granaCherryPackage, granaCherryTexture, granaCherryPairing],
     category: "aged",
     rating: 5,
-    reviews: 51,
+    reviewCount: 51,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -158,8 +229,8 @@ export const products: Product[] = [
       flavor: "Savoury, umami-rich",
       finish: "Long, complex, and satisfying",
     },
-    pairings: ["Pasta", "Risotto", "Soups"],
-    ingredients: "Cow milk, cultures, salt, veg Rennet",
+    pairings: "Pasta, Risotto, Soups",
+    ingredients: ["Cow milk", "cultures", "salt", "veg Rennet"],
   },
   {
     id: "burrata",
@@ -173,7 +244,7 @@ export const products: Product[] = [
     images: [burrataPackage],
     category: "fresh",
     rating: 5,
-    reviews: 64,
+    reviewCount: 64,
     weight: "140g",
     inStock: true,
     featured: true,
@@ -184,8 +255,8 @@ export const products: Product[] = [
       flavor: "Mild, rich, and creamy",
       finish: "Silky and clean",
     },
-    pairings: ["Fresh salads", "Bread", "Olive oil"],
-    ingredients: "Cow milk, cream, salt, veg rennet",
+    pairings: "Fresh salads, Bread, Olive oil",
+    ingredients: ["Cow milk", "cream", "salt", "veg rennet"],
   },
   {
     id: "mozzarella",
@@ -199,7 +270,7 @@ export const products: Product[] = [
     images: [mozzarellaPackage, mozzarellaTexture],
     category: "fresh",
     rating: 5,
-    reviews: 48,
+    reviewCount: 48,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -210,8 +281,8 @@ export const products: Product[] = [
       flavor: "Mild and creamy",
       finish: "Refreshing and clean",
     },
-    pairings: ["Salads", "Tomatoes", "Olive oil", "Pasta"],
-    ingredients: "Cow milk, cultures, salt, veg rennet",
+    pairings: "Salads, Tomatoes, Olive oil, Pasta",
+    ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
     id: "bocconcini",
@@ -225,7 +296,7 @@ export const products: Product[] = [
     images: [bocconciniPackage],
     category: "fresh",
     rating: 4,
-    reviews: 22,
+    reviewCount: 22,
     weight: "200g",
     inStock: true,
     tastingNotes: {
@@ -235,8 +306,8 @@ export const products: Product[] = [
       flavor: "Mild and clean",
       finish: "Light and refreshing",
     },
-    pairings: ["Salads", "Skewers", "Appetisers"],
-    ingredients: "Cow milk, cultures, salt, veg rennet",
+    pairings: "Salads, Skewers, Appetisers",
+    ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
     id: "ricotta",
@@ -250,7 +321,7 @@ export const products: Product[] = [
     images: [ricottaPackage],
     category: "fresh",
     rating: 5,
-    reviews: 36,
+    reviewCount: 36,
     weight: "200g",
     inStock: true,
     tastingNotes: {
@@ -260,8 +331,8 @@ export const products: Product[] = [
       flavor: "Slightly sweet and milky",
       finish: "Clean and fresh",
     },
-    pairings: ["Pasta", "Desserts", "Spreads", "Baking"],
-    ingredients: "Whey, milk solids, salt",
+    pairings: "Pasta, Desserts, Spreads, Baking",
+    ingredients: ["Whey", "milk solids", "salt"],
   },
   {
     id: "halloumi",
@@ -275,7 +346,7 @@ export const products: Product[] = [
     images: [halloumiPackage],
     category: "specialty",
     rating: 5,
-    reviews: 42,
+    reviewCount: 42,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -286,8 +357,8 @@ export const products: Product[] = [
       flavor: "Lightly salty and rich when heated",
       finish: "Clean and satisfying",
     },
-    pairings: ["Grilled vegetables", "Salads", "Wraps", "Lemon"],
-    ingredients: "Cow milk, salt, veg rennet",
+    pairings: "Grilled vegetables, Salads, Wraps, Lemon",
+    ingredients: ["Cow milk", "salt", "veg rennet"],
   },
   {
     id: "feta",
@@ -301,7 +372,7 @@ export const products: Product[] = [
     images: [fetaPackage],
     category: "specialty",
     rating: 4,
-    reviews: 31,
+    reviewCount: 31,
     weight: "200g",
     inStock: true,
     featured: true,
@@ -312,8 +383,8 @@ export const products: Product[] = [
       flavor: "Salty and tangy",
       finish: "Zesty and lingering",
     },
-    pairings: ["Salads", "Vegetables", "Baking"],
-    ingredients: "Cow milk, veg rennet, salt",
+    pairings: "Salads, Vegetables, Baking",
+    ingredients: ["Cow milk", "veg rennet", "salt"],
   },
   {
     id: "pizzaella",
@@ -327,7 +398,7 @@ export const products: Product[] = [
     images: [pizzaellaPackage],
     category: "melting",
     rating: 5,
-    reviews: 55,
+    reviewCount: 55,
     weight: "200g",
     inStock: true,
     tastingNotes: {
@@ -337,8 +408,8 @@ export const products: Product[] = [
       flavor: "Clean and milky when melted",
       finish: "Satisfyingly clean",
     },
-    pairings: ["Pizza", "Sandwiches", "Baked dishes"],
-    ingredients: "Cow milk, cultures, salt, veg rennet",
+    pairings: "Pizza, Sandwiches, Baked dishes",
+    ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
     id: "paneer",
@@ -352,7 +423,7 @@ export const products: Product[] = [
     images: [cottageCheesePackage],
     category: "fresh",
     rating: 5,
-    reviews: 89,
+    reviewCount: 89,
     weight: "200g",
     inStock: true,
     tastingNotes: {
@@ -362,8 +433,8 @@ export const products: Product[] = [
       flavor: "Mild and milky",
       finish: "Clean and fresh",
     },
-    pairings: ["Curries", "Grilling", "Stir-frying"],
-    ingredients: "Cow milk, food-grade Coagulant, salt",
+    pairings: "Curries, Grilling, Stir-frying",
+    ingredients: ["Cow milk", "food-grade Coagulant", "salt"],
   },
   {
     id: "skyr",
@@ -377,7 +448,7 @@ export const products: Product[] = [
     images: [ricottaPackage],
     category: "fresh",
     rating: 5,
-    reviews: 42,
+    reviewCount: 42,
     weight: "200g",
     inStock: true,
     tastingNotes: {
@@ -387,8 +458,8 @@ export const products: Product[] = [
       flavor: "Fresh, lightly sour, and creamy",
       finish: "Refreshing and clean",
     },
-    pairings: ["Fruits", "Honey", "Granola", "Savoury bowls"],
-    ingredients: "Cow milk, live cultures",
+    pairings: "Fruits, Honey, Granola, Savoury bowls",
+    ingredients: ["Cow milk", "live cultures"],
   },
   // COMMENTED OUT - NOT IN CURRENT PRODUCT LIST
   // Subscription Plans
@@ -401,7 +472,7 @@ export const products: Product[] = [
   //     image: '/images/products/subscription-explorer.png',
   //     category: 'subscriptions',
   //     rating: 5,
-  //     reviews: 89,
+  //     reviewCount: 89,
   //     weight: 'Subscription',
   //     inStock: true,
   // },
@@ -414,7 +485,7 @@ export const products: Product[] = [
   //     image: '/images/products/subscription-enthusiast.png',
   //     category: 'subscriptions',
   //     rating: 5,
-  //     reviews: 124,
+  //     reviewCount: 124,
   //     weight: 'Subscription',
   //     inStock: true,
   //     featured: true,
@@ -428,7 +499,7 @@ export const products: Product[] = [
   //     image: '/images/products/subscription-connoisseur.png',
   //     category: 'subscriptions',
   //     rating: 5,
-  //     reviews: 76,
+  //     reviewCount: 76,
   //     weight: 'Subscription',
   //     inStock: true,
   // },
@@ -437,11 +508,31 @@ export const products: Product[] = [
 export const featuredProducts = products.filter((p) => p.featured);
 
 export const categories = [
-  { id: "all", name: "All Cheeses" },
-  { id: "aged", name: "Aged Cheeses" },
-  { id: "fresh", name: "Fresh Cheeses" },
-  { id: "specialty", name: "Specialty Cheeses" },
-  { id: "melting", name: "Melting & Basics" },
+  { 
+  id: "all", 
+  name: "All Cheeses", 
+  description: "Explore our complete range of handcrafted cheeses." 
+},
+{ 
+  id: "aged", 
+  name: "Aged Cheeses", 
+  description: "Rich cheeses matured slowly for deeper flavors." 
+},
+{ 
+  id: "fresh", 
+  name: "Fresh Cheeses", 
+  description: "Soft, delicate cheeses crafted for pure freshness." 
+},
+{ 
+  id: "specialty", 
+  name: "Specialty Cheeses", 
+  description: "Unique cheeses crafted for distinctive flavor experiences." 
+},
+{ 
+  id: "melting", 
+  name: "Melting & Basics", 
+  description: "Versatile cheeses perfect for cooking and melting." 
+}
 ];
 
 export const testimonials = [

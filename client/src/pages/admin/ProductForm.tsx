@@ -25,11 +25,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     weight: "",
     inStock: true,
     featured: false,
-    ingredients: "",
+    ingredients: [] as string[],
     rating: 0,
-    reviews: 0,
+    reviewCount: 0,
     pairings: "",
     onHold: false,
+    bestPairingDishes: [] as any[],
   });
 
   const [tastingNotes, setTastingNotes] = useState({
@@ -55,11 +56,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
         weight: product.weight || "",
         inStock: product.inStock ?? true,
         featured: product.featured ?? false,
-        ingredients: product.ingredients || "",
+        ingredients: Array.isArray(product.ingredients) ? product.ingredients : [],
         rating: product.rating || 0,
-        reviews: product.reviews || 0,
-        pairings: product.pairings ? product.pairings.join(", ") : "",
+        reviewCount: product.reviewCount || 0,
+        pairings: product.pairings || "",
         onHold: product.onHold ?? false,
+        bestPairingDishes: product.bestPairingDishes || [],
       });
       if (product.tastingNotes) {
         setTastingNotes({ ...product.tastingNotes });
@@ -133,10 +135,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
       const submissionData = {
         ...formData,
         rating: Number(formData.rating),
-        reviews: Number(formData.reviews),
-        pairings: formData.pairings
-          ? formData.pairings.split(",").map((p: string) => p.trim())
-          : [],
+        reviewCount: Number(formData.reviewCount),
+        pairings: formData.pairings || "",
+        ingredients: formData.ingredients,
         tastingNotes,
         imagesBase64: images.map((img) => ({
           name: img.name,
@@ -145,7 +146,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
         })),
         images: existingImages, // Existing URLs to keep
         onHold: formData.onHold === true, // Force boolean
+        bestPairingDishes: formData.bestPairingDishes,
+        reviews: product?.reviews || [], // Read-only from existing product
       };
+
+      console.log("📤 Final submissionData Summary:", { 
+        name: submissionData.name, 
+        mainImages: submissionData.imagesBase64?.length,
+        dishes: submissionData.bestPairingDishes?.length 
+      });
 
       console.log("📤 Final Submission Payload [onHold]:", submissionData.onHold);
 
@@ -193,11 +202,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
       weight: "200g",
       inStock: true,
       featured: true,
-      ingredients: "Cow Milk, Salt, Culture, Rennet",
+      ingredients: ["Cow Milk", "Salt", "Culture", "Rennet"],
       rating: 4.8,
-      reviews: 12,
+      reviewCount: 12,
       pairings: "Red Wine, Grapes, Sourdough",
       onHold: false,
+      bestPairingDishes: [
+        {
+          dishName: "Classic Cheese Platter",
+          shortDescription: "A selection of artisanal cheeses...",
+          originCountry: "France",
+          prepTime: "15 mins",
+          difficultyLevel: "Easy",
+          whyItPairsWell: "The creamy texture complements...",
+          ingredients: ["Brie", "Grapes", "Crackers"],
+          steps: ["Arrange cheese", "Add fruits", "Serve"]
+        }
+      ],
     });
     setTastingNotes({
       appearance: "Creamy white rind",
@@ -537,12 +558,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">
-                    Reviews Count
+                    Review Count
                   </label>
                   <input
                     type="number"
-                    name="reviews"
-                    value={formData.reviews}
+                    name="reviewCount"
+                    value={formData.reviewCount}
                     onChange={handleInputChange}
                     min="0"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
@@ -553,12 +574,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                 <label className="text-sm font-bold text-gray-700">
                   Pairings (comma separated)
                 </label>
-                <input
-                  type="text"
+                <textarea
                   name="pairings"
                   value={formData.pairings}
                   onChange={handleInputChange}
-                  placeholder="e.g. Wine, Crackers, Fruit"
+                  placeholder="e.g. Best served with Red Wine, Grapes, and fresh Sourdough bread."
+                  rows={3}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
                 />
               </div>
@@ -566,18 +587,346 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
 
             {/* Ingredients */}
             <div className="space-y-2 pt-4 border-t border-gray-100">
-              <label className="text-sm font-bold text-gray-700">
-                Ingredients
-              </label>
-              <input
-                type="text"
-                name="ingredients"
-                value={formData.ingredients}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none"
-                placeholder="e.g., Cow Milk, Culture, Salt..."
-              />
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm font-bold text-gray-700">
+                  Ingredients
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, ingredients: [...prev.ingredients, ""] }))}
+                  className="text-xs font-bold text-yellow-600 hover:text-yellow-700 flex items-center gap-1"
+                >
+                  <Plus size={14} /> Add Ingredient
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {formData.ingredients.map((ing, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={ing}
+                      onChange={(e) => {
+                        const newIngs = [...formData.ingredients];
+                        newIngs[idx] = e.target.value;
+                        setFormData(prev => ({ ...prev, ingredients: newIngs }));
+                      }}
+                      className="flex-1 px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none text-sm"
+                      placeholder="Ingredient name"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newIngs = formData.ingredients.filter((_, i) => i !== idx);
+                        setFormData(prev => ({ ...prev, ingredients: newIngs }));
+                      }}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {formData.ingredients.length === 0 && (
+                <p className="text-xs text-gray-400 italic">No ingredients added yet.</p>
+              )}
             </div>
+
+            {/* Best Pairing Dishes Section */}
+            <div className="space-y-6 pt-6 border-t border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-800">Best Pairing Dishes</h3>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({
+                    ...prev,
+                    bestPairingDishes: [...prev.bestPairingDishes, {
+                      dishName: "",
+                      shortDescription: "",
+                      originCountry: "",
+                      prepTime: "",
+                      difficultyLevel: "Easy",
+                      whyItPairsWell: "",
+                      ingredients: [""],
+                      steps: [""],
+                      image: ""
+                    }]
+                  }))}
+                  className="flex items-center gap-2 px-4 py-2 bg-yellow-50 text-yellow-700 rounded-xl font-bold hover:bg-yellow-100 transition-all border border-yellow-200"
+                >
+                  <Plus size={18} /> Add Pairing Dish
+                </button>
+              </div>
+
+              <div className="space-y-8">
+                {formData.bestPairingDishes.map((dish, dishIdx) => (
+                  <div key={dishIdx} className="p-6 bg-gray-50/50 rounded-2xl border border-gray-200 relative group/dish animate-in fade-in slide-in-from-top-4">
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({
+                        ...prev,
+                        bestPairingDishes: prev.bestPairingDishes.filter((_, i) => i !== dishIdx)
+                      }))}
+                      className="absolute top-4 right-4 p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover/dish:opacity-100"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Dish Basic Info */}
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dish Name</label>
+                          <input
+                            type="text"
+                            value={dish.dishName}
+                            onChange={(e) => {
+                              const newDishes = [...formData.bestPairingDishes];
+                              newDishes[dishIdx].dishName = e.target.value;
+                              setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                            }}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 outline-none text-sm"
+                            placeholder="e.g. Traditional Quiche"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Origin Country</label>
+                            <input
+                              type="text"
+                              value={dish.originCountry}
+                              onChange={(e) => {
+                                const newDishes = [...formData.bestPairingDishes];
+                                newDishes[dishIdx].originCountry = e.target.value;
+                                setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                              }}
+                              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none text-sm"
+                              placeholder="e.g. France"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Prep Time</label>
+                            <input
+                              type="text"
+                              value={dish.prepTime}
+                              onChange={(e) => {
+                                const newDishes = [...formData.bestPairingDishes];
+                                newDishes[dishIdx].prepTime = e.target.value;
+                                setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                              }}
+                              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none text-sm"
+                              placeholder="e.g. 45 mins"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Short Description</label>
+                          <textarea
+                            value={dish.shortDescription}
+                            onChange={(e) => {
+                              const newDishes = [...formData.bestPairingDishes];
+                              newDishes[dishIdx].shortDescription = e.target.value;
+                              setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none text-sm resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Dish Image & Complexity */}
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dish Image</label>
+                          <div className="flex gap-4 items-start">
+                            <div className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-200 overflow-hidden relative flex-shrink-0">
+                              {dish.image || dish.imagePreview ? (
+                                <img src={dish.imagePreview || dish.image} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                  <Upload size={24} />
+                                </div>
+                              )}
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  if (e.target.files?.[0]) {
+                                    const file = e.target.files[0];
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      const newDishes = [...formData.bestPairingDishes];
+                                      newDishes[dishIdx].data = reader.result as string; 
+                                      newDishes[dishIdx].imageMimeType = file.type;
+                                      newDishes[dishIdx].imagePreview = reader.result as string;
+                                      setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                className="absolute inset-0 opacity-0 cursor-pointer"
+                              />
+                            </div>
+                            <div className="flex-1 space-y-1">
+                              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Difficulty</label>
+                              <select
+                                value={dish.difficultyLevel}
+                                onChange={(e) => {
+                                  const newDishes = [...formData.bestPairingDishes];
+                                  newDishes[dishIdx].difficultyLevel = e.target.value;
+                                  setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                }}
+                                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none text-sm"
+                              >
+                                <option value="Easy">Easy</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Chef Level">Chef Level</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Why it pairs well</label>
+                          <textarea
+                            value={dish.whyItPairsWell}
+                            onChange={(e) => {
+                              const newDishes = [...formData.bestPairingDishes];
+                              newDishes[dishIdx].whyItPairsWell = e.target.value;
+                              setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none text-sm resize-none"
+                            placeholder="e.g. The acidity cuts through the richness..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Dynamic Lists: Ingredients & Steps */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 pt-6 border-t border-gray-100">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Ingredients</label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newDishes = [...formData.bestPairingDishes];
+                              newDishes[dishIdx].ingredients.push("");
+                              setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                            }}
+                            className="text-[10px] font-bold text-yellow-600 hover:text-yellow-700"
+                          >+ Add Item</button>
+                        </div>
+                        <div className="space-y-2">
+                          {dish.ingredients.map((ing: string, ingIdx: number) => (
+                            <div key={ingIdx} className="flex gap-2">
+                              <input
+                                type="text"
+                                value={ing}
+                                onChange={(e) => {
+                                  const newDishes = [...formData.bestPairingDishes];
+                                  newDishes[dishIdx].ingredients[ingIdx] = e.target.value;
+                                  setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                }}
+                                className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200 outline-none text-xs"
+                                placeholder="e.g. 100g Cheese"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newDishes = [...formData.bestPairingDishes];
+                                  newDishes[dishIdx].ingredients = newDishes[dishIdx].ingredients.filter((_: any, i: number) => i !== ingIdx);
+                                  setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                }}
+                                className="text-red-400 hover:text-red-600"
+                              ><Trash2 size={14} /></button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Steps</label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newDishes = [...formData.bestPairingDishes];
+                              newDishes[dishIdx].steps.push("");
+                              setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                            }}
+                            className="text-[10px] font-bold text-yellow-600 hover:text-yellow-700"
+                          >+ Add Step</button>
+                        </div>
+                        <div className="space-y-2">
+                          {dish.steps.map((step: string, stepIdx: number) => (
+                            <div key={stepIdx} className="flex gap-2">
+                              <input
+                                type="text"
+                                value={step}
+                                onChange={(e) => {
+                                  const newDishes = [...formData.bestPairingDishes];
+                                  newDishes[dishIdx].steps[stepIdx] = e.target.value;
+                                  setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                }}
+                                className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200 outline-none text-xs"
+                                placeholder={`Step ${stepIdx + 1}`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newDishes = [...formData.bestPairingDishes];
+                                  newDishes[dishIdx].steps = newDishes[dishIdx].steps.filter((_: any, i: number) => i !== stepIdx);
+                                  setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
+                                }}
+                                className="text-red-400 hover:text-red-600"
+                              ><Trash2 size={14} /></button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {formData.bestPairingDishes.length === 0 && (
+                  <p className="text-sm text-gray-400 italic text-center py-4">No pairing dishes added yet.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Read-only Reviews Section */}
+            {product && product.reviews && product.reviews.length > 0 && (
+              <div className="space-y-6 pt-6 border-t border-gray-200">
+                <h3 className="text-xl font-bold text-gray-800">Customer Reviews (Read-only)</h3>
+                <div className="space-y-4">
+                  {product.reviews.map((rev: any, idx: number) => (
+                    <div key={idx} className="p-4 bg-blue-50/30 rounded-xl border border-blue-100 flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                        {rev.username?.charAt(0) || "U"}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-bold text-gray-900">{rev.username || "Anonymous"} <span className="text-xs font-normal text-gray-500">at {rev.restaurantName || "Our Shop"}</span></p>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest">{rev.userArea || "Artisan Selection"}</p>
+                          </div>
+                          <div className="flex text-yellow-500">
+                            {[...Array(5)].map((_, i) => (
+                               <svg key={i} className={`w-3 h-3 ${i < rev.rating ? 'fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20">
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                               </svg>
+                            ))}
+                          </div>
+                        </div>
+                        <p className="mt-2 text-sm text-gray-600 leading-relaxed italic">"{rev.comment}"</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </form>
         </div>
 

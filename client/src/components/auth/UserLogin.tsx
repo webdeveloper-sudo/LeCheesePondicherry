@@ -409,17 +409,17 @@ export default function UserLogin() {
         <div className="max-w-md w-full">
           {/* Mobile Header (Only visible on small screens) */}
           <div className="lg:hidden mb-8 text-center">
-            <h1 className="text-3xl font-heading font-bold text-[#2C5530]">
+            <h1 className="text-3xl font-heading font-bold text-brand-green">
               Le Pondicherry Cheese
             </h1>
-            <p className="text-[#C9A961] font-medium tracking-wide">
+            <p className="text-brand-gold-subtle font-medium tracking-wide">
               ARTISAN CHEESE
             </p>
           </div>
 
-          <div className="bg-pattern p-8 lg:p-10 rounded-2xl shadow-xl lg:shadow-none lg:bg-transparent lg:border-none border border-[#E8D5B8] lg:border-0">
+          <div className="bg-pattern p-8 lg:p-10 rounded-2xl shadow-xl lg:shadow-none lg:bg-transparent lg:border-none border border-bg-cream lg:border-0">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold font-heading text-[#2C5530] mb-2">
+              <h2 className="text-3xl font-bold font-heading text-brand-green mb-2">
                 {step === "login" ? "Welcome Back" : "Join the Family"}
               </h2>
               <p className="text-gray-600">
@@ -446,13 +446,13 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Mail
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type="email"
                       required
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-[#2C5530]/40 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-brand-green/40 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={(e) =>
@@ -468,13 +468,13 @@ export default function UserLogin() {
                   <div className="relative group gap-2 justify-between">
                     <div>
                       <Lock
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                         size={20}
                       />
                       <input
                         type={showPassword ? "text" : "password"}
                         required
-                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-[#2C5530]/40 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-brand-green/40 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                         placeholder="••••••••"
                         value={formData.password}
                         onChange={(e) =>
@@ -486,7 +486,7 @@ export default function UserLogin() {
                       <button
                         type="button"
                         onClick={handleShowPassword}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C9A961] transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-gold-subtle transition-colors"
                       >
                         {showPassword ? (
                           <Eye size={20} />
@@ -502,7 +502,7 @@ export default function UserLogin() {
                    <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 rounded text-[#2C5530] focus:ring-[#2C5530] border-gray-300"
+                      className="w-4 h-4 rounded text-brand-green focus:ring-[#2C5530] border-gray-300"
                     />
                     <span className="text-gray-600">Remember me</span>
                   </label>
@@ -517,7 +517,7 @@ export default function UserLogin() {
                         );
                       }
                     }}
-                    className="text-[#2C5530] font-medium hover:underline"
+                    className="text-brand-green font-medium hover:underline"
                   >
                     Forgot Password?
                   </button> */}
@@ -526,7 +526,7 @@ export default function UserLogin() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-[#2C5530]/20 hover:bg-[#1a3a20] hover:shadow-[#2C5530]/40 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-brand-green/20 hover:bg-[#1a3a20] hover:shadow-brand-green/40 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? "Logging in..." : "Sign In"}{" "}
                   <ArrowRight size={20} />
@@ -537,7 +537,7 @@ export default function UserLogin() {
                     <div className="w-full border-t border-gray-200"></div>
                   </div>
                   <div className="relative flex justify-center text-sm font-medium text-gray-500">
-                    <span className="px-4 bg-white lg:bg-[#FAF7F2]">
+                    <span className="px-4 bg-white lg:bg-bg-cream-light">
                       New to Le Pondicherry Cheese?
                     </span>
                   </div>
@@ -551,7 +551,7 @@ export default function UserLogin() {
                       setStep("email");
                       setFormData({ ...formData, email: "" });
                     }}
-                    className="text-[#C9A961] font-bold hover:underline"
+                    className="text-brand-gold-subtle font-bold hover:underline"
                   >
                     Create Account
                   </button>
@@ -568,12 +568,12 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Mail
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type="email"
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-[#2C5530]/40 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-brand-green/40 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={(e) =>
@@ -585,7 +585,7 @@ export default function UserLogin() {
                 <button
                   onClick={() => handleSendOtp()}
                   disabled={!formData.email || loading}
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Sending OTP..." : "Send OTP"}
                 </button>
@@ -605,8 +605,8 @@ export default function UserLogin() {
             {step === "otp" && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Mail size={32} className="text-[#C9A961]" />
+                  <div className="w-16 h-16 bg-brand-gold-subtle/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Mail size={32} className="text-brand-gold-subtle" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-1">
                     Check your Email
@@ -622,7 +622,7 @@ export default function UserLogin() {
                 <div className="flex justify-center">
                   <input
                     type="text"
-                    className="w-full max-w-[240px] text-center text-3xl font-mono tracking-[0.5em] py-3 border-b-2 border-gray-300 focus:border-[#C9A961] outline-none bg-transparent transition-colors"
+                    className="w-full max-w-[240px] text-center text-3xl font-mono tracking-[0.5em] py-3 border-b-2 border-gray-300 focus:border-brand-gold-subtle outline-none bg-transparent transition-colors"
                     placeholder="••••••"
                     maxLength={6}
                     value={formData.otp}
@@ -638,7 +638,7 @@ export default function UserLogin() {
                 <button
                   onClick={handleVerifyOtp}
                   disabled={loading || formData.otp.length !== 6}
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Verifying..." : "Verify Code"}
                 </button>
@@ -657,7 +657,7 @@ export default function UserLogin() {
             {step === "password-setup" && (
               <div className="space-y-5">
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold font-heading text-[#2C5530] mb-2">
+                  <h3 className="text-2xl font-bold font-heading text-brand-green mb-2">
                     Create Password
                   </h3>
                   <p className="text-sm text-gray-500">
@@ -671,12 +671,12 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Lock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="Min 6 characters"
                       value={formData.password}
                       onChange={(e) =>
@@ -686,7 +686,7 @@ export default function UserLogin() {
                     <button
                       type="button"
                       onClick={handleShowPassword}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C9A961] transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-gold-subtle transition-colors"
                     >
                       {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                     </button>
@@ -699,12 +699,12 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Lock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="Confirm your password"
                       value={formData.confirmPassword}
                       onChange={(e) =>
@@ -732,7 +732,7 @@ export default function UserLogin() {
                     formData.password !== formData.confirmPassword ||
                     formData.password.length < 6
                   }
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Creating Account..." : "Set Password"}
                 </button>
@@ -743,10 +743,10 @@ export default function UserLogin() {
             {step === "forgot-password" && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-[#C9A961]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Lock size={32} className="text-[#C9A961]" />
+                  <div className="w-16 h-16 bg-brand-gold-subtle/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Lock size={32} className="text-brand-gold-subtle" />
                   </div>
-                  <h3 className="text-2xl font-bold font-heading text-[#2C5530] mb-2">
+                  <h3 className="text-2xl font-bold font-heading text-brand-green mb-2">
                     Forgot Password
                   </h3>
                   <p className="text-sm text-gray-500 mb-6">
@@ -761,7 +761,7 @@ export default function UserLogin() {
                 <button
                   onClick={() => handleSendOtp("reset-password")}
                   disabled={loading}
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Sending OTP..." : "Send Reset OTP"}
                 </button>
@@ -781,7 +781,7 @@ export default function UserLogin() {
             {step === "reset-password" && (
               <div className="space-y-5">
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold font-heading text-[#2C5530] mb-2">
+                  <h3 className="text-2xl font-bold font-heading text-brand-green mb-2">
                     Reset Password
                   </h3>
                   <p className="text-sm text-gray-500">
@@ -795,12 +795,12 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Lock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="Min 6 characters"
                       value={formData.password}
                       onChange={(e) =>
@@ -810,7 +810,7 @@ export default function UserLogin() {
                     <button
                       type="button"
                       onClick={handleShowPassword}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C9A961] transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-gold-subtle transition-colors"
                     >
                       {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                     </button>
@@ -823,12 +823,12 @@ export default function UserLogin() {
                   </label>
                   <div className="relative group">
                     <Lock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#C9A961] transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
                       size={20}
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C9A961]/50 focus:border-[#C9A961] outline-none transition-all placeholder:text-gray-400"
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="Confirm password"
                       value={formData.confirmPassword}
                       onChange={(e) =>
@@ -856,7 +856,7 @@ export default function UserLogin() {
                     formData.password !== formData.confirmPassword ||
                     formData.password.length < 6
                   }
-                  className="w-full bg-[#2C5530] text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
+                  className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Resetting Password..." : "Update Password"}
                 </button>
@@ -877,7 +877,7 @@ export default function UserLogin() {
                     className={`text-xs font-bold flex items-center gap-1 transition-all ${
                       isLocating
                         ? "text-gray-400"
-                        : "text-[#2C5530] hover:underline"
+                        : "text-brand-green hover:underline"
                     }`}
                   >
                     {isLocating ? (
@@ -924,7 +924,7 @@ export default function UserLogin() {
                     className={`w-full px-4 py-3 border rounded-lg outline-none transition-all ${
                       errors.name
                         ? "border-red-300"
-                        : "border-gray-300 focus:border-[#C9A961]"
+                        : "border-gray-300 focus:border-brand-gold-subtle"
                     }`}
                     placeholder="Enter your name"
                     value={formData.name}
@@ -987,7 +987,7 @@ export default function UserLogin() {
                       className={`flex-1 px-4 py-3 border rounded-lg outline-none transition-all ${
                         errors.mobile
                           ? "border-red-300"
-                          : "border-gray-300 focus:border-[#C9A961]"
+                          : "border-gray-300 focus:border-brand-gold-subtle"
                       }`}
                       placeholder="Enter mobile number"
                       value={formData.mobile}
@@ -1013,7 +1013,7 @@ export default function UserLogin() {
                     className={`w-full px-4 py-3 border rounded-lg outline-none transition-all resize-none ${
                       errors.address
                         ? "border-red-300"
-                        : "border-gray-300 focus:border-[#C9A961]"
+                        : "border-gray-300 focus:border-brand-gold-subtle"
                     }`}
                     placeholder="House no, street, locality..."
                     value={formData.address}
@@ -1031,7 +1031,7 @@ export default function UserLogin() {
                       name="city"
                       type="text"
                       required
-                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#C9A961] text-sm"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-gold-subtle text-sm"
                       value={formData.city}
                       onChange={handleInputChange}
                     />
@@ -1044,7 +1044,7 @@ export default function UserLogin() {
                       name="state"
                       type="text"
                       required
-                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#C9A961] text-sm"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-gold-subtle text-sm"
                       value={formData.state}
                       onChange={handleInputChange}
                     />
@@ -1061,14 +1061,14 @@ export default function UserLogin() {
                       className={`w-full px-3 py-3 border rounded-lg outline-none transition-all text-sm ${
                         errors.pincode
                           ? "border-red-300"
-                          : "border-gray-300 focus:border-[#C9A961]"
+                          : "border-gray-300 focus:border-brand-gold-subtle"
                       }`}
                       placeholder="6 digits"
                       value={formData.pincode}
                       onChange={handleInputChange}
                     />
                     {formData.pincode.length === 6 && (
-                      <span className="absolute right-2 bottom-3 text-[#2C5530] text-[10px] font-bold animate-pulse">
+                      <span className="absolute right-2 bottom-3 text-brand-green text-[10px] font-bold animate-pulse">
                         ✓ Located
                       </span>
                     )}
@@ -1079,7 +1079,7 @@ export default function UserLogin() {
                   <button
                     onClick={() => handleProfileSave(false)}
                     disabled={loading || !isProfileFormValid()}
-                    className="w-full bg-[#2C5530] text-white py-4 rounded-lg font-bold hover:bg-[#1a3a20] transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full bg-brand-green text-white py-4 rounded-lg font-bold hover:bg-[#1a3a20] transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
                   >
                     {loading ? "Saving Profile..." : "Complete Profile"}
                     {!loading && <Check size={18} />}
@@ -1108,10 +1108,10 @@ export default function UserLogin() {
 
         {/* Branding Title Top */}
         <div className="absolute top-22 left-0 right-0 z-30 text-center">
-          <h1 className="text-5xl font-heading font-bold text-[#2C5530] mb-2 drop-shadow-sm">
+          <h1 className="text-5xl font-heading font-bold text-brand-green mb-2 drop-shadow-sm">
             Le Pondicherry Cheese
           </h1>
-          <div className="inline-block bg-[#2C5530] text-white px-6 py-1 rounded-full text-sm font-bold tracking-[0.2em] shadow-lg">
+          <div className="inline-block bg-brand-green text-white px-6 py-1 rounded-full text-sm font-bold tracking-[0.2em] shadow-lg">
             PREMIUM ARTISAN CHEESE
           </div>
         </div>

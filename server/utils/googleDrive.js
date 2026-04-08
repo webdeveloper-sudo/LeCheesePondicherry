@@ -21,6 +21,7 @@ const uploadFile = async (fileName, mimeType, base64Data, folderId) => {
     : base64Data;
 
   console.log(`📡 Sending ${fileName} to Apps Script proxy...`);
+  console.log(`📁 Target Folder ID: ${folderId || "Proxy Default"}`);
 
   try {
     const response = await axios.post(APPS_SCRIPT_URL, {
@@ -32,13 +33,14 @@ const uploadFile = async (fileName, mimeType, base64Data, folderId) => {
     });
 
     if (response.data && response.data.success) {
-      console.log(`✅ Upload successful: ${response.data.url}`);
-      return response.data.url;
+      console.log(`✅ Upload successful: ${response.data.directUrl || response.data.url}`);
+      return response.data.directUrl || response.data.url;
     } else {
       console.error(
         "❌ Apps Script Error:",
         response.data?.message || response.data?.error || "Unknown error",
       );
+      console.log("📄 Full Apps Script Response:", JSON.stringify(response.data, null, 2));
       throw new Error(response.data?.message || "Apps Script Upload Failed");
     }
   } catch (error) {

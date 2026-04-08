@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import faqBanner from "@/assets/images/process-hero-new.webp";
 import {
   MotionContainer,
   MotionHeading,
@@ -81,17 +83,20 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] py-20">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-bg-cream-light">
+      {/* Hero Banner */}
+      <BannerAndBreadCrumb title="FAQ" img={faqBanner} />
+
+      <div className="container mx-auto px-4 max-w-4xl py-16">
         <MotionContainer className="text-center mb-16" stagger>
           <MotionHeading
             as="h1"
-            className="text-4xl md:text-5xl font-bold text-[#1A1A1A] mb-4"
+            className="text-4xl md:text-5xl font-bold text-text-primary mb-4"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Frequently Asked Questions
           </MotionHeading>
-          <MotionText className="text-[#6B6B6B] max-w-2xl mx-auto">
+          <MotionText className="text-text-secondary max-w-2xl mx-auto">
             Everything you need to know about our handcrafted cheese, shipping
             logistics, and the AGOC portal.
           </MotionText>
@@ -102,7 +107,7 @@ export default function FAQPage() {
             <MotionContainer key={catIdx} stagger>
               <MotionHeading
                 as="h2"
-                className="text-xl font-bold text-[#2C5530] mb-6 border-b border-[#2C5530]/10 pb-2 uppercase tracking-wider text-sm"
+                className="text-xl font-bold text-brand-green mb-6 border-b border-brand-green/10 pb-2 uppercase tracking-wider text-sm"
               >
                 {cat.category}
               </MotionHeading>
@@ -120,11 +125,11 @@ export default function FAQPage() {
                         onClick={() => setOpenIndex(isOpen ? null : id)}
                         className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
                       >
-                        <span className="font-semibold text-[#1A1A1A] pr-8">
+                        <span className="font-semibold text-text-primary pr-8">
                           {faq.q}
                         </span>
                         <svg
-                          className={`w-5 h-5 text-[#C9A961] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                          className={`w-5 h-5 text-brand-gold-subtle transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -139,7 +144,7 @@ export default function FAQPage() {
                       </button>
                       {isOpen && (
                         <div className="px-5 pb-5 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <p className="text-[#6B6B6B] leading-relaxed">
+                          <p className="text-text-secondary leading-relaxed">
                             {faq.a}
                           </p>
                         </div>
@@ -153,7 +158,7 @@ export default function FAQPage() {
         </div>
 
         {/* Still have questions? */}
-        <div className="mt-20 bg-[#2C5530] rounded-2xl p-8 md:p-12 text-center text-white shadow-xl relative overflow-hidden">
+        <div className="mt-20 bg-brand-green rounded-2xl p-8 md:p-12 text-center text-white shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl" />
           <div className="relative z-10">
             <h3
@@ -169,15 +174,21 @@ export default function FAQPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/wholesale"
-                className="px-8 py-3 bg-[#FAB519] text-[#1D161A] rounded-full font-bold hover:scale-105 transition-transform shadow-lg"
+                className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
               >
                 Wholesale Inquiry
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
               <a
                 href="mailto:technicalhead@achariya.org"
-                className="px-8 py-3 bg-white/10 border border-white/20 text-white rounded-full font-bold hover:bg-white/20 transition-all"
+                className="group inline-flex items-center gap-2 border border-white/40 text-white hover:border-brand-gold hover:text-brand-gold font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 backdrop-blur-sm hover:-translate-y-0.5"
               >
                 Email Technical Support
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </a>
             </div>
           </div>
