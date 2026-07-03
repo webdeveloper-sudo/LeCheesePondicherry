@@ -694,10 +694,13 @@ export default function Header() {
               Reach Us
             </h5> */}
             <address className="not-italic space-y-4 text-sm text-white">
-              <p className="flex gap-2 items-start">
-                <Map size={40} /> Marie Oulgaret, Auroville Road Pondicherry -
-                605111, India
-              </p>
+              <div className="flex gap-2 items-start">
+                <Map size={40} className="shrink-0" />
+                <div>
+                  <p>No: 16/3, Pondy to Vazhudavaur Road, Perambai,</p>
+                  <p>Villupuram,Tamilnadu - 605109</p>
+                </div>
+              </div>
               <div className="pt-2">
                 <a
                   href="mailto:hello@lepondicheese.com"

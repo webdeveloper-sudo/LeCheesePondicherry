@@ -11,7 +11,7 @@ import { products as staticProducts, Product } from "@/data/products";
 import { blogs as staticBlogs, BlogPost } from "@/data/blogs";
 import { cartAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
-import { FETCH_MODE } from "@/config";
+import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
 
 export interface CartItem {
@@ -134,8 +134,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       try {
         // Fetch Products and Blogs in parallel
         const [productsRes, blogsRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/products`, { timeout: 5000 }),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/blogs`, { timeout: 5000 })
+          axios.get(`${API_BASE_URL}/api/products`, { timeout: 5000 }),
+          axios.get(`${API_BASE_URL}/api/blogs`, { timeout: 5000 })
         ]);
 
         if (productsRes.data) {
@@ -160,8 +160,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           setProductsLoaded(true);
         }
 
-          if (blogsRes.data.success) {
-            const fetchedBlogs = blogsRes.data.data || [];
+          if (blogsRes.data.success || blogsRes.data) {
+            const fetchedBlogs = blogsRes.data.data || blogsRes.data || [];
             const publishedBlogs = fetchedBlogs
               .filter((b: any) => b.isPublished !== false && b.onHold !== true)
               .map((b: any) => ({
@@ -175,14 +175,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setIsServerDown(false);
       } catch (error: any) {
         console.error("CartProvider: Failed to fetch dynamic data, falling back to static:", error);
-        
-        // Check if it's a network error or connection timeout
-        if (!error.response || error.code === 'ECONNABORTED' || error.message.includes('Network Error')) {
-          setIsServerDown(true);
-          // Fallback to static data
-          setAllProducts(staticProducts);
-          setAllBlogs(staticBlogs.map(b => ({ ...b, _id: b.id, slug: b.id })));
-        }
+        setIsServerDown(true);
+        // Fallback to static data
+        setAllProducts(staticProducts);
+        setAllBlogs(staticBlogs.map(b => ({ ...b, _id: b.id, slug: b.id })));
+        setProductsLoaded(true);
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,5 @@
-// API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || "https://lecheesepondicherry-1.onrender.com";
+import { API_BASE_URL } from "@/config";
+
 
 // Helper to get auth headers
 const getAuthHeaders = (): HeadersInit => {

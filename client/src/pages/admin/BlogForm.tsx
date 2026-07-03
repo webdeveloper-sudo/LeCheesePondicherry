@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Upload, Plus, Trash2, Save, Loader } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "@/config";
 import { useToastStore } from "@/store/useToastStore";
 
 interface BlogFormProps {
@@ -185,14 +186,14 @@ export default function BlogForm({
 
       if (existingBlog) {
         await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/blogs/${existingBlog._id}`,
+          `${API_BASE_URL}/api/blogs/${existingBlog._id}`,
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/blogs`, payload, {
+        await axios.post(`${API_BASE_URL}/api/blogs`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

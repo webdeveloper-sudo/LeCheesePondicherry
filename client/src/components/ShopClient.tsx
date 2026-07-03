@@ -52,10 +52,20 @@ export default function ShopClient() {
 
   useEffect(() => {
     const query = searchParams.get("search");
+    const categoryParam = searchParams.get("category");
+
     if (query) {
       setSearchTerm(query);
       setActiveCategory("all"); // Reset category when searching from URL
       setIsSearchOpen(true);
+    }
+
+    if (categoryParam) {
+      setActiveCategory(categoryParam);
+      if (!query) {
+        setSearchTerm("");
+        setIsSearchOpen(false);
+      }
     }
     // We don't clear the searchTerm if it's NOT in the params, 
     // because that's when we want the PERSISTENT store to take over.
@@ -188,7 +198,7 @@ export default function ShopClient() {
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       activeCategory === cat.id
                         ? "bg-brand-green text-white"
-                        : "bg-gray-100 text-text-primary hover:bg-gray-200"
+                        : "bg-gray-100 border border-brand-gold-subtle text-text-primary hover:bg-gray-200"
                     }`}
                   >
                     {cat.name}

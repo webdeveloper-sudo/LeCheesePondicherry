@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import NewsletterForm from "./NewsletterForm";
 import logo from "@/assets/images/logo.webp";
-import { Mail, Map, Phone } from "lucide-react";
-
+import { File, Mail, Map, Phone } from "lucide-react";
+import fssai from "@/assets/document/lpc-fssai-certifcation.pdf";
 export default function Footer() {
   return (
     <footer className="bg-brand-green-subtle text-white">
@@ -34,6 +33,7 @@ export default function Footer() {
         <div className="container mx-auto px-6 md:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8 text-center md:text-left">
             {/* Brand */}
+
             <div className="flex flex-col items-center md:items-start">
               <Link to="/">
                 <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-full border-2 border-brand-gold-subtle shadow-lg mb-6 hover:scale-105 transition-transform duration-300">
@@ -45,12 +45,13 @@ export default function Footer() {
                 </div>
               </Link>
               <p className="text-white/90 text-sm mb-4 leading-relaxed max-w-xs">
-                Handcrafted in Pondicherry, inspired by French tradition.
-                Premium artisan cheeses made with passion and local ingredients.
+                Le Pondicherry Cheese is an artisanal cheese brand born where
+                rich dairy heritage meets refined European cheese-making
+                traditions—in the historic coastal town of Pondicherry
               </p>
-              <p className="text-sm font-medium text-brand-gold-subtle bg-white/5 py-1 px-3 rounded-full">
-                Part of AGOC - Achariya Group
-              </p>
+              <a href={fssai} target="_blank" rel="noopenner noreferrer" className="text-sm flex gap-2 items-center underline underline-offset-4 font-medium text-brand-gold-subtle bg-white/5 py-1 px-3 rounded-full">
+                FSSAI Certified <File size={15} />
+              </a>
             </div>
 
             {/* Quick Links */}
@@ -63,6 +64,7 @@ export default function Footer() {
                   <Link
                     to="/shop"
                     className="hover:text-brand-gold-subtle transition-colors"
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     All Cheeses
                   </Link>
@@ -71,32 +73,36 @@ export default function Footer() {
                   <Link
                     to="/shop?category=aged"
                     className="hover:text-brand-gold-subtle transition-colors"
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     Aged Cheeses
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=soft"
+                    to="/shop?category=fresh"
                     className="hover:text-brand-gold-subtle transition-colors"
+                    onClick={() => window.scrollTo(0, 0)}
                   >
-                    Soft Cheeses
+                    Fresh Cheeses
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/gifts"
+                    to="/shop?category=specialty"
                     className="hover:text-brand-gold-subtle transition-colors"
+                    onClick={() => window.scrollTo(0, 0)}
                   >
-                    Gift Collections
+                    Specialty Cheeses
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=subscription"
+                    to="/shop?category=melting"
                     className="hover:text-brand-gold-subtle transition-colors"
+                    onClick={() => window.scrollTo(0, 0)}
                   >
-                    Subscription Boxes
+                    Melting & Basics
                   </Link>
                 </li>
               </ul>
@@ -105,7 +111,7 @@ export default function Footer() {
             {/* Company */}
             <div>
               <h5 className="footer-header font-bold mb-6 text-brand-gold-subtle uppercase tracking-widest text-sm">
-                Company
+                Quick Links
               </h5>
               <ul className="space-y-4 text-sm text-white/90">
                 <li>
@@ -121,7 +127,15 @@ export default function Footer() {
                     to="/process"
                     className="hover:text-brand-gold-subtle transition-colors"
                   >
-                    Artisan Process
+                    Our Facility
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/gallery"
+                    className="hover:text-brand-gold-subtle transition-colors"
+                  >
+                    Gallery
                   </Link>
                 </li>
                 <li>
@@ -156,31 +170,45 @@ export default function Footer() {
               <h5 className="footer-header font-bold mb-6 text-brand-gold-subtle uppercase tracking-widest text-sm">
                 Contact
               </h5>
-              <address className="not-italic space-y-4 text-sm text-white/90">
-                <div className="flex gap-2 items-start">
-                  <Map className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
-                  <div>
-                    <p>Marie Oulgaret, Auroville Road</p>
-                    <p>Pondicherry - 605111, India</p>
+              <address className="not-italic space-y-3 text-sm text-white/90">
+                <div className="flex items-start gap-3">
+                  {" "}
+                  {/* Changed to items-center */}
+                  <div className="flex items-center justify-center w-8 h-8 p-1.5 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group flex-shrink-0">
+                    <Map className="w-5 h-5" />{" "}
+                    {/* Fixed size, no flex classes */}
+                  </div>
+                  <div className="min-h-[28px] flex items-center">
+                    {" "}
+                    {/* Uniform height container */}
+                    <p className="leading-relaxed">
+                      No: 16/3, Pondy to Vazhudavaur Road, Perambai, Villupuram,
+                      Tamilnadu - 605109
+                    </p>
                   </div>
                 </div>
-                <div className="pt-2 flex gap-2 items-start">
-                  <Mail className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
+
+                <div className="flex items-start gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 p-1.5 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group flex-shrink-0">
+                    <Mail className="w-5 h-5" />
+                  </div>
                   <a
                     href="mailto:vp.expansions@hopemarket.in"
-                    className="hover:text-brand-gold-subtle transition-colors block font-medium"
+                    className="hover:text-brand-gold-subtle transition-colors font-medium min-h-[28px] flex items-center"
                   >
                     vp.expansions@hopemarket.in
                   </a>
                 </div>
-                <div className="pt-1 flex gap-2 items-start">
-                  <Phone className="flex items-center justify-center w-7 p-1 h-7 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group" />
-                  <a
-                    href="tel:+917200504628"
-                    className="hover:text-brand-gold-subtle transition-colors block font-medium"
-                  >
-                    +91 72005 04628
-                  </a>
+
+                <div className="flex items-start gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 p-1.5 rounded-full backdrop-blur-sm border border-white/40 text-brand-gold-subtle hover:bg-brand-gold-subtle hover:text-brand-green hover:border-brand-gold-subtle transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg group flex-shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div className="flex gap-1 min-h-[28px] flex items-center flex-wrap">
+                    <a href="tel:+918438892532" className="hover:text-brand-gold-subtle transition-colors font-medium">+91 84388 92532</a>
+                    <span>,</span>
+                    <a href="tel:+917200504628" className="hover:text-brand-gold-subtle transition-colors font-medium">+91 72005 04628</a>
+                  </div>
                 </div>
               </address>
               {/* Social Icons */}

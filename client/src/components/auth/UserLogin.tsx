@@ -18,6 +18,7 @@ import {
   Check,
   MapPin,
 } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 // Country data for the selector
 const countries = [
@@ -52,6 +53,7 @@ const sliderImages = [
 export default function UserLogin() {
   const navigate = useNavigate();
   const { setUser, fetchWishlist } = useUserStore();
+  const { isServerDown } = useCart();
   const [step, setStep] = useState<
     | "email"
     | "otp"
@@ -429,6 +431,18 @@ export default function UserLogin() {
               </p>
             </div>
 
+            {isServerDown && (
+              <div className="bg-amber-50 border border-amber-200 text-amber-900 px-4 py-3 rounded-xl mb-6 flex items-start gap-2 shadow-sm">
+                <span className="text-lg leading-none">⚠️</span>
+                <div>
+                  <p className="font-bold text-sm">Authentication Offline</p>
+                  <p className="text-[11px] text-amber-700 mt-0.5">
+                    The backend server is currently offline. Signup and login services are temporarily unavailable.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-6 flex items-center gap-2">
@@ -506,26 +520,21 @@ export default function UserLogin() {
                     />
                     <span className="text-gray-600">Remember me</span>
                   </label>
-                  {/* <button
+                  <button
                     type="button"
                     onClick={() => {
-                      if (formData.email) {
-                        setStep("forgot-password");
-                      } else {
-                        setError(
-                          "Please enter your email first to reset password.",
-                        );
-                      }
+                      setError("");
+                      setStep("forgot-password");
                     }}
                     className="text-brand-green font-medium hover:underline"
                   >
                     Forgot Password?
-                  </button> */}
+                  </button>
                 </div>
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || isServerDown}
                   className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-brand-green/20 hover:bg-[#1a3a20] hover:shadow-brand-green/40 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? "Logging in..." : "Sign In"}{" "}
@@ -584,7 +593,7 @@ export default function UserLogin() {
                 </div>
                 <button
                   onClick={() => handleSendOtp()}
-                  disabled={!formData.email || loading}
+                  disabled={!formData.email || loading || isServerDown}
                   className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Sending OTP..." : "Send OTP"}
@@ -739,9 +748,9 @@ export default function UserLogin() {
               </div>
             )}
 
-            {/* Step: Forgot Password Confirmation */}
+            {/* Step: Forgot Password */}
             {step === "forgot-password" && (
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-brand-gold-subtle/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Lock size={32} className="text-brand-gold-subtle" />
@@ -749,18 +758,36 @@ export default function UserLogin() {
                   <h3 className="text-2xl font-bold font-heading text-brand-green mb-2">
                     Forgot Password
                   </h3>
-                  <p className="text-sm text-gray-500 mb-6">
-                    We will send an OTP to verify your identity for:
-                    <br />
-                    <span className="font-bold text-gray-800 break-all">
-                      {formData.email}
-                    </span>
+                  <p className="text-sm text-gray-500">
+                    Enter your email to receive an OTP to reset your password.
                   </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative group">
+                    <Mail
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
+                      size={20}
+                    />
+                    <input
+                      type="email"
+                      required
+                      className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-brand-green/40 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
 
                 <button
                   onClick={() => handleSendOtp("reset-password")}
-                  disabled={loading}
+                  disabled={!formData.email || loading || isServerDown}
                   className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Sending OTP..." : "Send Reset OTP"}
@@ -768,9 +795,13 @@ export default function UserLogin() {
 
                 <div className="text-center">
                   <button
-                    onClick={() => setStep("login")}
+                    onClick={() => {
+                      setError("");
+                      setStep("login");
+                    }}
                     className="text-sm text-gray-500 hover:text-gray-800 font-medium"
                   >
+                    <ArrowLeft className="inline-block mr-2" size={16} />
                     Back to Login
                   </button>
                 </div>

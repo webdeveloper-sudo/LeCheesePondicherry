@@ -326,12 +326,12 @@ export default function ProductDetailClient({
                     }`}
                   />
                 </button> */}
-                <button
+                {/* <button
                   onClick={handleBuyNow}
                   className="btn btn-accent text-lg py-4 px-8"
                 >
                   Buy Now
-                </button>
+                </button> */}
               </div>
 
               {/* Trust Badges */}

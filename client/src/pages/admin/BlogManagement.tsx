@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Search, Loader } from "lucide-react";
 import BlogForm from "./BlogForm";
 import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 interface Blog {
   _id: string;
@@ -32,7 +33,7 @@ export default function BlogManagement() {
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/blogs?admin=true`,
+        `${API_BASE_URL}/api/blogs?admin=true`,
       );
       if (response.data.success) {
         setBlogs(response.data.data);
@@ -49,7 +50,7 @@ export default function BlogManagement() {
       const token = JSON.parse(
         localStorage.getItem("lepondy-user-storage") || "{}",
       ).state?.token;
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/blogs/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/blogs/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

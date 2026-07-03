@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/MotionPrimitives";
 import { fadeUp, staggerContainer, scaleIn } from "@/animations/variants";
 import { motion } from "framer-motion";
-import { FETCH_MODE } from "@/config";
+import { FETCH_MODE, API_BASE_URL } from "@/config";
 import { products as staticProducts } from "@/data/products";
 import axios from "axios";
 import { HomeBlogsGrid } from "./HomeBlogsGrid";
@@ -107,7 +107,7 @@ Action: Item added to cart for checkout.
     const fetchAllProducts = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`,
+          `${API_BASE_URL}/api/products`,
         );
         if (response.data) {
           const fetchedData = response.data.data || response.data;
@@ -127,7 +127,8 @@ Action: Item added to cart for checkout.
           setAllProducts(mappedProducts);
         }
       } catch (error) {
-        console.error("YourPicks: Failed to fetch products:", error);
+        console.error("HomeClient: Failed to fetch products, falling back to static:", error);
+        setAllProducts(staticProducts);
       } finally {
         setLoading(false);
       }
@@ -254,7 +255,7 @@ Action: Item added to cart for checkout.
                 variants={fadeUp}
                 className="flex flex-wrap gap-6 justify-center mt-12 pt-8 border-t border-white/10 w-full max-w-lg"
               >
-                {["FSSAI Certified", "Zero Preservatives", "100% Vegetarian"].map((badge) => (
+                {["Farm fresh", " Small batch ", "Naturally aged","Premium"].map((badge) => (
                   <span key={badge} className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0" />
                     {badge}
@@ -355,8 +356,8 @@ Action: Item added to cart for checkout.
                 Discover Our Signature Collection
               </h2>
               <p className="text-text-secondary max-w-2xl mx-auto">
-                Handcrafted cheeses made using traditional French techniques and
-                the finest local ingredients
+               Le Pondicherry Cheese
+Artisanal Excellence from Pondicherry
               </p>
             </div>
             <div className="w-full">
@@ -377,8 +378,8 @@ Action: Item added to cart for checkout.
                    Our Signature Collection
                 </h2>
                 <p className="text-GRAY-800 max-w-2xl mx-auto break-words">
-                  Handcrafted cheeses made using traditional French techniques
-                  and the finest local ingredients
+                 Le Pondicherry Cheese
+Artisanal Excellence from Pondicherry
                 </p>
               </div>
 

@@ -17,7 +17,7 @@ const Outlet = () => {
     const outlets = [
   {
     name: "Pondicherry Flagship",
-    address: "Auroville Road, Pondicherry",
+    address: "No: 16/3, Pondy to Vazhudavaur Road, Perambai, Villupuram,Tamilnadu - 605109",
     status: "Flagship Store",
     image:
       "https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=2070&auto=format&fit=crop",

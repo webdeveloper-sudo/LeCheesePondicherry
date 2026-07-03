@@ -138,9 +138,9 @@ export default function ContactPage() {
                           Our Location
                         </h3>
                         <p className="text-text-secondary leading-relaxed">
-                          AGOC Food Park, Auroville Road
-                          <br />
-                          Pondicherry - 605101, India
+                          No: 16/3, Pondy to Vazhudavaur Road, Perambai,
+                     
+                          Villupuram,Tamilnadu - 605109
                         </p>
                       </div>
                     </div>
@@ -170,12 +170,11 @@ export default function ContactPage() {
                         <h3 className="font-heading font-bold text-xl mb-1 text-text-primary">
                           Call Us
                         </h3>
-                        <a
-                          href="tel:+917200504628"
-                          className="text-text-secondary hover:text-brand-gold-subtle transition-colors"
-                        >
-                          +91 72005 04628
-                        </a>
+                        <div className="text-text-secondary flex gap-1">
+                          <a href="tel:+918438892532" className="hover:text-brand-gold-subtle transition-colors">+91 84388 92532</a>
+                          <span>,</span>
+                          <a href="tel:+917200504628" className="hover:text-brand-gold-subtle transition-colors">+91 72005 04628</a>
+                        </div>
                       </div>
                     </div>
 

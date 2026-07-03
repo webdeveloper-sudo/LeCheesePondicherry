@@ -34,7 +34,6 @@ const initializeTransporter = async () => {
           "⚠️ SMTP connection failed:",
           verifyError.message,
         );
-        console.log("ℹ️ Will fallback to Google Apps Script Proxy for emails.");
         smtpVerified = false;
       }
     } catch (error) {
@@ -45,7 +44,7 @@ const initializeTransporter = async () => {
     }
   } else {
     console.warn(
-      "⚠️ SMTP credentials missing. Email service will use Proxy or Log-only mode.",
+      "⚠️ SMTP credentials missing. Email service will run in Log-only mode in development.",
     );
   }
 };
@@ -155,30 +154,23 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
     console.log("========================================\n");
   }
 
-  // Priority 1: SMTP (if verified and working)
-  if (smtpVerified && transporter) {
+  if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`✅ Email sent via SMTP to ${email}`);
       return true;
     } catch (error) {
-      console.error("❌ SMTP send failed, trying Proxy...", error.message);
-    }
-  }
-
-  // Priority 2: HTTP Proxy (Bypass Render block)
-  const result = await sendViaProxy(mailOptions);
-  
-  if (!result) {
-    // If proxy failed on Render, it's a hard failure regardless of NODE_ENV
-    if (process.env.RENDER || process.env.NODE_ENV === "production") {
+      console.error(`❌ SMTP send failed to ${email}:`, error.message);
+      if (process.env.NODE_ENV === "development") {
+        console.log("ℹ️ Local development fallback: allowing OTP verification to continue (check console logs for OTP).");
+        return true;
+      }
       return false;
     }
-    // Only in local dev (no RENDER env) we allow the flow to continue
-    return true;
+  } else {
+    console.error("❌ Email transporter not initialized");
+    return process.env.NODE_ENV === "development";
   }
-
-  return result;
 };
 
 /**
@@ -209,13 +201,16 @@ const sendWelcomeEmail = async (email, name) => {
     `,
   };
 
-  if (smtpVerified && transporter) {
+  if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
-      return;
-    } catch (e) {}
+      console.log(`✅ Welcome email sent via SMTP to ${email}`);
+    } catch (error) {
+      console.error(`❌ Welcome email SMTP send failed to ${email}:`, error.message);
+    }
+  } else {
+    console.warn("⚠️ Welcome email not sent: Transporter not initialized");
   }
-  await sendViaProxy(mailOptions);
 };
 
 /**
@@ -271,13 +266,16 @@ const sendOrderConfirmationEmail = async (order, user) => {
     `,
   };
 
-  if (smtpVerified && transporter) {
+  if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
-      return;
-    } catch (e) {}
+      console.log(`✅ Order confirmation email sent via SMTP to ${user.email}`);
+    } catch (error) {
+      console.error(`❌ Order confirmation SMTP send failed to ${user.email}:`, error.message);
+    }
+  } else {
+    console.warn("⚠️ Order confirmation email not sent: Transporter not initialized");
   }
-  await sendViaProxy(mailOptions);
 };
 
 /**
@@ -303,19 +301,24 @@ const sendShippingUpdateEmail = async (order, user) => {
     `,
   };
 
-  if (smtpVerified && transporter) {
+  if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
-      return;
-    } catch (e) {}
+      console.log(`✅ Shipping update email sent via SMTP to ${user.email}`);
+    } catch (error) {
+      console.error(`❌ Shipping update SMTP send failed to ${user.email}:`, error.message);
+    }
+  } else {
+    console.warn("⚠️ Shipping update email not sent: Transporter not initialized");
   }
-  await sendViaProxy(mailOptions);
 };
 
-// Initialize on module load
-initializeTransporter().catch((err) =>
-  console.error("❌ Email transporter initialization error:", err.message),
-);
+// Initialize on module load (skip during tests to avoid open handles)
+if (process.env.NODE_ENV !== "test") {
+  initializeTransporter().catch((err) =>
+    console.error("❌ Email transporter initialization error:", err.message),
+  );
+}
 
 module.exports = {
   sendOTPEmail,

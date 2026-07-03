@@ -17,6 +17,7 @@ export default function CartPage() {
     toggleSelectItem,
     toggleSelectAll,
     totalItems,
+    isServerDown,
   } = useCart();
   const { isAuthenticated } = useUserStore();
   const [showTooltip, setShowTooltip] = useState(false);
@@ -55,6 +56,17 @@ export default function CartPage() {
   return (
     <div className="min-h-screen py-12 bg-bg-cream-light">
       <div className="container mx-auto px-4">
+        {isServerDown && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-900 px-5 py-4 rounded-2xl mb-8 flex items-start gap-3 shadow-sm">
+            <span className="text-xl leading-none">⚠️</span>
+            <div>
+              <p className="font-bold text-sm">Offline Fallback Mode</p>
+              <p className="text-xs text-amber-700 mt-1">
+                The database server is currently unreachable. The website has automatically switched to local fallback mode using static data. You can still manage your local cart, but checkout and account synchronization are disabled.
+              </p>
+            </div>
+          </div>
+        )}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <h1
             className="text-3xl md:text-4xl font-bold text-text-primary"

@@ -20,9 +20,12 @@ export default function TopHeader() {
         Free Delivery on orders above ₹2000
        </div> */}
        <div className="flex items-center text-green gap-4">
-        <a href="tel:+917200504628" className="flex items-center gap-2">
-          <Phone size={16}/> +91 72005 04628
-        </a>
+        <div className="flex items-center gap-1 text-sm font-medium">
+          <Phone size={16}/> 
+          <a href="tel:+918438892532" className="hover:underline">+91 84388 92532</a>
+          <span>,</span>
+          <a href="tel:+917200504628" className="hover:underline">+91 72005 04628</a>
+        </div>
         <div className="px-1">|</div>
         <a href="mailto:vp.expansions@hopemarket.in" className="flex items-center gap-2">
           <Mail size={16}/> vp.expansions@hopemarket.in

@@ -4,7 +4,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useCart } from "@/context/CartContext";
 import { products as staticProducts, Product } from "@/data/products";
 import ProductCard from "./ProductCard";
-import { FETCH_MODE } from "@/config";
+import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -35,7 +35,7 @@ export default function YourPicks({
     const fetchAllProducts = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`,
+          `${API_BASE_URL}/api/products`,
         );
         if (response.data) {
           const fetchedData = response.data.data || response.data;
@@ -55,7 +55,8 @@ export default function YourPicks({
           setAllProducts(mappedProducts);
         }
       } catch (error) {
-        console.error("YourPicks: Failed to fetch products:", error);
+        console.error("YourPicks: Failed to fetch products, falling back to static:", error);
+        setAllProducts(staticProducts);
       } finally {
         setLoading(false);
       }

@@ -7,7 +7,7 @@ import { wishlistAPI } from "@/lib/api";
 import { products as staticProducts, Product } from "@/data/products";
 import { Heart, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { FETCH_MODE } from "@/config";
+import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
 import { MotionContainer } from "@/components/ui/MotionPrimitives";
 import { motion } from "framer-motion";
@@ -49,7 +49,7 @@ export default function WishlistPage() {
           // If we are in dynamic mode, we fetch products if we haven't already
           // Note: In a larger app, this would be in a context or global state
           const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/products`,
+            `${API_BASE_URL}/api/products`,
           );
           if (response.data) {
             const fetchedData = response.data.data || response.data;
@@ -74,7 +74,11 @@ export default function WishlistPage() {
         );
         setWishlistProducts(wishlistProductsList);
       } catch (err) {
-        console.error("Wishlist: Failed to load products", err);
+        console.error("Wishlist: Failed to load products, falling back to static:", err);
+        const wishlistProductsList = staticProducts.filter((p) =>
+          wishlistIds.includes(p.id),
+        );
+        setWishlistProducts(wishlistProductsList);
       } finally {
         setLoading(false);
       }
