@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const CASHFREE_ENV = process.env.NODE_ENV === "production" ? "PROD" : "TEST";
+const CASHFREE_ENV = process.env.CASHFREE_ENV || (process.env.NODE_ENV === "production" ? "PROD" : "TEST");
 
 const CASHFREE_APP_ID = CASHFREE_ENV === "TEST"
   ? process.env.TEST_CASHFREE_APP_ID
