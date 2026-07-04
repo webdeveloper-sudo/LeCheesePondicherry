@@ -86,7 +86,13 @@ export const authAPI = {
   },
 
   // Set password after OTP verification
-  setPassword: async (email: string, password: string, tempToken: string) => {
+  setPassword: async (
+    email: string,
+    password: string,
+    tempToken: string,
+    guestCart?: any[],
+    guestWishlist?: string[]
+  ) => {
     return apiRequest<{
       token: string;
       user: {
@@ -97,7 +103,7 @@ export const authAPI = {
       };
     }>("/api/auth/set-password", {
       method: "POST",
-      body: JSON.stringify({ email, password, tempToken }),
+      body: JSON.stringify({ email, password, tempToken, guestCart, guestWishlist }),
     });
   },
 
@@ -118,7 +124,12 @@ export const authAPI = {
   },
 
   // Login with email and password
-  login: async (email: string, password: string) => {
+  login: async (
+    email: string,
+    password: string,
+    guestCart?: any[],
+    guestWishlist?: string[]
+  ) => {
     return apiRequest<{
       token: string;
       user: {
@@ -135,7 +146,7 @@ export const authAPI = {
       };
     }>("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, guestCart, guestWishlist }),
     });
   },
 

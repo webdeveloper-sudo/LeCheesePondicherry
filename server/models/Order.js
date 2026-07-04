@@ -100,6 +100,15 @@ const orderSchema = new mongoose.Schema(
     cancellationReason: String,
     refundAmount: Number,
     refundedOn: Date,
+    trackingHistory: [
+      {
+        status: { type: String, required: true },
+        title: String,
+        description: String,
+        location: String,
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

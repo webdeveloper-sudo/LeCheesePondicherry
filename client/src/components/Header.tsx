@@ -34,10 +34,10 @@ export default function Header() {
   const userName = name ? name.split(" ")[0] : "User"; // Get first name
   const [isClient, setIsClient] = useState(false);
   const location = useLocation(); // Add this import
-  const isHomeRoute = location.pathname === "/";
+  const isHomeRoute = location.pathname ;
   const logoVariants = {
     initial: { rotate: 0, scale: 0.9, opacity: 0 },
-    animate: isHomeRoute
+    animate: isHomeRoute 
       ? {
           rotate: 360,
           scale: 1,

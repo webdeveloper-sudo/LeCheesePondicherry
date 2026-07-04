@@ -98,14 +98,8 @@ export default function WishlistPage() {
       const product = wishlistProducts.find((p) => p.id === productId);
       addToCart(productId, 1, "200g", product?.price || 0);
 
-      // If authenticated, also call backend API to move
-      if (isAuthenticated()) {
-        await wishlistAPI.moveToCart(productId, 1);
-        await fetchWishlist();
-      } else {
-        // For guests, just remove from wishlist
-        await toggleWishlist(productId);
-      }
+      // Remove from wishlist immediately (for both guest & auth users)
+      await toggleWishlist(productId);
     } finally {
       setMovingToCart(null);
     }

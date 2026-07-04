@@ -96,6 +96,14 @@ const verifyPayment = async (req, res) => {
             paymentOn: new Date(),
             transactionId: cfOrder.cf_order_id,
             paymentMode: cfOrder.payment_session_id ? "online" : "unknown",
+            trackingHistory: [
+              {
+                status: "placed",
+                title: "Order Placed",
+                description: "Your order has been placed successfully.",
+                timestamp: new Date(),
+              },
+            ],
           });
 
           // Sync to User History & Clear Cart
@@ -143,6 +151,14 @@ const verifyPayment = async (req, res) => {
           deliveryAddress: orderData.shippingAddress,
           paymentStatus: "failed",
           orderStatus: "cancelled", // Or a specific failed status
+          trackingHistory: [
+            {
+              status: "cancelled",
+              title: "Payment Failed / Cancelled",
+              description: "The payment session failed or was cancelled.",
+              timestamp: new Date(),
+            },
+          ],
         });
       }
 
@@ -238,14 +254,64 @@ const updateOrder = async (req, res) => {
     }
 
     // Update fields
-    if (orderStatus) order.orderStatus = orderStatus;
+    if (orderStatus && orderStatus !== order.orderStatus) {
+      order.orderStatus = orderStatus;
+      
+      const statusTitles = {
+        placed: "Order Placed",
+        confirmed: "Order Confirmed",
+        processing: "Order Processing",
+        shipped: "Order Shipped",
+        out_for_delivery: "Out for Delivery",
+        delivered: "Order Delivered",
+        cancelled: "Order Cancelled",
+        returned: "Order Returned",
+      };
+      
+      const statusDescriptions = {
+        placed: "We have received your order.",
+        confirmed: "Your payment has been verified and your order is confirmed.",
+        processing: "We are preparing your delicious cheese order.",
+        shipped: `Your package has been handed over to courier partner${courierPartner ? " " + courierPartner : ""}.`,
+        out_for_delivery: "Your package is out for delivery and will arrive today.",
+        delivered: "Enjoy your delicious cheese! Delivered successfully.",
+        cancelled: "Your order has been cancelled.",
+        returned: "The package has been returned to our facility.",
+      };
+
+      order.trackingHistory.push({
+        status: orderStatus,
+        title: statusTitles[orderStatus] || `Status Updated: ${orderStatus}`,
+        description: statusDescriptions[orderStatus] || `Order status has been updated to ${orderStatus}.`,
+        timestamp: new Date(),
+      });
+    }
+
     if (trackingNumber) order.trackingNumber = trackingNumber;
     if (courierPartner) order.courierPartner = courierPartner;
     if (estimatedDeliveryDate)
       order.estimatedDeliveryDate = estimatedDeliveryDate;
     if (notes) order.notes = notes;
+    if (req.body.trackingHistory) {
+      order.trackingHistory = req.body.trackingHistory;
+    }
 
     await order.save();
+
+    // Sync to User's nested orders array
+    await User.updateOne(
+      { _id: order.user, "orders._id": order._id },
+      {
+        $set: {
+          "orders.$.orderStatus": order.orderStatus,
+          "orders.$.trackingNumber": order.trackingNumber,
+          "orders.$.courierPartner": order.courierPartner,
+          "orders.$.estimatedDeliveryDate": order.estimatedDeliveryDate,
+          "orders.$.notes": order.notes,
+          "orders.$.trackingHistory": order.trackingHistory,
+        },
+      }
+    );
 
     res.status(200).json({
       success: true,

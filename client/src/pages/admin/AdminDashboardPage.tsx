@@ -6,7 +6,7 @@ import UserManagement from "@/pages/admin/UserManagement";
 import ProductManagement from "@/pages/admin/ProductManagement";
 import OrderManagement from "@/pages/admin/OrderManagement";
 import BlogManagement from "@/pages/admin/BlogManagement";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
 
 export default function AdminDashboardPage() {
@@ -14,6 +14,7 @@ export default function AdminDashboardPage() {
   const navigate = useNavigate();
   const { addToast } = useToastStore();
   const [activeTab, setActiveTab] = useState("products");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is admin, if not redirect
@@ -67,12 +68,20 @@ export default function AdminDashboardPage() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onLogout={handleLogout}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64 min-h-screen">
-        <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10 flex justify-between items-center shadow-sm">
+      <div className="flex-1 lg:ml-64 ml-0 min-h-screen transition-all duration-300">
+        <header className="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 sticky top-0 z-10 flex justify-between items-center shadow-sm">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
+            >
+              <Menu size={24} />
+            </button>
             <div className="h-8 w-1 bg-yellow-500 rounded-full" />
             <h2 className="text-xl font-black text-gray-800 uppercase tracking-tight">
               {activeTab} Management

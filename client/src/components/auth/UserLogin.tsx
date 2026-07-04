@@ -52,8 +52,8 @@ const sliderImages = [
 
 export default function UserLogin() {
   const navigate = useNavigate();
-  const { setUser, fetchWishlist } = useUserStore();
-  const { isServerDown } = useCart();
+  const { setUser, fetchWishlist, wishlistIds } = useUserStore();
+  const { isServerDown, items, syncWithBackend } = useCart();
   const [step, setStep] = useState<
     | "email"
     | "otp"
@@ -288,6 +288,8 @@ export default function UserLogin() {
         formData.email,
         formData.password,
         tempToken,
+        otpPurpose !== "reset-password" ? items : undefined,
+        otpPurpose !== "reset-password" ? wishlistIds : undefined,
       );
 
       if (result.success && result.data) {
@@ -307,6 +309,10 @@ export default function UserLogin() {
           role: user.role,
           token: token,
         });
+
+        if (otpPurpose !== "reset-password") {
+          await syncWithBackend();
+        }
 
         setStep("profile");
       } else {
@@ -369,7 +375,12 @@ export default function UserLogin() {
     setError("");
 
     try {
-      const result = await authAPI.login(formData.email, formData.password);
+      const result = await authAPI.login(
+        formData.email,
+        formData.password,
+        items,
+        wishlistIds
+      );
 
       if (result.success && result.data) {
         const { token, user } = result.data;
@@ -387,7 +398,8 @@ export default function UserLogin() {
           preferences: user.preferences || [],
         });
 
-        // Fetch wishlist after login
+        // Sync cart and fetch wishlist after login
+        await syncWithBackend();
         await fetchWishlist();
 
         const redirectPath =

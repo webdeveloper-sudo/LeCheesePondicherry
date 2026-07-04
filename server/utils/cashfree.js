@@ -1,8 +1,14 @@
 const axios = require("axios");
 
-const CASHFREE_APP_ID = process.env.CASHFREE_APP_ID;
-const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
-const CASHFREE_ENV = process.env.CASHFREE_ENV || "TEST";
+const CASHFREE_ENV = process.env.NODE_ENV === "production" ? "PROD" : "TEST";
+
+const CASHFREE_APP_ID = CASHFREE_ENV === "TEST"
+  ? process.env.TEST_CASHFREE_APP_ID
+  : process.env.PROD_CASHFREE_APP_ID;
+
+const CASHFREE_SECRET_KEY = CASHFREE_ENV === "TEST"
+  ? process.env.TEST_CASHFREE_SECRET_KEY
+  : process.env.PROD_CASHFREE_SECRET_KEY;
 
 const BASE_URL =
   CASHFREE_ENV === "TEST"

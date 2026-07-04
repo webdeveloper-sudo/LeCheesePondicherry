@@ -64,7 +64,6 @@ export default function OrderStatusPage() {
           setStatus("success");
           setOrderDetails(res.data.data || res.data);
           clearCart();
-          localStorage.removeItem("lepondy_pending_order");
         } else if (res.data?.canRetry && currentRetries < maxRetries) {
           currentRetries++;
           setRetryCount(currentRetries);
@@ -76,7 +75,7 @@ export default function OrderStatusPage() {
           setError(
             res.data?.message ||
               res.message ||
-              "Payment verification timed out or failed.",
+              "The order could not be placed now due to some technical issue or payment failure. Please try again.",
           );
         }
       } catch (err: any) {
@@ -155,13 +154,57 @@ export default function OrderStatusPage() {
             </div>
             <div className="flex flex-col gap-3 pt-4">
               <Link
-                to="/user"
+                to="/orders"
+                onClick={() => localStorage.removeItem("lepondy_pending_order")}
                 className="btn btn-primary w-full py-4 text-center"
               >
                 View My Orders
               </Link>
               <Link
                 to="/shop"
+                onClick={() => localStorage.removeItem("lepondy_pending_order")}
+                className="btn btn-secondary w-full py-4 text-center"
+              >
+                Continue Shopping
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {status === "pending" && (
+          <div className="space-y-6 animate-fade-in">
+            <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto">
+              <svg
+                className="w-10 h-10 text-amber-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-black text-text-primary">
+              Payment Pending
+            </h2>
+            <p className="text-gray-600 leading-relaxed text-sm">
+              Your payment is currently pending confirmation from your bank. We will process your order as soon as we receive confirmation. You can check the status in your orders history.
+            </p>
+            <div className="flex flex-col gap-3 pt-4">
+              <Link
+                to="/orders"
+                onClick={() => localStorage.removeItem("lepondy_pending_order")}
+                className="btn btn-primary w-full py-4 text-center"
+              >
+                View My Orders
+              </Link>
+              <Link
+                to="/shop"
+                onClick={() => localStorage.removeItem("lepondy_pending_order")}
                 className="btn btn-secondary w-full py-4 text-center"
               >
                 Continue Shopping
@@ -201,12 +244,19 @@ export default function OrderStatusPage() {
             </p>
             <div className="flex flex-col gap-3 pt-4">
               <button
-                onClick={() => navigate("/checkout")}
+                onClick={() => {
+                  localStorage.removeItem("lepondy_pending_order");
+                  navigate("/checkout");
+                }}
                 className="btn btn-primary w-full py-4"
               >
                 Try Again
               </button>
-              <Link to="/shop" className="btn btn-secondary w-full py-4">
+              <Link
+                to="/shop"
+                onClick={() => localStorage.removeItem("lepondy_pending_order")}
+                className="btn btn-secondary w-full py-4"
+              >
                 Back to Shop
               </Link>
             </div>

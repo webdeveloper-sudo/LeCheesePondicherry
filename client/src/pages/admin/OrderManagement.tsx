@@ -51,6 +51,33 @@ const OrderManagement: React.FC = () => {
     setEditingOrder(null);
   };
 
+  const handleDeleteLog = async (order: any, indexToDelete: number) => {
+    const updatedHistory = order.trackingHistory.filter((_: any, idx: number) => idx !== indexToDelete);
+    await updateOrder(order._id, { trackingHistory: updatedHistory });
+  };
+
+  const [newLog, setNewLog] = React.useState({
+    status: "placed",
+    title: "",
+    description: "",
+    location: ""
+  });
+
+  const handleAddLog = async (orderId: string, currentHistory: any[]) => {
+    if (!newLog.title.trim() || !newLog.description.trim()) {
+      alert("Please fill in both title and description for the update.");
+      return;
+    }
+    const updatedHistory = [...(currentHistory || []), { ...newLog, timestamp: new Date() }];
+    await updateOrder(orderId, { trackingHistory: updatedHistory });
+    setNewLog({
+      status: "placed",
+      title: "",
+      description: "",
+      location: ""
+    });
+  };
+
   const startEditing = (order: any) => {
     setEditingOrder(order._id);
     setTrackingData({
@@ -150,58 +177,144 @@ const OrderManagement: React.FC = () => {
 
             {/* Tracking Editor */}
             {editingOrder === order._id && (
-              <div className="p-5 bg-[#FAF7F2] border-t border-gray-100">
-                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
-                  Shipping Details
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <input
-                    placeholder="Tracking ID"
-                    value={trackingData.trackingNumber}
-                    onChange={(e) =>
-                      setTrackingData({
-                        ...trackingData,
-                        trackingNumber: e.target.value,
-                      })
-                    }
-                    className="px-3 py-2 border rounded-lg text-sm"
-                  />
-                  <input
-                    placeholder="Courier Partner"
-                    value={trackingData.courierPartner}
-                    onChange={(e) =>
-                      setTrackingData({
-                        ...trackingData,
-                        courierPartner: e.target.value,
-                      })
-                    }
-                    className="px-3 py-2 border rounded-lg text-sm"
-                  />
-                  <input
-                    type="date"
-                    value={trackingData.estimatedDeliveryDate}
-                    onChange={(e) =>
-                      setTrackingData({
-                        ...trackingData,
-                        estimatedDeliveryDate: e.target.value,
-                      })
-                    }
-                    className="px-3 py-2 border rounded-lg text-sm"
-                  />
+              <div className="p-5 bg-[#FAF7F2] border-t border-gray-100 space-y-6 text-left">
+                <div>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
+                    Shipping Details
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input
+                      placeholder="Tracking ID"
+                      value={trackingData.trackingNumber}
+                      onChange={(e) =>
+                        setTrackingData({
+                          ...trackingData,
+                          trackingNumber: e.target.value,
+                        })
+                      }
+                      className="px-3 py-2 border bg-white rounded-lg text-sm"
+                    />
+                    <input
+                      placeholder="Courier Partner"
+                      value={trackingData.courierPartner}
+                      onChange={(e) =>
+                        setTrackingData({
+                          ...trackingData,
+                          courierPartner: e.target.value,
+                        })
+                      }
+                      className="px-3 py-2 border bg-white rounded-lg text-sm"
+                    />
+                    <input
+                      type="date"
+                      value={trackingData.estimatedDeliveryDate}
+                      onChange={(e) =>
+                        setTrackingData({
+                          ...trackingData,
+                          estimatedDeliveryDate: e.target.value,
+                        })
+                      }
+                      className="px-3 py-2 border bg-white rounded-lg text-sm"
+                    />
+                  </div>
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => handleSaveTracking(order._id)}
+                      className="bg-[#2C5530] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1a3a20] transition-colors"
+                    >
+                      Save Shipping Info
+                    </button>
+                    <button
+                      onClick={() => setEditingOrder(null)}
+                      className="text-gray-500 text-xs font-bold hover:underline"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => handleSaveTracking(order._id)}
-                    className="bg-[#2C5530] text-white px-4 py-2 rounded-lg text-xs font-bold"
-                  >
-                    Save & Mark Shipped
-                  </button>
-                  <button
-                    onClick={() => setEditingOrder(null)}
-                    className="text-gray-500 text-xs font-bold"
-                  >
-                    Cancel
-                  </button>
+
+                {/* Custom Tracking History Section */}
+                <div className="border-t border-gray-200/60 pt-5">
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-widest mb-4">
+                    Tracking Updates Logs ({order.trackingHistory?.length || 0})
+                  </h4>
+                  
+                  {/* List Logs */}
+                  <div className="space-y-2 mb-4 max-h-40 overflow-y-auto pr-1">
+                    {order.trackingHistory && order.trackingHistory.length > 0 ? (
+                      order.trackingHistory.map((log: any, lidx: number) => (
+                        <div key={lidx} className="flex justify-between items-start gap-4 bg-white p-3 rounded-lg border border-gray-100 text-xs shadow-sm">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center flex-wrap gap-2">
+                              <span className="font-extrabold text-[#2C5530] uppercase text-[9px] bg-[#2C5530]/5 px-1.5 py-0.5 rounded">
+                                {log.status}
+                              </span>
+                              <span className="font-bold text-gray-800">{log.title}</span>
+                              {log.location && <span className="text-[10px] text-[#C9A961] font-bold">📍 {log.location}</span>}
+                            </div>
+                            <p className="text-gray-500 mt-1">{log.description}</p>
+                            <span className="text-[9px] text-gray-400 font-medium block mt-0.5">
+                              {new Date(log.timestamp).toLocaleString()}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteLog(order, lidx)}
+                            className="text-red-500 hover:text-red-700 font-bold hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-gray-400 italic">No tracking updates recorded.</p>
+                    )}
+                  </div>
+
+                  {/* Add Log Form */}
+                  <div className="bg-white p-4 rounded-xl border border-gray-200/80 space-y-3">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Add Status Update</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <select
+                        value={newLog.status}
+                        onChange={(e) => setNewLog({ ...newLog, status: e.target.value })}
+                        className="px-3 py-2 border rounded-lg text-xs font-medium focus:ring-1 focus:ring-yellow-500 bg-white"
+                      >
+                        <option value="placed">Placed</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="returned">Returned</option>
+                      </select>
+                      <input
+                        placeholder="Update Title (e.g. Dispatched)"
+                        value={newLog.title}
+                        onChange={(e) => setNewLog({ ...newLog, title: e.target.value })}
+                        className="px-3 py-2 border rounded-lg text-xs"
+                      />
+                      <input
+                        placeholder="Location (e.g. Pondicherry)"
+                        value={newLog.location}
+                        onChange={(e) => setNewLog({ ...newLog, location: e.target.value })}
+                        className="px-3 py-2 border rounded-lg text-xs"
+                      />
+                    </div>
+                    <textarea
+                      placeholder="Detailed description of status update..."
+                      value={newLog.description}
+                      onChange={(e) => setNewLog({ ...newLog, description: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-lg text-xs"
+                      rows={2}
+                    />
+                    <button
+                      onClick={() => handleAddLog(order._id, order.trackingHistory)}
+                      className="bg-[#2C5530] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1a3a20] transition-colors"
+                    >
+                      Add Update to Timeline
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

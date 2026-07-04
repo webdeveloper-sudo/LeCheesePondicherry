@@ -156,7 +156,7 @@ const verifyOTP = async (req, res) => {
  */
 const setPassword = async (req, res) => {
   try {
-    const { email, password, tempToken } = req.body;
+    const { email, password, tempToken, guestCart, guestWishlist } = req.body;
 
     // Verify temp token
     const jwt = require("jsonwebtoken");
@@ -188,15 +188,51 @@ const setPassword = async (req, res) => {
       // Update existing user (for password reset)
       user.hashedPassword = hashedPassword;
       user.isEmailVerified = true;
-      await user.save();
     } else {
       // Create new user
-      user = await User.create({
+      user = new User({
         email: email.toLowerCase(),
         hashedPassword,
         isEmailVerified: true,
+        cart: [],
+        wishlist: [],
       });
     }
+
+    // Merge guest cart items
+    if (guestCart && Array.isArray(guestCart)) {
+      for (const guestItem of guestCart) {
+        const existingItem = user.cart.find(
+          (item) => item.productId === guestItem.productId && item.weight === guestItem.weight
+        );
+        if (existingItem) {
+          existingItem.quantity += guestItem.quantity;
+        } else {
+          user.cart.push({
+            productId: guestItem.productId,
+            quantity: guestItem.quantity,
+            weight: guestItem.weight || "200g",
+            price: guestItem.price || 0,
+            addedAt: new Date(),
+          });
+        }
+      }
+    }
+
+    // Merge guest wishlist items
+    if (guestWishlist && Array.isArray(guestWishlist)) {
+      for (const guestId of guestWishlist) {
+        const exists = user.wishlist.some((item) => item.productId === guestId);
+        if (!exists) {
+          user.wishlist.push({
+            productId: guestId,
+            addedAt: new Date(),
+          });
+        }
+      }
+    }
+
+    await user.save();
 
     // Generate auth token
     const token = generateToken({
@@ -215,6 +251,9 @@ const setPassword = async (req, res) => {
         name: user.name,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
+        cartItemCount: user.getCartItemCount(),
+        wishlistCount: user.wishlist?.length || 0,
+        wishlistIds: user.wishlist?.map((item) => item.productId) || [],
         preferences: user.preferences || [],
       },
     });
@@ -297,7 +336,7 @@ const completeProfile = async (req, res) => {
  */
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, guestCart, guestWishlist } = req.body;
 
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -331,6 +370,39 @@ const login = async (req, res) => {
         success: false,
         message: "Invalid email or password",
       });
+    }
+
+    // Merge guest cart items
+    if (guestCart && Array.isArray(guestCart)) {
+      for (const guestItem of guestCart) {
+        const existingItem = user.cart.find(
+          (item) => item.productId === guestItem.productId && item.weight === guestItem.weight
+        );
+        if (existingItem) {
+          existingItem.quantity += guestItem.quantity;
+        } else {
+          user.cart.push({
+            productId: guestItem.productId,
+            quantity: guestItem.quantity,
+            weight: guestItem.weight || "200g",
+            price: guestItem.price || 0,
+            addedAt: new Date(),
+          });
+        }
+      }
+    }
+
+    // Merge guest wishlist items
+    if (guestWishlist && Array.isArray(guestWishlist)) {
+      for (const guestId of guestWishlist) {
+        const exists = user.wishlist.some((item) => item.productId === guestId);
+        if (!exists) {
+          user.wishlist.push({
+            productId: guestId,
+            addedAt: new Date(),
+          });
+        }
+      }
     }
 
     // Update last login

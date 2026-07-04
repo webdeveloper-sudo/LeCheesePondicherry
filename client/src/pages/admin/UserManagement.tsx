@@ -14,7 +14,7 @@ const UserManagement: React.FC = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">User Management</h2>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

@@ -377,3 +377,12 @@ body {
     background-position: 0% 50%;
   }
 }
+
+/* Make all buttons rounded-full globally */
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-accent {
+  border-radius: 9999px !important;
+}
