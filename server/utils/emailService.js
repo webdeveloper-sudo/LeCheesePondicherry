@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const axios = require("axios");
 
 // Create reusable transporter
 let transporter = null;
@@ -42,6 +43,81 @@ const initializeTransporter = async () => {
     console.warn(
       "⚠️ SMTP credentials missing. Email service will run in Log-only mode in development.",
     );
+  }
+};
+
+/**
+ * Helper to send email via Google Apps Script Proxy
+ */
+const sendViaProxy = async (mailOptions) => {
+  const APPS_SCRIPT_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
+  if (!APPS_SCRIPT_URL) {
+    console.error("❌ GOOGLE_APPS_SCRIPT_URL is missing in .env");
+    return false;
+  }
+
+  try {
+    const abbreviatedUrl = APPS_SCRIPT_URL.substring(0, 15) + "..." + APPS_SCRIPT_URL.substring(APPS_SCRIPT_URL.length - 10);
+    console.log(`📡 Sending email to ${mailOptions.to} via Apps Script Proxy...`);
+    console.log(`🔗 Proxy URL: ${abbreviatedUrl}`);
+
+    const response = await axios.post(APPS_SCRIPT_URL, {
+      action: "SEND_EMAIL",
+      to: mailOptions.to,
+      cc: mailOptions.cc,
+      subject: mailOptions.subject,
+      html: mailOptions.html,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      timeout: 10000 // 10 second timeout
+    });
+
+    console.log("📥 Proxy Response Status:", response.status);
+    console.log("📥 Proxy Response Body:", JSON.stringify(response.data));
+
+    if (response.data && response.data.success) {
+      console.log(`✅ Email sent successfully via Proxy to ${mailOptions.to}`);
+      return true;
+    } else {
+      console.error(
+        "❌ Apps Script Email Error:",
+        response.data?.message || "Unknown error",
+      );
+      return false;
+    }
+  } catch (error) {
+    console.error("❌ Proxy Email Error:", error.message);
+    return false;
+  }
+};
+
+/**
+ * Unified helper to route email sending based on EMAILOTP_MODE
+ */
+const sendEmailHelper = async (mailOptions) => {
+  const mode = process.env.EMAILOTP_MODE || "nodemailer";
+
+  if (mode === "appscript") {
+    console.log("📨 Mode: appscript. Routing via Google Apps Script Proxy...");
+    return await sendViaProxy(mailOptions);
+  }
+
+  console.log("📨 Mode: nodemailer. Routing via direct SMTP...");
+  if (transporter) {
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`✅ Email sent via SMTP to ${mailOptions.to}`);
+      return true;
+    } catch (error) {
+      console.error(`❌ SMTP send failed to ${mailOptions.to}:`, error.message);
+      return false;
+    }
+  } else {
+    console.warn(`⚠️ SMTP Transporter not initialized for ${mailOptions.to}`);
+    return false;
   }
 };
 
@@ -102,25 +178,12 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
     console.log("========================================\n");
   }
 
-  if (transporter) {
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log(`✅ Email sent via SMTP to ${email}`);
-      return true;
-    } catch (error) {
-      console.error(`❌ SMTP send failed to ${email}:`, error.message);
-      if (process.env.NODE_ENV === "development") {
-        console.log(
-          "ℹ️ Local development fallback: allowing OTP verification to continue (check console logs for OTP).",
-        );
-        return true;
-      }
-      return false;
-    }
-  } else {
-    console.error("❌ Email transporter not initialized");
-    return process.env.NODE_ENV === "development";
+  const success = await sendEmailHelper(mailOptions);
+  if (!success && process.env.NODE_ENV === "development") {
+    console.log("ℹ️ Local development fallback: allowing OTP verification to continue (check console logs for OTP).");
+    return true;
   }
+  return success;
 };
 
 /**
@@ -151,19 +214,7 @@ const sendWelcomeEmail = async (email, name) => {
     `,
   };
 
-  if (transporter) {
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log(`✅ Welcome email sent via SMTP to ${email}`);
-    } catch (error) {
-      console.error(
-        `❌ Welcome email SMTP send failed to ${email}:`,
-        error.message,
-      );
-    }
-  } else {
-    console.warn("⚠️ Welcome email not sent: Transporter not initialized");
-  }
+  await sendEmailHelper(mailOptions);
 };
 
 /**
@@ -219,21 +270,7 @@ const sendOrderConfirmationEmail = async (order, user) => {
     `,
   };
 
-  if (transporter) {
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log(`✅ Order confirmation email sent via SMTP to ${user.email}`);
-    } catch (error) {
-      console.error(
-        `❌ Order confirmation SMTP send failed to ${user.email}:`,
-        error.message,
-      );
-    }
-  } else {
-    console.warn(
-      "⚠️ Order confirmation email not sent: Transporter not initialized",
-    );
-  }
+  await sendEmailHelper(mailOptions);
 };
 
 /**
@@ -259,21 +296,7 @@ const sendShippingUpdateEmail = async (order, user) => {
     `,
   };
 
-  if (transporter) {
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log(`✅ Shipping update email sent via SMTP to ${user.email}`);
-    } catch (error) {
-      console.error(
-        `❌ Shipping update SMTP send failed to ${user.email}:`,
-        error.message,
-      );
-    }
-  } else {
-    console.warn(
-      "⚠️ Shipping update email not sent: Transporter not initialized",
-    );
-  }
+  await sendEmailHelper(mailOptions);
 };
 
 // Initialize on module load (skip during tests to avoid open handles)

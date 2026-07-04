@@ -1,4 +1,32 @@
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
+const logFile = path.join(__dirname, "server-debug.log");
+
+// Set up file logging
+const logStream = fs.createWriteStream(logFile, { flags: "a" });
+const originalWriteOut = process.stdout.write.bind(process.stdout);
+const originalWriteErr = process.stderr.write.bind(process.stderr);
+
+process.stdout.write = (chunk, encoding, callback) => {
+  logStream.write(`[INFO] ${new Date().toISOString()}: ${chunk}`);
+  return originalWriteOut(chunk, encoding, callback);
+};
+
+process.stderr.write = (chunk, encoding, callback) => {
+  logStream.write(`[ERROR] ${new Date().toISOString()}: ${chunk}`);
+  return originalWriteErr(chunk, encoding, callback);
+};
+
+process.on("uncaughtException", (err) => {
+  logStream.write(`[UNCAUGHT EXCEPTION] ${new Date().toISOString()}: ${err.stack || err}\n`);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  logStream.write(`[UNHANDLED REJECTION] ${new Date().toISOString()}: ${reason?.stack || reason}\n`);
+});
+
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -69,6 +97,16 @@ app.get("/", (req, res) => {
       user: "/api/user",
     },
   });
+});
+
+// Debug logs endpoint
+app.get("/api/debug-logs", (req, res) => {
+  if (fs.existsSync(logFile)) {
+    res.setHeader("Content-Type", "text/plain");
+    res.sendFile(logFile);
+  } else {
+    res.send("No logs available yet.");
+  }
 });
 
 // 404 handler
