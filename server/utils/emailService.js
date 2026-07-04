@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const axios = require("axios");
+
 
 // Create reusable transporter
 let transporter = null;
@@ -49,53 +49,7 @@ const initializeTransporter = async () => {
   }
 };
 
-/**
- * Helper to send email via Google Apps Script Proxy (Bypasses SMTP blocks)
- */
-const sendViaProxy = async (mailOptions) => {
-  const APPS_SCRIPT_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
-  if (!APPS_SCRIPT_URL) {
-    console.error("❌ GOOGLE_APPS_SCRIPT_URL is missing in .env");
-    return false;
-  }
 
-  try {
-    const abbreviatedUrl = APPS_SCRIPT_URL.substring(0, 15) + "..." + APPS_SCRIPT_URL.substring(APPS_SCRIPT_URL.length - 10);
-    console.log(`📡 Sending email to ${mailOptions.to} via Apps Script Proxy...`);
-    console.log(`🔗 Proxy URL: ${abbreviatedUrl}`);
-
-    const response = await axios.post(APPS_SCRIPT_URL, {
-      action: "SEND_EMAIL",
-      to: mailOptions.to,
-      cc: mailOptions.cc,
-      subject: mailOptions.subject,
-      html: mailOptions.html,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      timeout: 10000 // 10 second timeout
-    });
-
-    console.log("📥 Proxy Response Status:", response.status);
-    console.log("📥 Proxy Response Body:", JSON.stringify(response.data));
-
-    if (response.data && response.data.success) {
-      console.log(`✅ Email sent successfully via Proxy to ${mailOptions.to}`);
-      return true;
-    } else {
-      console.error(
-        "❌ Apps Script Email Error:",
-        response.data?.message || "Unknown error",
-      );
-      return false;
-    }
-  } catch (error) {
-    console.error("❌ Proxy Email Error:", error.message);
-    return false;
-  }
-};
 
 /**
  * Send OTP email to user
@@ -154,28 +108,23 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
     console.log("========================================\n");
   }
 
-  let sent = false;
   if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`✅ Email sent via SMTP to ${email}`);
-      sent = true;
+      return true;
     } catch (error) {
       console.error(`❌ SMTP send failed to ${email}:`, error.message);
+      if (process.env.NODE_ENV === "development") {
+        console.log("ℹ️ Local development fallback: allowing OTP verification to continue (check console logs for OTP).");
+        return true;
+      }
+      return false;
     }
+  } else {
+    console.error("❌ Email transporter not initialized");
+    return process.env.NODE_ENV === "development";
   }
-
-  if (!sent) {
-    console.log(`📡 Falling back to Google Apps Script Proxy for ${email}...`);
-    sent = await sendViaProxy(mailOptions);
-  }
-
-  if (!sent && process.env.NODE_ENV === "development") {
-    console.log("ℹ️ Local development fallback: allowing OTP verification to continue (check console logs for OTP).");
-    return true;
-  }
-
-  return sent;
 };
 
 /**
@@ -206,20 +155,15 @@ const sendWelcomeEmail = async (email, name) => {
     `,
   };
 
-  let sent = false;
   if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`✅ Welcome email sent via SMTP to ${email}`);
-      sent = true;
     } catch (error) {
       console.error(`❌ Welcome email SMTP send failed to ${email}:`, error.message);
     }
-  }
-
-  if (!sent) {
-    console.log(`📡 Falling back to Google Apps Script Proxy for ${email}...`);
-    await sendViaProxy(mailOptions);
+  } else {
+    console.warn("⚠️ Welcome email not sent: Transporter not initialized");
   }
 };
 
@@ -276,20 +220,15 @@ const sendOrderConfirmationEmail = async (order, user) => {
     `,
   };
 
-  let sent = false;
   if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`✅ Order confirmation email sent via SMTP to ${user.email}`);
-      sent = true;
     } catch (error) {
       console.error(`❌ Order confirmation SMTP send failed to ${user.email}:`, error.message);
     }
-  }
-
-  if (!sent) {
-    console.log(`📡 Falling back to Google Apps Script Proxy for ${user.email}...`);
-    await sendViaProxy(mailOptions);
+  } else {
+    console.warn("⚠️ Order confirmation email not sent: Transporter not initialized");
   }
 };
 
@@ -316,20 +255,15 @@ const sendShippingUpdateEmail = async (order, user) => {
     `,
   };
 
-  let sent = false;
   if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
       console.log(`✅ Shipping update email sent via SMTP to ${user.email}`);
-      sent = true;
     } catch (error) {
       console.error(`❌ Shipping update SMTP send failed to ${user.email}:`, error.message);
     }
-  }
-
-  if (!sent) {
-    console.log(`📡 Falling back to Google Apps Script Proxy for ${user.email}...`);
-    await sendViaProxy(mailOptions);
+  } else {
+    console.warn("⚠️ Shipping update email not sent: Transporter not initialized");
   }
 };
 
