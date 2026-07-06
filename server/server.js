@@ -109,6 +109,37 @@ app.get("/api/debug-logs", (req, res) => {
   }
 });
 
+// Database Environment Diagnostics Endpoint (Masks actual password)
+app.get("/api/diagnose-db-env", (req, res) => {
+  const uri = process.env.MONGODB_URI || "";
+  if (!uri) {
+    return res.json({ error: "MONGODB_URI is empty or undefined" });
+  }
+
+  // Parse the URI: mongodb+srv://username:password@host/
+  const match = uri.match(/mongodb(?:\+srv)?:\/\/([^:]+):([^@]+)@(.+)/);
+  if (!match) {
+    return res.json({
+      validFormat: false,
+      length: uri.length,
+      hasPercent: uri.includes("%"),
+      hasAt: uri.includes("@"),
+      prefix: uri.substring(0, 15)
+    });
+  }
+
+  const [_, username, password, host] = match;
+  res.json({
+    validFormat: true,
+    username,
+    passwordLength: password ? password.length : 0,
+    passwordHasPercent: password ? password.includes("%") : false,
+    passwordHasAt: password ? password.includes("@") : false,
+    host: host.split("?")[0],
+    uriLength: uri.length
+  });
+});
+
 // 404 handler
 app.use((req, res, next) => {
   res.status(404).json({
