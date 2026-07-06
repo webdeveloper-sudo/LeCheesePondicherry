@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { fadeUp } from "@/animations/variants";
 import {
   MotionContainer,
@@ -133,85 +134,13 @@ export default function RefundPolicyPage() {
                 >
                   Shipping Policy
                 </h2>
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
-                      Shipping Locations
-                    </h3>
-                    <p className="text-text-secondary">
-                      We currently ship across India. Some remote locations may
-                      have delivery limitations.
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
-                      Order Processing
-                    </h3>
-                    <p className="text-text-secondary">
-                      Orders are typically processed within 1–2 business days
-                      after payment confirmation.
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
-                      Delivery Timeline
-                    </h3>
-                    <p className="text-text-secondary mb-2">
-                      Estimated delivery times:
-                    </p>
-                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
-                      <li>Pondicherry: Within 24 hours</li>
-                      <li>Tamil Nadu: 2–4 business days</li>
-                      <li>Rest of India: Within 5–7 business days</li>
-                      <li>Metro Cities: 2–4 business days</li>
-                    </ul>
-                    <p className="text-xs text-text-secondary mt-2 italic">
-                      Delivery timelines may vary slightly depending on
-                      location, logistics operations, and external factors
-                      beyond our control.
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-text-primary">
-                      Shipping Charges
-                    </h3>
-                    <p className="text-text-secondary mb-2">
-                      Shipping charges are calculated based on:
-                    </p>
-                    <ul className="list-disc pl-5 text-text-secondary space-y-1">
-                      <li>Order weight</li>
-                      <li>Delivery location</li>
-                      <li>Shipping method</li>
-                    </ul>
-                    <p className="text-text-secondary mt-2 text-justify">
-                      The final shipping cost will be displayed at checkout
-                      prior to payment confirmation. Applicable payment gateway
-                      processing fees and delivery charges, where applicable,
-                      may be included in the final order value displayed during
-                      checkout.
-                    </p>
-                  </div>
-
-                  <div className="p-6 bg-brand-green text-white rounded-lg">
-                    <h3
-                      className="text-xl font-bold mb-3"
-                      style={{ fontFamily: "var(--font-heading)" }}
-                    >
-                      Cold Chain Packaging
-                    </h3>
-                    <p className="text-sm opacity-90 leading-relaxed text-justify mb-4">
-                      To maintain freshness and quality, our cheeses are shipped
-                      using temperature-controlled insulated packaging.
-                    </p>
-                    <p className="text-sm font-bold border-t border-white/20 pt-2">
-                      Important: Customers are advised to refrigerate the
-                      products immediately upon delivery.
-                    </p>
-                  </div>
-                </div>
+                <p className="text-text-secondary leading-relaxed">
+                  For detailed information regarding our shipping regions, delivery timelines (including Pondicherry local delivery and Tamil Nadu / Rest of India shipments), weight-based slab charges, and our cold chain packaging, please visit our dedicated{" "}
+                  <Link to="/shipping-policy" className="text-green font-bold hover:underline">
+                    Shipping Policy Page
+                  </Link>
+                  .
+                </p>
               </motion.section>
             </div>
           </div>

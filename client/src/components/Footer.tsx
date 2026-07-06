@@ -271,6 +271,12 @@ export default function Footer() {
               Return Policy
             </Link>
             <Link
+              to="/shipping-policy"
+              className="hover:text-brand-gold-subtle transition-colors"
+            >
+              Shipping Policy
+            </Link>
+            <Link
               to="/privacy"
               className="hover:text-brand-gold-subtle transition-colors"
             >

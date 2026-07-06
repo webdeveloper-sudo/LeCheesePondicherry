@@ -2,7 +2,12 @@ import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import defaultBanner from "../assets/images/process-hero-new.webp";
 
-const BannerAndBreadCrumb = ({ title = "Page Title", img }) => {
+interface BannerAndBreadCrumbProps {
+  title?: string;
+  img?: any;
+}
+
+const BannerAndBreadCrumb = ({ title = "Page Title", img }: BannerAndBreadCrumbProps) => {
   const location = useLocation();
 
   // Safe image handling (imported images are NOT strings)
@@ -21,6 +26,7 @@ const BannerAndBreadCrumb = ({ title = "Page Title", img }) => {
     "/return",
     "/process",
     "/refund-policy",
+    "/shipping-policy",
     "/stories",
     "/terms",
     "/wholesale",
@@ -37,7 +43,7 @@ const BannerAndBreadCrumb = ({ title = "Page Title", img }) => {
   const pathnames = location.pathname.split("/").filter(Boolean);
 
   // Check if route exists and is navigable
-  const isValidRoute = (routePath) => validRoutes.has(routePath);
+  const isValidRoute = (routePath: string) => validRoutes.has(routePath);
 
   return (
     <section
