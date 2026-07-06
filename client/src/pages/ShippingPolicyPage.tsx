@@ -1,48 +1,39 @@
-import { motion } from "framer-motion";
-import { fadeUp } from "@/animations/variants";
-import {
-  MotionContainer,
-  MotionHeading,
-  MotionText,
-} from "@/components/ui/MotionPrimitives";
-
 export default function ShippingPolicyPage() {
   const lastUpdated = "July 6, 2026";
 
   return (
     <div className="bg-pattern py-10 min-h-screen">
       <div className="container bg-bg-cream-light border border-gray-200 mx-auto px-4 max-w-4xl">
-        <MotionContainer stagger>
+        <div>
           <div className="flex px-5 justify-between items-center">
-            <MotionHeading
-              as="h1"
+            <h1
               className="text-4xl md:text-5xl font-bold my-8 text-green"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               Shipping Policy
-            </MotionHeading>
-            <MotionText className="text-text-secondary md:block hidden text-end mb-8 italic">
+            </h1>
+            <p className="text-text-secondary md:block hidden text-end mb-8 italic">
               Last Updated: {lastUpdated}
-            </MotionText>
+            </p>
           </div>
 
           <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100 mb-8">
             <div className="space-y-12">
-              <MotionText className="text-text-secondary md:hidden block text-end mb-8 italic">
+              <p className="text-text-secondary md:hidden block text-end mb-8 italic">
                 Last Updated: {lastUpdated}
-              </MotionText>
+              </p>
 
               {/* Introduction Section */}
-              <motion.section variants={fadeUp}>
+              <section>
                 <p className="text-text-secondary leading-relaxed mb-6 text-justify">
                   At Le Pondicherry Cheese, we craft artisanal, premium cheeses and dairy products. 
                   Because our products are highly perishable, we handle every order with the utmost care, 
                   utilizing premium packaging and robust logistics to ensure your cheese arrives fresh and in perfect condition.
                 </p>
-              </motion.section>
+              </section>
 
               {/* Shipping Regions & Delivery Timelines */}
-              <motion.section variants={fadeUp}>
+              <section>
                 <h2
                   className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -78,10 +69,10 @@ export default function ShippingPolicyPage() {
                 <p className="text-xs text-text-secondary italic">
                   Note: While we strive to meet these timelines, delivery may occasionally vary slightly due to logistics operations, public holidays, or external factors beyond our control.
                 </p>
-              </motion.section>
+              </section>
 
               {/* Shipping Charges */}
-              <motion.section variants={fadeUp}>
+              <section>
                 <h2
                   className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -133,10 +124,10 @@ export default function ShippingPolicyPage() {
                 <p className="text-xs text-text-secondary mt-3 italic">
                   Note: Total shipping charges are computed automatically at checkout. Any partial weight is rounded up to the next full 1 kg slab.
                 </p>
-              </motion.section>
+              </section>
 
               {/* Premium Packaging & Handling */}
-              <motion.section variants={fadeUp}>
+              <section>
                 <div className="p-6 bg-brand-green text-white rounded-lg">
                   <h3
                     className="text-xl font-bold mb-3"
@@ -151,10 +142,10 @@ export default function ShippingPolicyPage() {
                     CRITICAL: Please ensure that someone is available to collect the package upon arrival, and place the cheese products in the refrigerator immediately.
                   </p>
                 </div>
-              </motion.section>
+              </section>
 
               {/* Order Processing & Dispatch */}
-              <motion.section variants={fadeUp}>
+              <section>
                 <h2
                   className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -172,10 +163,10 @@ export default function ShippingPolicyPage() {
                     Once dispatched, you will receive tracking coordinates via Email or WhatsApp to monitor your shipment's journey.
                   </li>
                 </ul>
-              </motion.section>
+              </section>
             </div>
           </div>
-        </MotionContainer>
+        </div>
       </div>
     </div>
   );

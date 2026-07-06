@@ -1,38 +1,30 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { fadeUp } from "@/animations/variants";
-import {
-  MotionContainer,
-  MotionHeading,
-  MotionText,
-} from "@/components/ui/MotionPrimitives";
 
 export default function RefundPolicyPage() {
   const lastUpdated = "March 11, 2026";
 
   return (
     <div className="bg-pattern py-10">
-      <div className="container bg-bg-cream-light  border border-gray-200 mx-auto px-4 max-w-4xl">
-        <MotionContainer stagger>
+      <div className="container bg-bg-cream-light border border-gray-200 mx-auto px-4 max-w-4xl">
+        <div>
           <div className="flex px-5 justify-between items-center">
-            <MotionHeading
-              as="h1"
+            <h1
               className="text-4xl md:text-5xl font-bold my-8 text-green"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               Refund Policy
-            </MotionHeading>
-            <MotionText className="text-text-secondary md:block hidden text-end mb-8 italic">
+            </h1>
+            <p className="text-text-secondary md:block hidden text-end mb-8 italic">
               Last Updated: {lastUpdated}
-            </MotionText>
+            </p>
           </div>
 
           <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100">
             <div className="space-y-12">
-              <MotionText className="text-text-secondary md:hidden block text-end mb-8 italic">
+              <p className="text-text-secondary md:hidden block text-end mb-8 italic">
                 Last Updated: {lastUpdated}
-              </MotionText>
-              <motion.section variants={fadeUp}>
+              </p>
+              <section>
                 <p className="text-text-secondary leading-relaxed mb-6">
                   Due to the perishable nature of cheese and dairy products,
                   returns are limited.
@@ -125,9 +117,9 @@ export default function RefundPolicyPage() {
                     </p>
                   </div>
                 </div>
-              </motion.section>
+              </section>
 
-              <motion.section variants={fadeUp}>
+              <section>
                 <h2
                   className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -141,10 +133,10 @@ export default function RefundPolicyPage() {
                   </Link>
                   .
                 </p>
-              </motion.section>
+              </section>
             </div>
           </div>
-        </MotionContainer>
+        </div>
       </div>
     </div>
   );

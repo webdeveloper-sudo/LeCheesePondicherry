@@ -1,33 +1,24 @@
-import { motion } from "framer-motion";
-import { fadeUp } from "@/animations/variants";
-import {
-  MotionContainer,
-  MotionHeading,
-  MotionText,
-} from "@/components/ui/MotionPrimitives";
-
 export default function PrivacyPage() {
   const lastUpdated = "March 11, 2026";
 
   return (
     <div className="min-h-screen bg-pattern py-10">
       <div className="container mx-auto px-4 border border-gray-200 bg-white max-w-4xl">
-        <MotionContainer stagger>
-          <MotionHeading
-            as="h1"
+        <div>
+          <h1
             className="text-4xl md:text-5xl font-bold my-8 text-text-primary"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             Privacy Policy
-          </MotionHeading>
+          </h1>
 
           <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-gray-100">
-            <MotionText className="text-text-secondary mb-8 italic">
+            <p className="text-text-secondary mb-8 italic">
               Last Updated: {lastUpdated}
-            </MotionText>
+            </p>
 
             <div className="space-y-12">
-              <motion.section variants={fadeUp}>
+              <section>
                 <h2
                   className="text-2xl font-bold mb-4 text-brand-green"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -109,10 +100,10 @@ export default function PrivacyPage() {
                     </p>
                   </div>
                 </div>
-              </motion.section>
+              </section>
             </div>
           </div>
-        </MotionContainer>
+        </div>
       </div>
     </div>
   );
