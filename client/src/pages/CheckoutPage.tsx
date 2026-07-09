@@ -84,8 +84,10 @@ export default function CheckoutPage() {
     shipping.state.toLowerCase().includes("puducherry") ||
     shipping.state.toLowerCase().includes("pondicherry");
 
-  const deliveryCharge = calculateShipping(totalWeight, shipping.state, shipping.city);
-  const taxAmount = Math.round(subtotal * 0.04);
+  // const deliveryCharge = calculateShipping(totalWeight, shipping.state, shipping.city);
+  // const taxAmount = Math.round(subtotal * 0.04);
+  const deliveryCharge = 0;
+  const taxAmount = 0;
   const total = subtotal - discount + deliveryCharge + taxAmount;
 
   const fetchAddressesAndSetDefault = async () => {
@@ -970,7 +972,7 @@ export default function CheckoutPage() {
                       ₹{subtotal.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm text-text-secondary items-center">
+                  {/* <div className="flex justify-between text-sm text-text-secondary items-center">
                     <div className="flex items-center gap-1.5">
                       <span>Delivery</span>
                       <div className="relative inline-block">
@@ -997,8 +999,8 @@ export default function CheckoutPage() {
                     <span className="font-bold text-text-primary">
                       ₹{deliveryCharge.toLocaleString()}
                     </span>
-                  </div>
-                  <div className="flex justify-between text-sm text-text-secondary">
+                  </div> */}
+                  {/* <div className="flex justify-between text-sm text-text-secondary">
                     <div className="flex items-center gap-1.5">
                       <span>Tax and Charges</span>
                       <div className="relative inline-block">
@@ -1023,7 +1025,7 @@ export default function CheckoutPage() {
                     <span className="font-bold text-text-primary">
                       ₹{taxAmount.toLocaleString()}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between font-black text-xl pt-4 border-t border-gray-100 text-text-primary">
                     <span>Total</span>
                     <span className="text-brand-green">
