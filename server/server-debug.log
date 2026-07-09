@@ -1,0 +1,79 @@
+[INFO] 2026-07-09T11:28:58.638Z: Connecting to MongoDB...
+[INFO] 2026-07-09T11:29:00.200Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-09T11:29:00.794Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-09T11:29:01.222Z: 
+========================================
+[INFO] 2026-07-09T11:29:01.222Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-09T11:29:01.223Z: ========================================
+[INFO] 2026-07-09T11:29:01.223Z: 🚀 Server running on port 5000
+[INFO] 2026-07-09T11:29:01.224Z: 📍 Environment: production
+[INFO] 2026-07-09T11:29:01.224Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-09T11:29:01.224Z: ========================================
+
+[INFO] 2026-07-09T11:29:14.199Z: [Order] Creating session for samdev0418@gmail.com, amount: 232
+[INFO] 2026-07-09T11:29:14.200Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1783596554199-817",
+  "order_amount": 232,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "69b7eb192a5dbe8b7c199f4e",
+    "customer_name": "achariya",
+    "customer_email": "samdev0418@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}
+[INFO] 2026-07-09T11:29:33.464Z: [Order] Creating session for samdev0418@gmail.com, amount: 232
+[INFO] 2026-07-09T11:29:33.467Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1783596573464-686",
+  "order_amount": 232,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "69b7eb192a5dbe8b7c199f4e",
+    "customer_name": "achariya",
+    "customer_email": "samdev0418@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}
+[INFO] 2026-07-09T11:30:35.057Z: Connecting to MongoDB...
+[INFO] 2026-07-09T11:30:36.456Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-09T11:30:36.806Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[UNCAUGHT EXCEPTION] 2026-07-09T11:30:37.133Z: Error: listen EADDRINUSE: address already in use :::5000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at app.listen (E:\AGOC\LeCheesePondicherry\server\node_modules\express\lib\application.js:635:24)
+    at startServer (E:\AGOC\LeCheesePondicherry\server\server.js:220:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+[INFO] 2026-07-09T11:33:24.559Z: Connecting to MongoDB...
+[INFO] 2026-07-09T11:33:25.488Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-09T11:33:25.596Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-09T11:33:25.759Z: 
+========================================
+[INFO] 2026-07-09T11:33:25.759Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-09T11:33:25.760Z: ========================================
+[INFO] 2026-07-09T11:33:25.760Z: 🚀 Server running on port 5000
+[INFO] 2026-07-09T11:33:25.760Z: 📍 Environment: production
+[INFO] 2026-07-09T11:33:25.761Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-09T11:33:25.761Z: ========================================
+
+[INFO] 2026-07-09T11:33:40.323Z: [Order] Creating session for samdev0418@gmail.com, amount: 232
+[INFO] 2026-07-09T11:33:40.324Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1783596820322-814",
+  "order_amount": 232,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "69b7eb192a5dbe8b7c199f4e",
+    "customer_name": "achariya",
+    "customer_email": "samdev0418@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}
