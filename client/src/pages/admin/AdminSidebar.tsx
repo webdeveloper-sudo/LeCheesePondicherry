@@ -1,5 +1,5 @@
 import React from "react";
-import { Users, Package, ShoppingCart, LogOut, BookOpen, X } from "lucide-react";
+import { Users, Package, ShoppingCart, LogOut, BookOpen, X, Settings } from "lucide-react";
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -21,6 +21,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: "users", label: "Users", icon: <Users size={20} /> },
     { id: "products", label: "Products", icon: <Package size={20} /> },
     { id: "blogs", label: "Blogs", icon: <BookOpen size={20} /> },
+    { id: "settings", label: "Settings", icon: <Settings size={20} /> },
   ];
 
   return (

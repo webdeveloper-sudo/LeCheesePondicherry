@@ -3,35 +3,80 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PieChart, ShoppingBag } from "lucide-react";
+import { API_BASE_URL } from "@/config";
 
-export default function FlashSaleBanner() {
+interface FlashSaleBannerProps {
+  settings?: {
+    couponName: string;
+    validTime: string | null;
+    discountRate: number;
+  };
+}
+
+export default function FlashSaleBanner({ settings: initialSettings }: FlashSaleBannerProps) {
+  const [localSettings, setLocalSettings] = useState<any>(initialSettings || null);
   const [timeLeft, setTimeLeft] = useState({
-    hours: 23,
-    minutes: 59,
-    seconds: 59,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
+
+  // Sync settings prop to state or fetch if not present
+  useEffect(() => {
+    if (initialSettings) {
+      setLocalSettings(initialSettings);
+      return;
+    }
+
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/settings`);
+        const result = await response.json();
+        if (result.success) {
+          setLocalSettings(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching settings in FlashSaleBanner:", error);
+      }
+    };
+    fetchSettings();
+  }, [initialSettings]);
+
+  const settings = localSettings;
 
   // Countdown Timer Logic
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        } else if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        } else {
-          // Reset or stop (looping for demo effect)
-          return { hours: 23, minutes: 59, seconds: 59 };
-        }
-      });
-    }, 1000);
+    if (!settings?.validTime) return;
+
+    const targetDate = new Date(settings.validTime);
+
+    const updateTimer = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+
+      if (difference <= 0) {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const hours = Math.floor(difference / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({ hours, minutes, seconds });
+    };
+
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [settings]);
 
   const formatTime = (val: number) => val.toString().padStart(2, "0");
+
+  // If the toggle is disabled or time expired, do not show
+  const isFlashSaleActive = settings?.flashSaleEnabled && settings.validTime && new Date() < new Date(settings.validTime);
+  if (!isFlashSaleActive) return null;
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-brand-gold py-3 via-brand-gold-subtle to-brand-gold bg-[length:200%_100%] animate-shimmer shadow-md text-text-primary">
@@ -65,14 +110,14 @@ export default function FlashSaleBanner() {
         {/* Center/Right: Offer & CTA */}
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs line-through opacity-60 font-medium">
-              ₹2,400
+            <span className="text-xs font-medium uppercase tracking-wider opacity-80">
+              Use Code:
             </span>
-            <span className="text-xl sm:text-2xl font-black font-heading tracking-tight italic">
-              ₹1,800
+            <span className="text-sm sm:text-base font-black bg-brand-green text-white px-3 py-1 rounded-lg tracking-tight uppercase shadow-sm">
+              {settings?.couponName || "N/A"}
             </span>
-            <span className="hidden sm:inline-block text-[10px] font-bold bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-sm">
-              -25% OFF
+            <span className="inline-block text-[10px] font-bold bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse shadow-sm">
+              -{settings?.discountRate || 0}% OFF
             </span>
           </div>
 

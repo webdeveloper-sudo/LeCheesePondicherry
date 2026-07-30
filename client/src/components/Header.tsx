@@ -21,7 +21,12 @@ import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, imageVariant } from "@/animations/variants";
 import TopHeader from "./TopHeader";
 
-export default function Header() {
+interface HeaderProps {
+  settings?: any;
+  isFlashSaleActive?: boolean;
+}
+
+export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -121,7 +126,7 @@ export default function Header() {
 
   return (
     <header className="fixed  top-0 z-50 w-full bg-white shadow-sm">
-      {/* <FlashSaleBanner /> */}
+      {isFlashSaleActive && settings && <FlashSaleBanner settings={settings} />}
 
       {/* Desktop menu => */}
       <div className="hidden md:block">

@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const { createOrderSession, getCashfreeOrder } = require("../utils/cashfree");
 const { sendOrderConfirmationEmail } = require("../utils/emailService");
+const Setting = require("../models/Setting");
 
 /**
  * @desc    Initiate payment session (WITHOUT creating order in DB)
@@ -10,7 +11,7 @@ const { sendOrderConfirmationEmail } = require("../utils/emailService");
  */
 const createPaymentSession = async (req, res) => {
   try {
-    const { finalAmount, shippingAddress } = req.body;
+    const { finalAmount, shippingAddress, discount, orderAmount, deliveryCharge, taxAmount, couponName } = req.body;
 
     if (!finalAmount || isNaN(finalAmount)) {
       return res.status(400).json({
@@ -25,6 +26,67 @@ const createPaymentSession = async (req, res) => {
         success: false,
         message: "Shipping address or phone is missing",
         error: "Phone number is required for payment",
+      });
+    }
+
+    // 1. Strict coupon/discount verification
+    if (discount && Number(discount) > 0) {
+      const settings = await Setting.findOne();
+      if (!settings) {
+        return res.status(400).json({
+          success: false,
+          message: "Settings not found on server",
+        });
+      }
+      if (!settings.flashSaleEnabled) {
+        return res.status(400).json({
+          success: false,
+          message: "Flash sale coupon is currently disabled",
+        });
+      }
+      if (settings.validTime && new Date() > new Date(settings.validTime)) {
+        return res.status(400).json({
+          success: false,
+          message: "Flash sale coupon has expired",
+        });
+      }
+      if (!couponName || couponName.trim().toUpperCase() !== settings.couponName.trim().toUpperCase()) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid coupon name",
+        });
+      }
+      const expectedDiscount = Math.round(Number(orderAmount) * (settings.discountRate / 100));
+      if (Math.abs(Number(discount) - expectedDiscount) > 2) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid discount amount rate calculation",
+        });
+      }
+    }
+
+    // 2. Delivery charge validation
+    const settings = await Setting.findOne();
+    if (settings && !settings.deliveryChargesEnabled) {
+      if (Number(deliveryCharge) > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Delivery charges are currently disabled",
+        });
+      }
+    }
+
+    // 3. Mathematical validation of finalAmount
+    const calcDiscount = (discount && Number(discount) > 0) ? Number(discount) : 0;
+    const calcDelivery = (deliveryCharge && Number(deliveryCharge) > 0) ? Number(deliveryCharge) : 0;
+    const calcTax = (taxAmount && Number(taxAmount) > 0) ? Number(taxAmount) : 0;
+    const calculatedTotal = Number(orderAmount) - calcDiscount + calcDelivery + calcTax;
+    
+    if (Math.abs(Number(finalAmount) - calculatedTotal) > 2) {
+      return res.status(400).json({
+        success: false,
+        message: "Calculation mismatch for order total amount",
+        error: `Expected: ${calculatedTotal}, Received: ${finalAmount}`,
       });
     }
 

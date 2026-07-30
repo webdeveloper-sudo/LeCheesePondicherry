@@ -72,6 +72,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", require("./routes/blogRoutes"));
+app.use("/api/settings", require("./routes/settingRoutes"));
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

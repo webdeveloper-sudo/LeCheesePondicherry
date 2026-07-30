@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
 import { calculateShipping } from "@/lib/shippingUtils";
+import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 
 declare global {
@@ -76,7 +78,53 @@ export default function CheckoutPage() {
   const [gpsCoords, setGpsCoords] = useState<string>("Not detected");
 
 
-  const discount = 0;
+  const [settings, setSettings] = useState<any>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState("");
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/settings`);
+        if (response.data.success) {
+          setSettings(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching settings in CheckoutPage:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const isFlashSaleActive = settings?.flashSaleEnabled && settings.validTime && new Date() < new Date(settings.validTime);
+
+  const handleApplyCoupon = () => {
+    if (!isFlashSaleActive) {
+      addToast("No active flash sale promotions at this time.", "error");
+      return;
+    }
+    if (couponCode.trim().toUpperCase() === settings.couponName.trim().toUpperCase()) {
+      const discountAmountVal = Math.round(subtotal * (settings.discountRate / 100));
+      setAppliedDiscount(discountAmountVal);
+      setAppliedCoupon(settings.couponName);
+      setIsCouponApplied(true);
+      addToast(`Coupon "${settings.couponName}" applied successfully!`, "success");
+    } else {
+      addToast("Invalid coupon code.", "error");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode("");
+    setAppliedCoupon("");
+    setAppliedDiscount(0);
+    setIsCouponApplied(false);
+    addToast("Coupon removed.", "info");
+  };
+
+  const discount = isCouponApplied ? appliedDiscount : 0;
 
   const isPuducherry =
     shipping.city.toLowerCase().includes("puducherry") ||
@@ -84,7 +132,9 @@ export default function CheckoutPage() {
     shipping.state.toLowerCase().includes("puducherry") ||
     shipping.state.toLowerCase().includes("pondicherry");
 
-  const deliveryCharge = calculateShipping(totalWeight, shipping.state, shipping.city);
+  const deliveryCharge = (settings && !settings.deliveryChargesEnabled)
+    ? 0
+    : calculateShipping(totalWeight, shipping.state, shipping.city);
   const taxAmount = Math.round(subtotal * 0.04);
   const total = subtotal - discount + deliveryCharge + taxAmount;
 
@@ -300,6 +350,7 @@ export default function CheckoutPage() {
         })),
         orderAmount: subtotal,
         discount,
+        couponName: isCouponApplied ? appliedCoupon : undefined,
         deliveryCharge: deliveryCharge,
         taxAmount: taxAmount,
         finalAmount: total,
@@ -963,6 +1014,41 @@ export default function CheckoutPage() {
                   })}
                 </div>
 
+                {isFlashSaleActive && (
+                  <div className="border-t border-gray-100 pt-6 mb-4">
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                      Promo Code / Coupon Code
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        disabled={isCouponApplied}
+                        placeholder={settings?.couponName ? `e.g. ${settings.couponName}` : "Enter Coupon"}
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none uppercase font-semibold text-gray-700 disabled:bg-gray-100"
+                      />
+                      {isCouponApplied ? (
+                        <button
+                          type="button"
+                          onClick={handleRemoveCoupon}
+                          className="px-3 py-2 text-xs font-bold bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors shrink-0"
+                        >
+                          Remove
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          className="px-4 py-2 text-xs font-bold bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors shrink-0"
+                        >
+                          Apply
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="border-t border-gray-100 pt-6 space-y-3">
                   <div className="flex justify-between text-sm text-text-secondary">
                     <span>Subtotal</span>
@@ -970,6 +1056,12 @@ export default function CheckoutPage() {
                       ₹{subtotal.toLocaleString()}
                     </span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sm text-green font-bold">
+                      <span>Discount ({appliedCoupon})</span>
+                      <span>-₹{discount.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm text-text-secondary items-center">
                     <div className="flex items-center gap-1.5">
                       <span>Delivery</span>

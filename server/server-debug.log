@@ -77,3 +77,51 @@
     "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
   }
 }
+[INFO] 2026-07-13T11:48:53.873Z: Connecting to MongoDB...
+[INFO] 2026-07-13T11:48:55.133Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-13T11:48:55.527Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-13T11:48:55.694Z: 
+========================================
+[INFO] 2026-07-13T11:48:55.694Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-13T11:48:55.694Z: ========================================
+[INFO] 2026-07-13T11:48:55.695Z: 🚀 Server running on port 5000
+[INFO] 2026-07-13T11:48:55.695Z: 📍 Environment: production
+[INFO] 2026-07-13T11:48:55.695Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-13T11:48:55.695Z: ========================================
+
+[INFO] 2026-07-13T12:03:53.437Z: Connecting to MongoDB...
+[INFO] 2026-07-13T12:03:53.968Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-13T12:03:54.218Z: 
+========================================
+[INFO] 2026-07-13T12:03:54.218Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-13T12:03:54.219Z: ========================================
+[INFO] 2026-07-13T12:03:54.219Z: 🚀 Server running on port 5000
+[INFO] 2026-07-13T12:03:54.219Z: 📍 Environment: production
+[INFO] 2026-07-13T12:03:54.219Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-13T12:03:54.219Z: ========================================
+
+[INFO] 2026-07-13T12:03:54.482Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-13T12:04:04.872Z: Connecting to MongoDB...
+[INFO] 2026-07-13T12:04:05.355Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-13T12:04:05.603Z: 
+========================================
+[INFO] 2026-07-13T12:04:05.607Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-13T12:04:05.609Z: ========================================
+[INFO] 2026-07-13T12:04:05.609Z: 🚀 Server running on port 5000
+[INFO] 2026-07-13T12:04:05.609Z: 📍 Environment: production
+[INFO] 2026-07-13T12:04:05.610Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-13T12:04:05.610Z: ========================================
+
+[INFO] 2026-07-13T12:04:05.980Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-07-13T12:04:11.827Z: Connecting to MongoDB...
+[INFO] 2026-07-13T12:04:12.311Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-07-13T12:04:12.574Z: 
+========================================
+[INFO] 2026-07-13T12:04:12.597Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-07-13T12:04:12.613Z: ========================================
+[INFO] 2026-07-13T12:04:12.656Z: 🚀 Server running on port 5000
+[INFO] 2026-07-13T12:04:12.687Z: 📍 Environment: production
+[INFO] 2026-07-13T12:04:12.694Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-07-13T12:04:12.739Z: ========================================
+
+[INFO] 2026-07-13T12:04:13.178Z: ✅ Email Transporter Initialized & Verified

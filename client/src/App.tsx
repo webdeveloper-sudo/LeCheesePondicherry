@@ -9,6 +9,7 @@ import LoaderComponent from "@/components/Loader";
 import ToastContainer from "@/components/ToastContainer";
 import { CartProvider } from "@/context/CartContext";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { API_BASE_URL } from "@/config";
 
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
@@ -47,6 +48,7 @@ export default function App() {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
   const [isRouting, setIsRouting] = useState(false);
+  const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
     setIsRouting(true);
@@ -57,12 +59,33 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (isAdminPath) return;
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/settings`);
+        const result = await response.json();
+        if (result.success) {
+          setSettings(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching settings in App:", error);
+      }
+    };
+    fetchSettings();
+  }, [location.pathname, isAdminPath]);
+
+  const isFlashSaleActive = settings?.flashSaleEnabled && settings.validTime && new Date() < new Date(settings.validTime);
+
   return (
     <CartProvider>
       {/* {isRouting && <LoaderComponent fullScreen={true} size="lg" label="Loading..." />} */}
       {!isAdminPath && (
-        <div className="mb-[110px] sm:mb-[130px] md:mb-[135px]">
-          <Header />
+        <div className={isFlashSaleActive 
+          ? "mb-[160px] sm:mb-[180px] md:mb-[185px]" 
+          : "mb-[110px] sm:mb-[130px] md:mb-[135px]"
+        }>
+          <Header settings={settings} isFlashSaleActive={!!isFlashSaleActive} />
         </div>
       )}
       <ScrollToTop />

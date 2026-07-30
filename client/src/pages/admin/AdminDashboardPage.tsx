@@ -6,6 +6,7 @@ import UserManagement from "@/pages/admin/UserManagement";
 import ProductManagement from "@/pages/admin/ProductManagement";
 import OrderManagement from "@/pages/admin/OrderManagement";
 import BlogManagement from "@/pages/admin/BlogManagement";
+import SettingsManagement from "@/pages/admin/SettingsManagement";
 import { LogOut, Menu } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
 
@@ -57,6 +58,8 @@ export default function AdminDashboardPage() {
         return <ProductManagement />;
       case "blogs":
         return <BlogManagement />;
+      case "settings":
+        return <SettingsManagement />;
       default:
         return <ProductManagement />;
     }
