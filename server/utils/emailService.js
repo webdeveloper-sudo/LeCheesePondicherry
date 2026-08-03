@@ -1,12 +1,17 @@
 const nodemailer = require("nodemailer");
-const axios = require("axios");
+
+// Admin emails for system notification recipients
+const ADMIN_EMAILS = [
+  "accounts@lepondicheese.com",
+  "vp.expansions@hopemarket.in",
+  "webdeveloper@achariya.org",
+];
 
 // Create reusable transporter
 let transporter = null;
 let smtpVerified = false;
 
 const initializeTransporter = async () => {
-  // Only attempt SMTP if credentials are provided
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
       transporter = nodemailer.createTransport({
@@ -28,7 +33,7 @@ const initializeTransporter = async () => {
       try {
         await transporter.verify();
         smtpVerified = true;
-        console.log("✅ Email Transporter Initialized & Verified");
+        console.log("✅ Email Transporter Initialized & Verified via Nodemailer SMTP");
       } catch (verifyError) {
         console.warn("⚠️ SMTP connection failed:", verifyError.message);
         smtpVerified = false;
@@ -47,65 +52,14 @@ const initializeTransporter = async () => {
 };
 
 /**
- * Helper to send email via Google Apps Script Proxy
- */
-const sendViaProxy = async (mailOptions) => {
-  const APPS_SCRIPT_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
-  if (!APPS_SCRIPT_URL) {
-    console.error("❌ GOOGLE_APPS_SCRIPT_URL is missing in .env");
-    return false;
-  }
-
-  try {
-    const abbreviatedUrl = APPS_SCRIPT_URL.substring(0, 15) + "..." + APPS_SCRIPT_URL.substring(APPS_SCRIPT_URL.length - 10);
-    console.log(`📡 Sending email to ${mailOptions.to} via Apps Script Proxy...`);
-    console.log(`🔗 Proxy URL: ${abbreviatedUrl}`);
-
-    const response = await axios.post(APPS_SCRIPT_URL, {
-      action: "SEND_EMAIL",
-      to: mailOptions.to,
-      cc: mailOptions.cc,
-      subject: mailOptions.subject,
-      html: mailOptions.html,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      timeout: 10000 // 10 second timeout
-    });
-
-    console.log("📥 Proxy Response Status:", response.status);
-    console.log("📥 Proxy Response Body:", JSON.stringify(response.data));
-
-    if (response.data && response.data.success) {
-      console.log(`✅ Email sent successfully via Proxy to ${mailOptions.to}`);
-      return true;
-    } else {
-      console.error(
-        "❌ Apps Script Email Error:",
-        response.data?.message || "Unknown error",
-      );
-      return false;
-    }
-  } catch (error) {
-    console.error("❌ Proxy Email Error:", error.message);
-    return false;
-  }
-};
-
-/**
- * Unified helper to route email sending based on EMAILOTP_MODE
+ * Unified helper to send email via direct Nodemailer SMTP
  */
 const sendEmailHelper = async (mailOptions) => {
-  const mode = process.env.EMAILOTP_MODE || "nodemailer";
-
-  if (mode === "appscript") {
-    console.log("📨 Mode: appscript. Routing via Google Apps Script Proxy...");
-    return await sendViaProxy(mailOptions);
+  console.log("📨 Mode: nodemailer. Routing via direct SMTP...");
+  if (!transporter) {
+    await initializeTransporter();
   }
 
-  console.log("📨 Mode: nodemailer. Routing via direct SMTP...");
   if (transporter) {
     try {
       await transporter.sendMail(mailOptions);
@@ -123,10 +77,6 @@ const sendEmailHelper = async (mailOptions) => {
 
 /**
  * Send OTP email to user
- * @param {string} email - Recipient email address
- * @param {string} otp - OTP code
- * @param {string} purpose - Purpose of OTP (signup, reset-password, etc.)
- * @returns {Promise<boolean>} Success status
  */
 const sendOTPEmail = async (email, otp, purpose = "signup") => {
   const subjects = {
@@ -170,7 +120,6 @@ const sendOTPEmail = async (email, otp, purpose = "signup") => {
     `,
   };
 
-  // Log in development
   if (process.env.NODE_ENV === "development") {
     console.log("\n========================================");
     console.log("📧 EMAIL OTP SERVICE (Log only)");
@@ -205,7 +154,7 @@ const sendWelcomeEmail = async (email, name) => {
         <p style="line-height: 1.6; color: #444;">Thank you for joining Le Pondicherry Cheese. We're excited to have you as part of our artisan cheese community!</p>
         <p style="line-height: 1.6; color: #444;">Start exploring our premium collection of handcrafted cheeses made with love and tradition.</p>
         <div style="text-align: center; margin: 40px 0;">
-          <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}/shop" 
+          <a href="${process.env.FRONTEND_URL || "https://lepondicheese.com"}/shop" 
              style="background: #2C5530; color: white; padding: 15px 35px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
             Explore Our Collection
           </a>
@@ -218,7 +167,7 @@ const sendWelcomeEmail = async (email, name) => {
 };
 
 /**
- * Send order confirmation email to user
+ * Send order confirmation email to user & notify admin emails
  */
 const sendOrderConfirmationEmail = async (order, user) => {
   const itemsHtml = order.items
@@ -237,7 +186,7 @@ const sendOrderConfirmationEmail = async (order, user) => {
       process.env.SMTP_FROM ||
       `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
     to: user.email,
-    cc: "samdev0418@gmail.com",
+    cc: ADMIN_EMAILS,
     subject: `Order Confirmed: ${order.orderId} - Le Pondicherry Cheese`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
@@ -289,14 +238,171 @@ const sendShippingUpdateEmail = async (order, user) => {
         <p>Hi ${user.name || "Customer"},</p>
         <p>Good news! Your order <strong>${order.orderId}</strong> has been shipped and is on its way to you.</p>
         <div style="background: #FAF7F2; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Courier:</strong> ${order.courierPartner}</p>
-          <p><strong>Tracking Number:</strong> <span style="font-size: 18px; font-weight: bold; color: #C9A961;">${order.trackingNumber}</span></p>
+          <p><strong>Courier:</strong> ${order.courierPartner || "Standard Delivery"}</p>
+          <p><strong>Tracking Number:</strong> <span style="font-size: 18px; font-weight: bold; color: #C9A961;">${order.trackingNumber || "N/A"}</span></p>
         </div>
       </div>
     `,
   };
 
   await sendEmailHelper(mailOptions);
+};
+
+/**
+ * Send order delivered email to user
+ */
+const sendOrderDeliveredEmail = async (order, user) => {
+  const mailOptions = {
+    from:
+      process.env.SMTP_FROM ||
+      `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
+    to: user.email,
+    subject: `Your order has been delivered! 🎉 - Order ${order.orderId}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: #2C5530; margin: 0;">Le Pondicherry Cheese</h1>
+          <p style="color: #C9A961; font-weight: bold; margin: 5px 0; text-transform: uppercase; letter-spacing: 2px;">Order Delivered</p>
+        </div>
+        <div style="background: #FAF7F2; padding: 25px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+          <h2 style="color: #2C5530; margin-top: 0;">Order #${order.orderId} Delivered!</h2>
+          <p style="color: #444; font-size: 16px; line-height: 1.5;">Hi ${user.name || "Customer"}, your order has been successfully delivered. We hope you enjoy our handcrafted artisan cheeses!</p>
+        </div>
+        <p style="color: #666; font-size: 14px; text-align: center; line-height: 1.5;">Thank you for choosing Le Pondicherry Cheese. If you have any feedback or questions, please feel free to reply to this email.</p>
+        <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center; color: #888; font-size: 12px;">
+          <p>© ${new Date().getFullYear()} Le Pondicherry Cheese. All rights reserved.</p>
+        </div>
+      </div>
+    `,
+  };
+
+  await sendEmailHelper(mailOptions);
+};
+
+/**
+ * Send General Contact Form Enquiry Email to Admins
+ */
+const sendContactEnquiryAdminEmail = async (data) => {
+  const referenceId = "GEN-" + Date.now();
+  const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+  const mailOptions = {
+    from:
+      process.env.SMTP_FROM ||
+      `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
+    to: ADMIN_EMAILS,
+    subject: `New General Enquiry | Le Cheese Pondicherry | ${data.name}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #2C5530; padding: 24px 32px;">
+          <h2 style="color: #FAB519; margin: 0; font-size: 22px;">🧀 Le Pondicherry Cheese</h2>
+          <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 14px;">New General Enquiry Received</p>
+        </div>
+        <div style="padding: 28px 32px; background-color: #FAF7F2;">
+          <p style="color: #1A1A1A; font-size: 15px; margin-top: 0;">
+            Hello Team,<br><br>
+            A new enquiry has been submitted through the <b>Le Cheese Pondicherry Contact Form</b>.
+          </p>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+            <tr style="background-color: #2C5530;">
+              <td colspan="2" style="padding: 10px 16px; color: #FAB519; font-weight: bold; font-size: 13px; text-transform: uppercase;">ENQUIRY DETAILS</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; width: 38%; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Reference ID</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${referenceId}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Submitted On</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${timestamp}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Name</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.name}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Email</td>
+              <td style="padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #f0f0f0;"><a href="mailto:${data.email}" style="color: #2C5530;">${data.email}</a></td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Mobile</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.mobile ? ((data.dialCode || "+91") + ' ' + data.mobile) : 'Not provided'}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; vertical-align: top;">Message</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; white-space: pre-wrap;">${data.message}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    `,
+  };
+  const success = await sendEmailHelper(mailOptions);
+  return { success, referenceId };
+};
+
+/**
+ * Send Wholesale Enquiry Email to Admins
+ */
+const sendWholesaleEnquiryAdminEmail = async (data) => {
+  const referenceId = "WHL-" + Date.now();
+  const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+  const mailOptions = {
+    from:
+      process.env.SMTP_FROM ||
+      `"Le Pondicherry Cheese" <${process.env.SMTP_USER}>`,
+    to: ADMIN_EMAILS,
+    subject: `New Wholesale Enquiry | Le Cheese Pondicherry | ${data.businessName || data.name}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #2C5530; padding: 24px 32px;">
+          <h2 style="color: #FAB519; margin: 0; font-size: 22px;">🧀 Le Pondicherry Cheese</h2>
+          <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 14px;">New Wholesale / B2B Enquiry</p>
+        </div>
+        <div style="padding: 28px 32px; background-color: #FAF7F2;">
+          <p style="color: #1A1A1A; font-size: 15px; margin-top: 0;">
+            Hello Team,<br><br>
+            A new wholesale inquiry has been submitted on the website.
+          </p>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+            <tr style="background-color: #2C5530;">
+              <td colspan="2" style="padding: 10px 16px; color: #FAB519; font-weight: bold; font-size: 13px; text-transform: uppercase;">WHOLESALE DETAILS</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; width: 38%; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Reference ID</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${referenceId}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Business Name</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.businessName || data.name || "N/A"}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Contact Person</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.contactPerson || data.name || "N/A"}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Email</td>
+              <td style="padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #f0f0f0;"><a href="mailto:${data.email}" style="color: #2C5530;">${data.email}</a></td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Mobile / Phone</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.mobile ? ((data.dialCode || "+91") + ' ' + data.mobile) : (data.phone || 'Not provided')}</td>
+            </tr>
+            <tr style="background-color: #fafafa;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; border-bottom: 1px solid #f0f0f0;">Business Type / Location</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; border-bottom: 1px solid #f0f0f0;">${data.businessType || data.location || "N/A"}</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 16px; font-weight: bold; color: #6B6B6B; font-size: 13px; vertical-align: top;">Requirement / Message</td>
+              <td style="padding: 10px 16px; color: #1A1A1A; font-size: 13px; white-space: pre-wrap;">${data.message || data.requirement || "N/A"}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    `,
+  };
+  const success = await sendEmailHelper(mailOptions);
+  return { success, referenceId };
 };
 
 // Initialize on module load (skip during tests to avoid open handles)
@@ -307,9 +413,13 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 module.exports = {
+  ADMIN_EMAILS,
   sendOTPEmail,
   sendWelcomeEmail,
   sendOrderConfirmationEmail,
   sendShippingUpdateEmail,
+  sendOrderDeliveredEmail,
+  sendContactEnquiryAdminEmail,
+  sendWholesaleEnquiryAdminEmail,
   initializeTransporter,
 };

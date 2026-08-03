@@ -125,3 +125,59 @@
 [INFO] 2026-07-13T12:04:12.739Z: ========================================
 
 [INFO] 2026-07-13T12:04:13.178Z: ✅ Email Transporter Initialized & Verified
+[INFO] 2026-08-03T10:45:39.999Z: Connecting to MongoDB...
+[INFO] 2026-08-03T10:45:42.269Z: Connecting to MongoDB...
+[INFO] 2026-08-03T10:45:42.820Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-03T10:45:43.357Z: 
+========================================
+[INFO] 2026-08-03T10:45:43.358Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-03T10:45:43.358Z: ========================================
+[INFO] 2026-08-03T10:45:43.358Z: 🚀 Server running on port 5000
+[INFO] 2026-08-03T10:45:43.358Z: 📍 Environment: production
+[INFO] 2026-08-03T10:45:43.358Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-03T10:45:43.359Z: ========================================
+
+[INFO] 2026-08-03T10:45:43.517Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[ERROR] 2026-08-03T10:46:04.687Z: Auth middleware error: jwt expired
+[ERROR] 2026-08-03T10:58:50.252Z: Auth middleware error: jwt expired
+[ERROR] 2026-08-03T10:58:50.385Z: Auth middleware error: jwt expired
+[INFO] 2026-08-03T10:59:02.990Z: Connecting to MongoDB...
+[INFO] 2026-08-03T10:59:05.593Z: Connecting to MongoDB...
+[INFO] 2026-08-03T10:59:06.151Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-03T10:59:06.455Z: 
+========================================
+[INFO] 2026-08-03T10:59:06.456Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-03T10:59:06.456Z: ========================================
+[INFO] 2026-08-03T10:59:06.456Z: 🚀 Server running on port 5000
+[INFO] 2026-08-03T10:59:06.457Z: 📍 Environment: production
+[INFO] 2026-08-03T10:59:06.457Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-03T10:59:06.457Z: ========================================
+
+[INFO] 2026-08-03T10:59:06.612Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-03T10:59:55.148Z: 📨 Mode: nodemailer. Routing via direct SMTP...
+[INFO] 2026-08-03T10:59:57.925Z: ✅ Email sent via SMTP to sabariks092@gmail.com
+[INFO] 2026-08-03T11:04:43.994Z: 📨 Mode: nodemailer. Routing via direct SMTP...
+[INFO] 2026-08-03T11:04:46.814Z: ✅ Email sent via SMTP to sabariks092@gmail.com
+[INFO] 2026-08-03T11:07:21.988Z: 📨 Mode: nodemailer. Routing via direct SMTP...
+[INFO] 2026-08-03T11:07:25.750Z: ✅ Email sent via SMTP to accounts@lepondicheese.com,vp.expansions@hopemarket.in,webdeveloper@achariya.org
+[INFO] 2026-08-03T11:14:40.556Z: 📨 Mode: nodemailer. Routing via direct SMTP...
+[INFO] 2026-08-03T11:14:43.134Z: ✅ Email sent via SMTP to accounts@lepondicheese.com,vp.expansions@hopemarket.in,webdeveloper@achariya.org
+[INFO] 2026-08-03T11:19:40.417Z: 🔄 Updating Product ID: 69b392940c3b07931b9f7f19
+[INFO] 2026-08-03T11:19:40.419Z: 📦 Request Body onHold: [33mfalse[39m
+[INFO] 2026-08-03T11:19:40.452Z: ✔️ Final updateData.onHold: [33mfalse[39m
+[INFO] 2026-08-03T11:19:40.453Z: 📍 ID 69b392940c3b07931b9f7f19: Explicitly setting onHold to: [33mfalse[39m
+[INFO] 2026-08-03T11:20:39.773Z: [Order] Creating session for sabariks092@gmail.com, amount: 51
+[INFO] 2026-08-03T11:20:39.774Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1785756039773-297",
+  "order_amount": 51,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "6a707599a73744e2c8a887b5",
+    "customer_name": "Sabari kannan",
+    "customer_email": "sabariks092@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}

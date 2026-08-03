@@ -1,7 +1,11 @@
 const Order = require("../models/Order");
 const User = require("../models/User");
 const { createOrderSession, getCashfreeOrder } = require("../utils/cashfree");
-const { sendOrderConfirmationEmail } = require("../utils/emailService");
+const {
+  sendOrderConfirmationEmail,
+  sendShippingUpdateEmail,
+  sendOrderDeliveredEmail,
+} = require("../utils/emailService");
 const Setting = require("../models/Setting");
 
 /**
@@ -374,6 +378,22 @@ const updateOrder = async (req, res) => {
         },
       }
     );
+
+    // Trigger status update email notifications to customer
+    if (orderStatus === "shipped" || orderStatus === "delivered") {
+      try {
+        const userObj = await User.findById(order.user);
+        if (userObj && userObj.email) {
+          if (orderStatus === "shipped") {
+            await sendShippingUpdateEmail(order, userObj);
+          } else if (orderStatus === "delivered") {
+            await sendOrderDeliveredEmail(order, userObj);
+          }
+        }
+      } catch (emailErr) {
+        console.error("Order Status Update Email Error:", emailErr.message);
+      }
+    }
 
     res.status(200).json({
       success: true,
