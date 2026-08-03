@@ -456,7 +456,7 @@ export default function ProductDetailClient({
                 originalPrice={product.originalPrice}
                 image={product.image}
                 rating={product.rating}
-                reviews={product.reviewCount}
+                reviewCount={product.reviewCount}
               />
             ))}
           </div>

@@ -21,6 +21,7 @@ import {
 import { fadeUp, staggerContainer } from "@/animations/variants";
 import { motion } from "framer-motion";
 import Outlet from "@/components/Outlet";
+import { API_BASE_URL } from "@/config";
 
 export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "loading">("idle");
@@ -71,8 +72,11 @@ export default function ContactPage() {
     };
 
     try {
-      const res = await fetch(import.meta.env.VITE_APPSCRIPT_URL_GENERAL, {
+      const res = await fetch(`${API_BASE_URL}/api/enquiries/contact`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -83,7 +87,7 @@ export default function ContactPage() {
         (e.target as HTMLFormElement).reset();
         setDialCode("+91");
       } else {
-        console.error("AppScript error:", data.message);
+        console.error("Enquiry submission error:", data.message);
         setStatus("idle");
       }
     } catch (err) {

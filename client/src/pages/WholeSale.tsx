@@ -12,6 +12,7 @@ import chef from "@/assets/icons/chef.webp";
 import coldchain from "@/assets/icons/cold-chain.webp";
 import CountryList from "country-list-with-dial-code-and-flag";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { API_BASE_URL } from "@/config";
 
 export default function WholesalePage() {
   const [status, setStatus] = useState<"idle" | "loading">("idle");
@@ -58,8 +59,11 @@ export default function WholesalePage() {
     };
 
     try {
-      const res = await fetch(import.meta.env.VITE_APPSCRIPT_URL_WHOLESALE, {
+      const res = await fetch(`${API_BASE_URL}/api/enquiries/wholesale`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
@@ -70,7 +74,7 @@ export default function WholesalePage() {
         (e.target as HTMLFormElement).reset();
         setDialCode("+91");
       } else {
-        console.error("AppScript error:", data.message);
+        console.error("Enquiry submission error:", data.message);
         setStatus("idle");
       }
     } catch (err) {

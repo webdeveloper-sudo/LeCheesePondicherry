@@ -310,9 +310,7 @@ export default function UserLogin() {
           token: token,
         });
 
-        if (otpPurpose !== "reset-password") {
-          await syncWithBackend();
-        }
+        await syncWithBackend();
 
         setStep("profile");
       } else {

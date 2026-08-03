@@ -3,6 +3,7 @@
     "dev": "cd client && npm run dev "
   },
   "dependencies": {
+    "google-auth-library": "^10.9.1",
     "one-image-optimizer": "^1.0.2"
   }
 }
