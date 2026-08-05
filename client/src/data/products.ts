@@ -245,7 +245,7 @@ export const products: Product[] = [
     category: "fresh",
     rating: 5,
     reviewCount: 64,
-    weight: "140g",
+    weight: "150g",
     inStock: true,
     featured: true,
     tastingNotes: {
@@ -297,7 +297,7 @@ export const products: Product[] = [
     category: "fresh",
     rating: 4,
     reviewCount: 22,
-    weight: "200g",
+    weight: "100g",
     inStock: true,
     tastingNotes: {
       appearance: "Small white balls",

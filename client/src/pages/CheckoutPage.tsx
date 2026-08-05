@@ -243,21 +243,34 @@ export default function CheckoutPage() {
 
   const handleAddNewAddress = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (shipping.phone.length !== 10) {
+    if (!shipping.phone || shipping.phone.length !== 10) {
       addToast("Phone number must be exactly 10 digits.", "error");
+      return;
+    }
+
+    if (!shipping.name?.trim()) {
+      addToast("Recipient's name is required.", "error");
+      return;
+    }
+
+    if (!shipping.address?.trim() || !shipping.pincode?.trim()) {
+      addToast("Full address and pincode are required.", "error");
       return;
     }
 
     setIsProcessing(true);
     try {
-      const label = addressLabel === "Other" ? customLabel : addressLabel;
+      const label = addressLabel === "Other" ? (customLabel || "Other") : addressLabel;
       const addressData = {
-        type: label,
-        addressLine1: shipping.address,
-        city: shipping.city,
-        state: shipping.state,
-        pincode: shipping.pincode,
-        mobile: shipping.phone,
+        type: label || "Home",
+        name: shipping.name.trim(),
+        addressLine1: shipping.address.trim(),
+        city: shipping.city?.trim() || "",
+        state: shipping.state?.trim() || "",
+        pincode: shipping.pincode.trim(),
+        mobile: shipping.phone.trim(),
+        countryCode: "+91",
+        country: "India",
         isDefault: !editingAddressId && addresses.length === 0,
       };
 
@@ -268,23 +281,32 @@ export default function CheckoutPage() {
         res = await userAPI.addAddress(addressData);
       }
 
-      if (res.success) {
+      if (res && res.success) {
         await syncProfile();
-
-        // Use the callback-less sync or just assume the next render will have updated addresses
-        // But addresses from useUserStore might not be updated immediately in this scope
-        // So we might need to find the new one in the freshly synced store
-        // However, syncProfile is async and updates the store state.
 
         setIsAddingNew(false);
         setEditingAddressId(null);
 
-        // Optional: Re-fetch or rely on store update
+        // Auto-select newly saved address
+        if (res.addresses && res.addresses.length > 0) {
+          const savedAddr = editingAddressId
+            ? res.addresses.find((a: any) => a._id === editingAddressId)
+            : res.addresses[res.addresses.length - 1];
+          if (savedAddr && savedAddr._id) {
+            setSelectedAddressId(savedAddr._id);
+          }
+        }
+
+        addToast(
+          editingAddressId ? "Address updated successfully!" : "New address added successfully!",
+          "success"
+        );
       } else {
-        addToast(res.message || "Failed to save address", "error");
+        addToast(res?.message || "Failed to save address", "error");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving address:", error);
+      addToast(error?.response?.data?.message || "Error saving address. Please try again.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -338,6 +360,7 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
+      const selectedAddr = addresses?.find((a: any) => a._id === selectedAddressId);
       // 1. Construct the Order data payload
       const orderData = {
         items: selectedItems.map((item) => ({
@@ -355,11 +378,16 @@ export default function CheckoutPage() {
         taxAmount: taxAmount,
         finalAmount: total,
         shippingAddress: {
-          addressLine1: shipping.address,
-          city: shipping.city,
-          state: shipping.state,
-          pincode: shipping.pincode,
-          mobile: shipping.phone,
+          type: (selectedAddr?.type || addressLabel || "home").toLowerCase(),
+          name: shipping.name || userName || "Customer",
+          addressLine1: shipping.address || selectedAddr?.addressLine1 || "",
+          addressLine2: selectedAddr?.addressLine2 || "",
+          landmark: selectedAddr?.landmark || "",
+          city: shipping.city || selectedAddr?.city || "",
+          state: shipping.state || selectedAddr?.state || "",
+          pincode: shipping.pincode || selectedAddr?.pincode || "",
+          mobile: shipping.phone || selectedAddr?.mobile || userMobile || "",
+          country: selectedAddr?.country || "India",
         },
       };
 

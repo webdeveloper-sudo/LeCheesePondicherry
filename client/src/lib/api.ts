@@ -483,6 +483,12 @@ export const adminAPI = {
       body: JSON.stringify(orderData),
     });
   },
+
+  deleteOrder: async (orderId: string) => {
+    return apiRequest(`/api/orders/${orderId}`, {
+      method: "DELETE",
+    });
+  },
 };
 
 export { API_BASE_URL, getAuthHeaders, apiRequest };

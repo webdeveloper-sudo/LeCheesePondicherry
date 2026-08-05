@@ -23,10 +23,22 @@ export default function ProductDetailClient({
   const { isInWishlist, toggleWishlist, trackProductView } = useUserStore();
   const { addToast } = useToastStore();
 
+  const isBurrata =
+    product.id?.toLowerCase().includes("burrata") ||
+    product.name?.toLowerCase().includes("burrata");
+
+  const isBocconcini =
+    product.id?.toLowerCase().includes("bocconcini") ||
+    product.name?.toLowerCase().includes("bocconcini");
+
+  const defaultWeight = isBurrata
+    ? "150g"
+    : isBocconcini
+    ? "100g"
+    : product.weight || "200g";
+
   const [quantity, setQuantity] = useState(1);
-  // Always default to "200g" — the base price weight.
-  // product.weight from DB may be a non-standard value so we ignore it.
-  const [selectedWeight, setSelectedWeight] = useState("200g");
+  const [selectedWeight, setSelectedWeight] = useState(defaultWeight);
   const [activeTab, setActiveTab] = useState("description");
   const [addedToCart, setAddedToCart] = useState(false);
   const [mainImage, setMainImage] = useState(product.image);
@@ -39,23 +51,40 @@ export default function ProductDetailClient({
   useEffect(() => {
     setMainImage(product.image);
     setQuantity(1);
-    setSelectedWeight("200g"); // Always reset to 200g base price on product change
+    setSelectedWeight(defaultWeight);
     setAddedToCart(false);
     setActiveTab("description");
-  }, [product.id, product.image]);
+  }, [product.id, product.image, defaultWeight]);
 
   // Track product view when component mounts
   useEffect(() => {
     trackProductView(product.id);
   }, [product.id, trackProductView]);
 
-  const weightOptions = [
-    { label: "200g", price: product.price },
-    { label: "400g", price: Math.round(product.price * 1.85) },
-    { label: "600g", price: Math.round(product.price * 2.65) },
-    { label: "800g", price: Math.round(product.price * 3.4) },
-    { label: "1kg", price: Math.round(product.price * 4.1) },
-  ];
+  const weightOptions = isBurrata
+    ? [
+        { label: "150g", price: product.price },
+        { label: "300g", price: Math.round(product.price * 1.85) },
+        { label: "450g", price: Math.round(product.price * 2.65) },
+        { label: "600g", price: Math.round(product.price * 3.4) },
+        { label: "750g", price: Math.round(product.price * 4.1) },
+      ]
+    : isBocconcini
+    ? [
+        { label: "100g", price: product.price },
+        { label: "200g", price: Math.round(product.price * 1.85) },
+        { label: "300g", price: Math.round(product.price * 2.65) },
+        { label: "400g", price: Math.round(product.price * 3.4) },
+        { label: "500g", price: Math.round(product.price * 4.1) },
+        { label: "600g", price: Math.round(product.price * 4.8) },
+      ]
+    : [
+        { label: "200g", price: product.price },
+        { label: "400g", price: Math.round(product.price * 1.85) },
+        { label: "600g", price: Math.round(product.price * 2.65) },
+        { label: "800g", price: Math.round(product.price * 3.4) },
+        { label: "1kg", price: Math.round(product.price * 4.1) },
+      ];
 
   const selectedPrice =
     weightOptions.find((w) => w.label === selectedWeight)?.price ||

@@ -102,6 +102,7 @@ const addAddress = async (req, res) => {
   try {
     const {
       type,
+      name,
       addressLine1,
       addressLine2,
       landmark,
@@ -128,6 +129,7 @@ const addAddress = async (req, res) => {
 
     user.addresses.push({
       type: type || "home",
+      name: name || user.name || "",
       addressLine1,
       addressLine2,
       landmark,
@@ -166,6 +168,7 @@ const updateAddress = async (req, res) => {
     const { addressId } = req.params;
     const {
       type,
+      name,
       addressLine1,
       addressLine2,
       landmark,
@@ -198,7 +201,17 @@ const updateAddress = async (req, res) => {
 
     // Update fields
     if (type !== undefined) address.type = type;
+    if (name !== undefined) address.name = name;
     if (addressLine1 !== undefined) address.addressLine1 = addressLine1;
+    if (addressLine2 !== undefined) address.addressLine2 = addressLine2;
+    if (landmark !== undefined) address.landmark = landmark;
+    if (city !== undefined) address.city = city;
+    if (state !== undefined) address.state = state;
+    if (pincode !== undefined) address.pincode = pincode;
+    if (country !== undefined) address.country = country;
+    if (countryCode !== undefined) address.countryCode = countryCode;
+    if (mobile !== undefined) address.mobile = mobile;
+    if (isDefault !== undefined) address.isDefault = isDefault;
     if (addressLine2 !== undefined) address.addressLine2 = addressLine2;
     if (landmark !== undefined) address.landmark = landmark;
     if (city !== undefined) address.city = city;

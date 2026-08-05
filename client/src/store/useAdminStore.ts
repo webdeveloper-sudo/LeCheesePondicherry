@@ -18,6 +18,7 @@ interface AdminState {
   deleteProduct: (productId: string) => Promise<boolean>;
 
   updateOrder: (orderId: string, orderData: any) => Promise<boolean>;
+  deleteOrder: (orderId: string) => Promise<boolean>;
 }
 
 export const useAdminStore = create<AdminState>((set) => ({
@@ -122,6 +123,20 @@ export const useAdminStore = create<AdminState>((set) => ({
       return true;
     } else {
       set({ error: result.message || "Failed to update order" });
+      return false;
+    }
+  },
+
+  deleteOrder: async (orderId: string) => {
+    set({ isLoading: true, error: null });
+    const result = await adminAPI.deleteOrder(orderId);
+    set({ isLoading: false });
+    if (result.success) {
+      const adminState = useAdminStore.getState();
+      adminState.fetchOrders();
+      return true;
+    } else {
+      set({ error: result.message || "Failed to delete order" });
       return false;
     }
   },

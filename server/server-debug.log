@@ -181,3 +181,148 @@
     "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
   }
 }
+[INFO] 2026-08-05T05:06:06.751Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:06:09.246Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:06:10.034Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:06:10.478Z: 
+========================================
+[INFO] 2026-08-05T05:06:10.478Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:06:10.478Z: ========================================
+[INFO] 2026-08-05T05:06:10.478Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:06:10.478Z: 📍 Environment: production
+[INFO] 2026-08-05T05:06:10.479Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:06:10.479Z: ========================================
+
+[INFO] 2026-08-05T05:06:10.643Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T05:14:03.120Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:14:03.971Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:14:04.340Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T05:14:04.460Z: 
+========================================
+[INFO] 2026-08-05T05:14:04.461Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:14:04.461Z: ========================================
+[INFO] 2026-08-05T05:14:04.461Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:14:04.461Z: 📍 Environment: production
+[INFO] 2026-08-05T05:14:04.462Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:14:04.462Z: ========================================
+
+[INFO] 2026-08-05T05:14:15.941Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:14:16.489Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:14:16.987Z: 
+========================================
+[INFO] 2026-08-05T05:14:16.991Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:14:16.995Z: ========================================
+[INFO] 2026-08-05T05:14:16.995Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:14:16.996Z: 📍 Environment: production
+[INFO] 2026-08-05T05:14:16.997Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:14:16.997Z: ========================================
+
+[INFO] 2026-08-05T05:14:17.128Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T05:14:25.574Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:14:26.136Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:14:26.648Z: 
+========================================
+[INFO] 2026-08-05T05:14:26.648Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:14:26.649Z: ========================================
+[INFO] 2026-08-05T05:14:26.649Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:14:26.649Z: 📍 Environment: production
+[INFO] 2026-08-05T05:14:26.650Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:14:26.650Z: ========================================
+
+[INFO] 2026-08-05T05:14:26.752Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T05:38:51.618Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:38:52.273Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:38:52.735Z: 
+========================================
+[INFO] 2026-08-05T05:38:52.735Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:38:52.735Z: ========================================
+[INFO] 2026-08-05T05:38:52.735Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:38:52.736Z: 📍 Environment: production
+[INFO] 2026-08-05T05:38:52.736Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:38:52.736Z: ========================================
+
+[INFO] 2026-08-05T05:38:52.827Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T05:38:57.867Z: Connecting to MongoDB...
+[INFO] 2026-08-05T05:38:58.399Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T05:38:58.867Z: 
+========================================
+[INFO] 2026-08-05T05:38:58.867Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T05:38:58.867Z: ========================================
+[INFO] 2026-08-05T05:38:58.867Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T05:38:58.868Z: 📍 Environment: production
+[INFO] 2026-08-05T05:38:58.868Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T05:38:58.868Z: ========================================
+
+[INFO] 2026-08-05T05:38:59.203Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[ERROR] 2026-08-05T06:32:11.831Z: ⚠️ MongoDB disconnected
+[INFO] 2026-08-05T09:05:32.532Z: Connecting to MongoDB...
+[INFO] 2026-08-05T09:05:37.974Z: Connecting to MongoDB...
+[INFO] 2026-08-05T09:05:38.462Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T09:05:38.923Z: 
+========================================
+[INFO] 2026-08-05T09:05:38.923Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T09:05:38.923Z: ========================================
+[INFO] 2026-08-05T09:05:38.923Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T09:05:38.924Z: 📍 Environment: production
+[INFO] 2026-08-05T09:05:38.924Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T09:05:38.924Z: ========================================
+
+[INFO] 2026-08-05T09:05:39.365Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T09:06:01.221Z: Connecting to MongoDB...
+[INFO] 2026-08-05T09:06:01.691Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T09:06:01.987Z: 
+========================================
+[INFO] 2026-08-05T09:06:02.006Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T09:06:02.010Z: ========================================
+[INFO] 2026-08-05T09:06:02.011Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T09:06:02.011Z: 📍 Environment: production
+[INFO] 2026-08-05T09:06:02.011Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T09:06:02.012Z: ========================================
+
+[INFO] 2026-08-05T09:06:02.394Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T09:08:56.267Z: Connecting to MongoDB...
+[INFO] 2026-08-05T09:08:56.894Z: ✅ MongoDB Connected: ac-iaexiuc-shard-00-00.drjbrbn.mongodb.net
+[INFO] 2026-08-05T09:08:57.168Z: 
+========================================
+[INFO] 2026-08-05T09:08:57.169Z: 🧀 LE PONDICHERRY CHEESE API SERVER
+[INFO] 2026-08-05T09:08:57.169Z: ========================================
+[INFO] 2026-08-05T09:08:57.169Z: 🚀 Server running on port 5000
+[INFO] 2026-08-05T09:08:57.169Z: 📍 Environment: production
+[INFO] 2026-08-05T09:08:57.169Z: 🔗 API URL: http://localhost:5000
+[INFO] 2026-08-05T09:08:57.169Z: ========================================
+
+[INFO] 2026-08-05T09:08:57.381Z: ✅ Email Transporter Initialized & Verified via Nodemailer SMTP
+[INFO] 2026-08-05T09:12:06.860Z: 🔄 Updating Product ID: 69b392940c3b07931b9f7f19
+[INFO] 2026-08-05T09:12:06.861Z: 📦 Request Body onHold: [33mfalse[39m
+[INFO] 2026-08-05T09:12:06.895Z: ✔️ Final updateData.onHold: [33mfalse[39m
+[INFO] 2026-08-05T09:12:06.896Z: 📍 ID 69b392940c3b07931b9f7f19: Explicitly setting onHold to: [33mfalse[39m
+[INFO] 2026-08-05T09:12:34.714Z: [Order] Creating session for sabariks092@gmail.com, amount: 1
+[INFO] 2026-08-05T09:12:34.715Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1785921154714-509",
+  "order_amount": 1,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "6a707599a73744e2c8a887b5",
+    "customer_name": "Sabari kannan",
+    "customer_email": "sabariks092@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}
+[INFO] 2026-08-05T09:13:23.488Z: [Order] Creating session for sabariks092@gmail.com, amount: 1
+[INFO] 2026-08-05T09:13:23.496Z: Creating Cashfree Order with: {
+  "order_id": "ORD-1785921203488-862",
+  "order_amount": 1,
+  "order_currency": "INR",
+  "customer_details": {
+    "customer_id": "6a707599a73744e2c8a887b5",
+    "customer_name": "Sabari kannan",
+    "customer_email": "sabariks092@gmail.com",
+    "customer_phone": "8778377449"
+  },
+  "order_meta": {
+    "return_url": "https://lepondicheese.com/checkout/status?order_id={order_id}"
+  }
+}

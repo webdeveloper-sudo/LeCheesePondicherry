@@ -100,8 +100,10 @@ const validateProfile = [
 const validateAddress = [
   body("type")
     .optional()
-    .isIn(["home", "work", "other"])
-    .withMessage("Address type must be home, work, or other"),
+    .trim(),
+  body("name")
+    .optional()
+    .trim(),
   body("addressLine1")
     .trim()
     .notEmpty()
@@ -114,11 +116,10 @@ const validateAddress = [
     .trim()
     .notEmpty()
     .withMessage("Pincode is required")
-    .isNumeric()
-    .withMessage("Pincode must be numeric")
-    .isLength({ min: 5, max: 10 })
+    .isLength({ min: 4, max: 10 })
     .withMessage("Please provide a valid pincode"),
-  body("countryCode").trim().notEmpty().withMessage("Country code is required"),
+  body("countryCode").optional().trim(),
+  body("country").optional().trim(),
   body("mobile")
     .trim()
     .notEmpty()

@@ -94,9 +94,9 @@ export default function WishlistPage() {
   const handleMoveToCart = async (productId: string) => {
     setMovingToCart(productId);
     try {
-      // Add to cart (default 200g)
+      // Add to cart using product base weight
       const product = wishlistProducts.find((p) => p.id === productId);
-      addToCart(productId, 1, "200g", product?.price || 0);
+      addToCart(productId, 1, product?.weight || "200g", product?.price || 0);
 
       // Remove from wishlist immediately (for both guest & auth users)
       await toggleWishlist(productId);

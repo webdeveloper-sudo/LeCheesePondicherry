@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const addressSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ["home", "work", "other"],
     default: "home",
   },
+  name: String,
   addressLine1: { type: String, required: true },
   addressLine2: String,
   landmark: String,

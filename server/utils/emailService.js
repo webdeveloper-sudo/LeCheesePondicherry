@@ -169,17 +169,42 @@ const sendWelcomeEmail = async (email, name) => {
 /**
  * Send order confirmation email to user & notify admin emails
  */
+/**
+ * Send order confirmation email to user & notify admin emails
+ */
 const sendOrderConfirmationEmail = async (order, user) => {
-  const itemsHtml = order.items
+  const address = order.deliveryAddress || {};
+  const itemsHtml = (order.items || [])
     .map(
       (item) => `
     <tr>
-      <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.productName} (x${item.quantity})</td>
-      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${item.price * item.quantity}</td>
+      <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top;">
+        <div style="font-weight: bold; color: #1A1A1A; font-size: 14px;">${item.productName}</div>
+        ${item.weight ? `<div style="font-size: 12px; color: #777;">Weight: ${item.weight}</div>` : ""}
+      </td>
+      <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; text-align: center; font-size: 14px; color: #444;">
+        ₹${item.price} × ${item.quantity}
+      </td>
+      <td style="padding: 12px; border-bottom: 1px solid #f0f0f0; text-align: right; font-weight: bold; color: #1A1A1A; font-size: 14px;">
+        ₹${(item.price * item.quantity).toLocaleString("en-IN")}
+      </td>
     </tr>
   `,
     )
     .join("");
+
+  const formattedDate = new Date(order.createdAt || Date.now()).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const fullAddressStr = [
+    address.addressLine1,
+    address.addressLine2,
+    address.landmark ? `Landmark: ${address.landmark}` : "",
+    `${address.city || ""}, ${address.state || ""} - ${address.pincode || ""}`,
+    address.country || "India"
+  ].filter(Boolean).join("<br/>");
 
   const mailOptions = {
     from:
@@ -189,32 +214,121 @@ const sendOrderConfirmationEmail = async (order, user) => {
     cc: ADMIN_EMAILS,
     subject: `Order Confirmed: ${order.orderId} - Le Pondicherry Cheese`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="color: #2C5530;">Order Confirmation</h2>
-        <p>Hi ${user.name || "Customer"},</p>
-        <p>Thank you for your order! We've received your payment and are preparing your delicious cheese.</p>
-        <div style="background: #FAF7F2; padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Order ID:</strong> ${order.orderId}</p>
-          <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+      <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; background-color: #ffffff;">
+        
+        <!-- Header -->
+        <div style="background-color: #2C5530; padding: 25px 30px; text-align: center;">
+          <h1 style="color: #FAB519; margin: 0; font-size: 24px; letter-spacing: 1px;">🧀 Le Pondicherry Cheese</h1>
+          <p style="color: #ffffff; margin: 6px 0 0 0; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Order Confirmation</p>
         </div>
-        <h3>Order Summary</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background: #f8f8f8;">
-              <th style="padding: 10px; text-align: left;">Item</th>
-              <th style="padding: 10px; text-align: right;">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td style="padding: 10px; font-weight: bold;">Total</td>
-              <td style="padding: 10px; font-weight: bold; text-align: right;">₹${order.finalAmount}</td>
-            </tr>
-          </tfoot>
-        </table>
+
+        <div style="padding: 30px; background-color: #FAF7F2;">
+          
+          <p style="color: #1A1A1A; font-size: 16px; margin-top: 0;">
+            Hi <strong>${address.name || user.name || "Customer"}</strong>,
+          </p>
+          <p style="color: #555; font-size: 14px; line-height: 1.5;">
+            Thank you for shopping with us! We have received your payment and your artisan cheese order has been confirmed.
+          </p>
+
+          <!-- Order Overview Box -->
+          <div style="background-color: #ffffff; border: 1px solid #e5e0d8; border-radius: 10px; padding: 18px; margin: 20px 0;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <tr>
+                <td style="padding: 4px 0; color: #777;">Order ID:</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: bold; color: #2C5530;">#${order.orderId}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #777;">Placed On:</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: bold; color: #1A1A1A;">${formattedDate}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #777;">Payment Mode:</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: bold; color: #1A1A1A; text-transform: uppercase;">${order.paymentMode || "Online"}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #777;">Payment Status:</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: bold; color: #2C5530; text-transform: uppercase;">${order.paymentStatus || "Completed"}</td>
+              </tr>
+              ${order.transactionId ? `
+              <tr>
+                <td style="padding: 4px 0; color: #777;">Transaction ID:</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: bold; color: #555;">${order.transactionId}</td>
+              </tr>` : ""}
+            </table>
+          </div>
+
+          <!-- Address & Customer Details -->
+          <div style="background-color: #ffffff; border: 1px solid #e5e0d8; border-radius: 10px; padding: 18px; margin-bottom: 20px;">
+            <div style="color: #2C5530; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+              📍 Delivery Address ${address.type ? `(${address.type.toUpperCase()})` : ""}
+            </div>
+            <div style="font-size: 14px; font-weight: bold; color: #1A1A1A;">${address.name || user.name || "Customer"}</div>
+            <div style="font-size: 13px; color: #555; line-height: 1.5; margin-top: 4px;">
+              ${fullAddressStr}
+            </div>
+            <div style="font-size: 13px; color: #2C5530; font-weight: bold; margin-top: 8px;">
+              📞 Mobile: ${address.mobile || user.mobile || "N/A"}
+            </div>
+          </div>
+
+          <!-- Items Ordered Table -->
+          <div style="background-color: #ffffff; border: 1px solid #e5e0d8; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+            <div style="background-color: #2C5530; color: #FAB519; padding: 12px 18px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+              📦 Items Ordered
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #fcfcfc; border-bottom: 1px solid #eee; text-align: left; font-size: 12px; color: #777;">
+                  <th style="padding: 10px 12px;">Item</th>
+                  <th style="padding: 10px 12px; text-align: center;">Qty & Unit</th>
+                  <th style="padding: 10px 12px; text-align: right;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Financial Breakdown -->
+          <div style="background-color: #ffffff; border: 1px solid #e5e0d8; border-radius: 10px; padding: 18px;">
+            <div style="color: #2C5530; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+              💳 Bill Details Breakdown
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #444;">
+              <tr>
+                <td style="padding: 5px 0;">Basket Subtotal:</td>
+                <td style="padding: 5px 0; text-align: right;">₹${Number(order.orderAmount || 0).toLocaleString("en-IN")}</td>
+              </tr>
+              ${order.discount > 0 ? `
+              <tr>
+                <td style="padding: 5px 0; color: #d32f2f;">Discounts & Offers:</td>
+                <td style="padding: 5px 0; text-align: right; color: #d32f2f;">-₹${Number(order.discount).toLocaleString("en-IN")}</td>
+              </tr>` : ""}
+              <tr>
+                <td style="padding: 5px 0;">Delivery Charge:</td>
+                <td style="padding: 5px 0; text-align: right;">₹${Number(order.deliveryCharge || 0).toLocaleString("en-IN")}</td>
+              </tr>
+              <tr>
+                <td style="padding: 5px 0;">GST / Tax (4%):</td>
+                <td style="padding: 5px 0; text-align: right;">₹${Number(order.taxAmount || 0).toLocaleString("en-IN")}</td>
+              </tr>
+              <tr style="border-top: 2px solid #2C5530; font-size: 16px; font-weight: bold;">
+                <td style="padding: 12px 0 4px 0; color: #2C5530;">Total Paid:</td>
+                <td style="padding: 12px 0 4px 0; text-align: right; color: #2C5530;">₹${Number(order.finalAmount || 0).toLocaleString("en-IN")}</td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="border-top: 1px solid #eee; padding: 20px; text-align: center; color: #888; font-size: 12px; background-color: #ffffff;">
+          <p style="margin: 0 0 6px 0;">Thank you for choosing Le Pondicherry Cheese.</p>
+          <p style="margin: 0;">© ${new Date().getFullYear()} Le Pondicherry Cheese. All rights reserved.</p>
+        </div>
+
       </div>
     `,
   };
