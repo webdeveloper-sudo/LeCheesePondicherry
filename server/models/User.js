@@ -131,6 +131,13 @@ const userSchema = new mongoose.Schema(
 
     // Authentication
     hashedPassword: { type: String },
+    authProvider: {
+      type: String,
+      enum: ["local", "google", "facebook"],
+      default: "local",
+    },
+    googleId: { type: String, sparse: true, index: true },
+    facebookId: { type: String, sparse: true, index: true },
 
     // Address Management
     addresses: [addressSchema],
@@ -197,10 +204,12 @@ userSchema.methods.hasItemsInCart = function () {
   return this.cart && this.cart.length > 0;
 };
 
-// Method to get cart total (would need product prices from elsewhere)
+// Method to get cart total
 userSchema.methods.getCartItemCount = function () {
-  return this.cart.reduce((total, item) => total + item.quantity, 0);
+  if (!this.cart || !Array.isArray(this.cart)) return 0;
+  return this.cart.reduce((total, item) => total + (item.quantity || 0), 0);
 };
+
 
 // Pre-save hook to generate referral code
 userSchema.pre("save", function (next) {

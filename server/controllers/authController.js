@@ -3,6 +3,8 @@ const User = require("../models/User");
 const OTP = require("../models/OTP");
 const { generateToken } = require("../utils/generateToken");
 const { sendOTPEmail, sendWelcomeEmail } = require("../utils/emailService");
+const { OAuth2Client } = require("google-auth-library");
+
 
 /**
  * @desc    Send OTP to email for signup
@@ -481,6 +483,170 @@ const getMe = async (req, res) => {
 };
 
 /**
+ * @desc    Authenticate or register user with Google OAuth
+ * @route   POST /api/auth/google
+ * @access  Public
+ */
+const googleAuth = async (req, res) => {
+  try {
+    const { credential, guestCart, guestWishlist } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        message: "Google credential token is required.",
+      });
+    }
+
+    const googleClientId =
+      process.env.GOOGLE_CLIENT_ID ||
+      "855738841830-anvbvghgd6cvrb3tpqd5sostuoro5dc1.apps.googleusercontent.com";
+    const client = new OAuth2Client(googleClientId);
+
+
+    let ticket;
+    try {
+      ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: googleClientId,
+      });
+    } catch (verifyError) {
+
+      console.error("Google token verification failed:", verifyError);
+      return res.status(401).json({
+        success: false,
+        message: "Google authentication failed. Invalid token.",
+      });
+    }
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to retrieve email from Google profile.",
+      });
+    }
+
+    const googleEmail = payload.email.toLowerCase();
+    const googleSub = payload.sub;
+    const googleName = payload.name || "";
+    const googlePicture = payload.picture || "";
+
+    // Find existing user by googleId or email
+    let user = await User.findOne({
+      $or: [{ googleId: googleSub }, { email: googleEmail }],
+    });
+
+    if (user) {
+      // Check if user is deactivated
+      if (!user.isActive) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Your account has been deactivated. Please contact support.",
+        });
+      }
+
+      // Link googleId and sync details if needed
+      if (!user.googleId) {
+        user.googleId = googleSub;
+      }
+      user.isEmailVerified = true;
+      if (!user.profilePhoto && googlePicture) {
+        user.profilePhoto = googlePicture;
+      }
+      if (!user.name && googleName) {
+        user.name = googleName;
+      }
+    } else {
+      // Create new user for first-time Google signin
+      user = new User({
+        email: googleEmail,
+        name: googleName,
+        profilePhoto: googlePicture,
+        googleId: googleSub,
+        authProvider: "google",
+        isEmailVerified: true,
+        cart: [],
+        wishlist: [],
+      });
+    }
+
+    // Merge guest cart items
+    if (guestCart && Array.isArray(guestCart)) {
+      for (const guestItem of guestCart) {
+        const existingItem = user.cart.find(
+          (item) =>
+            item.productId === guestItem.productId &&
+            item.weight === guestItem.weight,
+        );
+        if (existingItem) {
+          existingItem.quantity += guestItem.quantity;
+        } else {
+          user.cart.push({
+            productId: guestItem.productId,
+            quantity: guestItem.quantity,
+            weight: guestItem.weight || "200g",
+            price: guestItem.price || 0,
+            addedAt: new Date(),
+          });
+        }
+      }
+    }
+
+    // Merge guest wishlist items
+    if (guestWishlist && Array.isArray(guestWishlist)) {
+      for (const guestId of guestWishlist) {
+        const exists = user.wishlist.some((item) => item.productId === guestId);
+        if (!exists) {
+          user.wishlist.push({
+            productId: guestId,
+            addedAt: new Date(),
+          });
+        }
+      }
+    }
+
+    // Update login tracking
+    user.lastLoginAt = new Date();
+    user.loginCount = (user.loginCount || 0) + 1;
+    await user.save();
+
+    // Generate JWT token
+    const token = generateToken({
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Google login successful",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        mobile: user.mobile,
+        profilePhoto: user.profilePhoto,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+        cartItemCount: user.getCartItemCount(),
+        wishlistCount: user.wishlist?.length || 0,
+        wishlistIds: user.wishlist?.map((item) => item.productId) || [],
+        preferences: user.preferences || [],
+      },
+    });
+  } catch (error) {
+    console.error("Google Auth error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to sign in with Google. Please try again.",
+    });
+  }
+};
+
+/**
  * @desc    Logout user (client-side token removal)
  * @route   POST /api/auth/logout
  * @access  Private
@@ -500,6 +666,8 @@ module.exports = {
   setPassword,
   completeProfile,
   login,
+  googleAuth,
   getMe,
   logout,
 };
+

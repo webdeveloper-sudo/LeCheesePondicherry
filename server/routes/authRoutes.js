@@ -6,6 +6,7 @@ const {
   setPassword,
   completeProfile,
   login,
+  googleAuth,
   getMe,
   logout,
 } = require("../controllers/authController");
@@ -23,6 +24,8 @@ router.post("/send-otp", rateLimit(5, 60 * 1000), validateEmail, sendOTP);
 router.post("/verify-otp", rateLimit(10, 60 * 1000), validateOTP, verifyOTP);
 router.post("/set-password", validatePassword, setPassword);
 router.post("/login", rateLimit(10, 15 * 60 * 1000), validateLogin, login);
+router.post("/google", rateLimit(15, 60 * 1000), googleAuth);
+
 
 // Protected routes
 router.post("/complete-profile", protect, validateProfile, completeProfile);

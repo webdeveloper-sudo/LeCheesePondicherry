@@ -1,31 +1,16 @@
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const logFile = path.join(__dirname, "server-debug.log");
-
-// Set up file logging
-const logStream = fs.createWriteStream(logFile, { flags: "a" });
-const originalWriteOut = process.stdout.write.bind(process.stdout);
-const originalWriteErr = process.stderr.write.bind(process.stderr);
-
-process.stdout.write = (chunk, encoding, callback) => {
-  logStream.write(`[INFO] ${new Date().toISOString()}: ${chunk}`);
-  return originalWriteOut(chunk, encoding, callback);
-};
-
-process.stderr.write = (chunk, encoding, callback) => {
-  logStream.write(`[ERROR] ${new Date().toISOString()}: ${chunk}`);
-  return originalWriteErr(chunk, encoding, callback);
-};
 
 process.on("uncaughtException", (err) => {
-  logStream.write(`[UNCAUGHT EXCEPTION] ${new Date().toISOString()}: ${err.stack || err}\n`);
-  process.exit(1);
+  console.error("Uncaught Exception:", err);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  logStream.write(`[UNHANDLED REJECTION] ${new Date().toISOString()}: ${reason?.stack || reason}\n`);
+  console.error("Unhandled Rejection:", reason);
 });
+
+
 
 const express = require("express");
 const cors = require("cors");
@@ -103,9 +88,10 @@ app.get("/", (req, res) => {
 
 // Debug logs endpoint
 app.get("/api/debug-logs", (req, res) => {
-  if (fs.existsSync(logFile)) {
+  const logFilePath = path.join(__dirname, "server.log");
+  if (fs.existsSync(logFilePath)) {
     res.setHeader("Content-Type", "text/plain");
-    res.sendFile(logFile);
+    res.sendFile(logFilePath);
   } else {
     res.send("No logs available yet.");
   }

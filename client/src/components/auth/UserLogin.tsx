@@ -19,6 +19,8 @@ import {
   MapPin,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import GoogleSignInButton from "./GoogleSignInButton";
+
 
 // Country data for the selector
 const countries = [
@@ -551,18 +553,33 @@ export default function UserLogin() {
                   <ArrowRight size={20} />
                 </button>
 
-                <div className="relative my-8">
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase tracking-wider font-semibold text-gray-400">
+                    <span className="px-3 bg-[#FAF8F5]">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="w-full flex justify-center">
+                  <GoogleSignInButton mode="signin" />
+                </div>
+
+                <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-200"></div>
                   </div>
                   <div className="relative flex justify-center text-sm font-medium text-gray-500">
-                    <span className="px-4 bg-white lg:bg-bg-cream-light">
+                    <span className="px-4 bg-[#FAF8F5]">
                       New to Le Pondicherry Cheese?
                     </span>
                   </div>
                 </div>
 
-                <p className="text-center text-sm text-gray-600 mt-6">
+                <p className="text-center text-sm text-gray-600 mt-4">
                   Don't have an account?{" "}
                   <button
                     type="button"
@@ -608,7 +625,23 @@ export default function UserLogin() {
                 >
                   {loading ? "Sending OTP..." : "Send OTP"}
                 </button>
-                <div className="">
+
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase tracking-wider font-semibold text-gray-400">
+                    <span className="px-3 bg-[#FAF8F5]">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="w-full flex justify-center">
+                  <GoogleSignInButton mode="signup" />
+                </div>
+
+                <div className="pt-2 text-center">
                   <button
                     onClick={() => setStep("login")}
                     className="text-sm text-gray-500 hover:text-gray-800 font-medium"
@@ -619,6 +652,7 @@ export default function UserLogin() {
                 </div>
               </div>
             )}
+
 
             {/* Step: OTP */}
             {step === "otp" && (

@@ -170,11 +170,38 @@ export const authAPI = {
     }>("/api/auth/me", { method: "GET" });
   },
 
+  // Authenticate with Google
+  googleAuth: async (
+    credential: string,
+    guestCart?: any[],
+    guestWishlist?: string[]
+  ) => {
+    return apiRequest<{
+      token: string;
+      user: {
+        id: string;
+        email: string;
+        name: string;
+        mobile: string;
+        profilePhoto: string;
+        role: string;
+        cartItemCount: number;
+        wishlistCount: number;
+        wishlistIds: string[];
+        preferences: any[];
+      };
+    }>("/api/auth/google", {
+      method: "POST",
+      body: JSON.stringify({ credential, guestCart, guestWishlist }),
+    });
+  },
+
   // Logout
   logout: async () => {
     return apiRequest("/api/auth/logout", { method: "POST" });
   },
 };
+
 
 // ============ CART API ============
 export const cartAPI = {
