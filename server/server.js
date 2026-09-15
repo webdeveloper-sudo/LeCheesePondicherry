@@ -30,12 +30,37 @@ const adminRoutes = require("./routes/adminRoutes");
 // Initialize express app
 const app = express();
 
-// Middleware
+// CORS Configuration
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:4173",
+  "http://localhost:3000",
+  "https://cheeseandchocolates.com",
+  "https://www.cheeseandchocolates.com",
+  "https://server.cheeseandchocolates.com",
+  ...(process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean)
+    : []),
+];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN
-      ? process.env.CORS_ORIGIN.split(",")
-      : "http://localhost:5174",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".cheeseandchocolates.com") ||
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+      console.warn(`[CORS] Blocked origin: ${origin}`);
+      return callback(null, false);
+    },
     credentials: true,
   }),
 );

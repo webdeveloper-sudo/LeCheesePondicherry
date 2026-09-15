@@ -46,3 +46,8 @@ service-account.json
 next-env.d.ts
 
 /src/generated/prisma
+
+# archives
+*.rar
+*.zip
+*.tar.gz

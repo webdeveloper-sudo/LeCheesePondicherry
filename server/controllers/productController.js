@@ -27,6 +27,8 @@ const getProducts = async (req, res) => {
   }
 };
 
+const mongoose = require("mongoose");
+
 /**
  * @desc    Get single product
  * @route   GET /api/products/:id
@@ -34,7 +36,14 @@ const getProducts = async (req, res) => {
  */
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const { id } = req.params;
+    const isObjectId = mongoose.Types.ObjectId.isValid(id);
+    const product = await Product.findOne({
+      $or: [
+        ...(isObjectId ? [{ _id: id }] : []),
+        { slug: id },
+      ],
+    });
     if (!product) {
       return res.status(404).json({
         success: false,

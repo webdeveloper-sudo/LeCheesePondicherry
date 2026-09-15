@@ -131,16 +131,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const fetchData = async () => {
       setLoading(true);
-      try {
-        // Fetch Products and Blogs in parallel
-        const [productsRes, blogsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/products`, { timeout: 5000 }),
-          axios.get(`${API_BASE_URL}/api/blogs`, { timeout: 5000 })
-        ]);
+      let productsLoadedSuccess = false;
 
+      // 1. Fetch Products
+      try {
+        const productsRes = await axios.get(`${API_BASE_URL}/api/products`, { timeout: 15000 });
         if (productsRes.data) {
           const fetchedData = productsRes.data.data || productsRes.data;
-          const mappedProducts = fetchedData
+          const mappedProducts = (Array.isArray(fetchedData) ? fetchedData : [])
             .filter((p: any) => p.onHold !== true)
             .map((p: any) => {
               let hash = 0;
@@ -158,33 +156,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
               };
             });
           setAllProducts(mappedProducts);
-          console.log("All Products", mappedProducts);
+          productsLoadedSuccess = true;
           setProductsLoaded(true);
         }
-
-          if (blogsRes.data.success || blogsRes.data) {
-            const fetchedBlogs = blogsRes.data.data || blogsRes.data || [];
-            const publishedBlogs = fetchedBlogs
-              .filter((b: any) => b.isPublished !== false && b.onHold !== true)
-              .map((b: any) => ({
-                ...b,
-                id: b._id,
-                slug: b.slug || b._id,
-              }));
-            setAllBlogs(publishedBlogs);
-          }
-        
-        setIsServerDown(false);
-      } catch (error: any) {
-        console.error("CartProvider: Failed to fetch dynamic data, falling back to static:", error);
-        setIsServerDown(true);
-        // Fallback to static data
+      } catch (prodErr: any) {
+        console.error("CartProvider: Failed to fetch products, falling back to static:", prodErr);
         setAllProducts(staticProducts);
-        setAllBlogs(staticBlogs.map(b => ({ ...b, _id: b.id, slug: b.id })));
         setProductsLoaded(true);
-      } finally {
-        setLoading(false);
       }
+
+      // 2. Fetch Blogs
+      try {
+        const blogsRes = await axios.get(`${API_BASE_URL}/api/blogs`, { timeout: 15000 });
+        if (blogsRes.data?.success || blogsRes.data) {
+          const fetchedBlogs = blogsRes.data.data || blogsRes.data || [];
+          const publishedBlogs = (Array.isArray(fetchedBlogs) ? fetchedBlogs : [])
+            .filter((b: any) => b.isPublished !== false && b.onHold !== true)
+            .map((b: any) => ({
+              ...b,
+              id: b._id,
+              slug: b.slug || b._id,
+            }));
+          setAllBlogs(publishedBlogs);
+        }
+      } catch (blogErr: any) {
+        console.error("CartProvider: Failed to fetch blogs, falling back to static:", blogErr);
+        setAllBlogs(staticBlogs.map((b) => ({ ...b, _id: b.id, slug: b.id })));
+      }
+
+      setIsServerDown(!productsLoadedSuccess);
+      setLoading(false);
     };
     fetchData();
   }, []);
