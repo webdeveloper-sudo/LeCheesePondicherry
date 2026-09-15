@@ -19,6 +19,9 @@ import {
   X,
   Phone,
   User as UserIcon,
+  Tag,
+  Gift,
+  Sparkles,
 } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
 import { calculateShipping } from "@/lib/shippingUtils";
@@ -56,7 +59,7 @@ export default function CheckoutPage() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipTax, setShowTooltipTax] = useState(false);
 
-    const { addToast } = useToastStore();
+  const { addToast } = useToastStore();
   // Address state
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
@@ -77,12 +80,14 @@ export default function CheckoutPage() {
   });
   const [gpsCoords, setGpsCoords] = useState<string>("Not detected");
 
-
+  // Coupon & Settings State
   const [settings, setSettings] = useState<any>(null);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [couponType, setCouponType] = useState<"first_time" | "flash_sale" | null>(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -98,31 +103,86 @@ export default function CheckoutPage() {
     fetchSettings();
   }, []);
 
-  const isFlashSaleActive = settings?.flashSaleEnabled && settings.validTime && new Date() < new Date(settings.validTime);
+  // Restore provisional coupon or active coupon from session
+  useEffect(() => {
+    const savedCoupon =
+      sessionStorage.getItem("activeCouponCode") ||
+      localStorage.getItem("provisionalCoupon");
 
-  const handleApplyCoupon = () => {
-    if (!isFlashSaleActive) {
-      addToast("No active flash sale promotions at this time.", "error");
+    if (savedCoupon && !isCouponApplied) {
+      setCouponCode(savedCoupon);
+      if (subtotal > 0) {
+        executeApplyCoupon(savedCoupon, false);
+      }
+    }
+  }, [subtotal]);
+
+  const executeApplyCoupon = async (codeToApply: string, showToast = true) => {
+    const trimmed = codeToApply.trim().toUpperCase();
+    if (!trimmed) {
+      if (showToast) addToast("Please enter a coupon code", "error");
       return;
     }
-    if (couponCode.trim().toUpperCase() === settings.couponName.trim().toUpperCase()) {
-      const discountAmountVal = Math.round(subtotal * (settings.discountRate / 100));
-      setAppliedDiscount(discountAmountVal);
-      setAppliedCoupon(settings.couponName);
-      setIsCouponApplied(true);
-      addToast(`Coupon "${settings.couponName}" applied successfully!`, "success");
-    } else {
-      addToast("Invalid coupon code.", "error");
+
+    setValidatingCoupon(true);
+    try {
+      const res = await orderAPI.validateCoupon(trimmed, subtotal);
+      if (res.success && res.data && res.data.data) {
+        const couponData = res.data.data;
+        setAppliedDiscount(couponData.discountAmount);
+        setAppliedCoupon(couponData.couponCode);
+        setCouponType(couponData.type);
+        setIsCouponApplied(true);
+        sessionStorage.setItem("activeCouponCode", couponData.couponCode);
+        if (showToast) {
+          addToast(couponData.message || `Coupon "${couponData.couponCode}" applied successfully!`, "success");
+        }
+      } else {
+        setIsCouponApplied(false);
+        setAppliedDiscount(0);
+        setAppliedCoupon("");
+        setCouponType(null);
+        sessionStorage.removeItem("activeCouponCode");
+        if (showToast) {
+          addToast(res.message || "Invalid coupon code", "error");
+        }
+      }
+    } catch (err: any) {
+      setIsCouponApplied(false);
+      setAppliedDiscount(0);
+      setAppliedCoupon("");
+      setCouponType(null);
+      sessionStorage.removeItem("activeCouponCode");
+      if (showToast) {
+        addToast(err?.message || "Failed to validate coupon", "error");
+      }
+    } finally {
+      setValidatingCoupon(false);
     }
+  };
+
+  const handleApplyCoupon = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    executeApplyCoupon(couponCode, true);
   };
 
   const handleRemoveCoupon = () => {
     setCouponCode("");
     setAppliedCoupon("");
     setAppliedDiscount(0);
+    setCouponType(null);
     setIsCouponApplied(false);
+    sessionStorage.removeItem("activeCouponCode");
+    localStorage.removeItem("provisionalCoupon");
     addToast("Coupon removed.", "info");
   };
+
+  // Recalculate discount if subtotal changes while coupon is applied
+  useEffect(() => {
+    if (isCouponApplied && appliedCoupon && subtotal > 0) {
+      executeApplyCoupon(appliedCoupon, false);
+    }
+  }, [subtotal]);
 
   const discount = isCouponApplied ? appliedDiscount : 0;
 
@@ -990,12 +1050,12 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 justify-center">
-                  <Link to="/user" className="btn btn-primary px-8">
-                    View My Orders
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to={`/thank-you?order_id=${orderResult?.orderId || ""}`} className="btn btn-primary px-8">
+                    View Full Order Details & Receipt
                   </Link>
-                  <Link to="/shop" className="btn btn-secondary px-8">
-                    Keep Shopping
+                  <Link to="/orders" className="btn btn-secondary px-8">
+                    My Orders
                   </Link>
                 </div>
               </div>
@@ -1042,41 +1102,7 @@ export default function CheckoutPage() {
                   })}
                 </div>
 
-                {isFlashSaleActive && (
-                  <div className="border-t border-gray-100 pt-6 mb-4">
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                      Promo Code / Coupon Code
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        disabled={isCouponApplied}
-                        placeholder={settings?.couponName ? `e.g. ${settings.couponName}` : "Enter Coupon"}
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none uppercase font-semibold text-gray-700 disabled:bg-gray-100"
-                      />
-                      {isCouponApplied ? (
-                        <button
-                          type="button"
-                          onClick={handleRemoveCoupon}
-                          className="px-3 py-2 text-xs font-bold bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors shrink-0"
-                        >
-                          Remove
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={handleApplyCoupon}
-                          className="px-4 py-2 text-xs font-bold bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors shrink-0"
-                        >
-                          Apply
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-
+                {/* Cost Breakdown Details */}
                 <div className="border-t border-gray-100 pt-6 space-y-3">
                   <div className="flex justify-between text-sm text-text-secondary">
                     <span>Subtotal</span>
@@ -1085,8 +1111,11 @@ export default function CheckoutPage() {
                     </span>
                   </div>
                   {discount > 0 && (
-                    <div className="flex justify-between text-sm text-green font-bold">
-                      <span>Discount ({appliedCoupon})</span>
+                    <div className="flex justify-between text-sm text-emerald-600 font-bold bg-emerald-50/60 px-3 py-2 rounded-lg border border-emerald-100">
+                      <span className="flex items-center gap-1.5">
+                        <Tag size={14} className="text-emerald-600 shrink-0" />
+                        <span>Discount ({appliedCoupon})</span>
+                      </span>
                       <span>-₹{discount.toLocaleString()}</span>
                     </div>
                   )}

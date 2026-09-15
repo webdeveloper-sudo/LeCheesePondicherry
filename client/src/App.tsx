@@ -37,6 +37,7 @@ import SingleBlogDetails from "./pages/blogs/SingleBlogDetails";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
+import ThankYouPage from "./pages/ThankYouPage";
 import YourOrders from "./pages/user/YourOrders";
 import NotFoundPage from "./pages/NotFoundPage";
 import ReturnPolicyPage from "./pages/ReturnPolicyPage";
@@ -97,6 +98,7 @@ export default function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/checkout/status" element={<OrderStatusPage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/gifts" element={<GiftsPage />} />
@@ -120,6 +122,7 @@ export default function App() {
           <Route path="/orders" element={<YourOrders />} />
           <Route path="/dummy" element={<DummyPage />} />
           <Route path="/admin" element={<AdminLoginPage />} />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           {/* 404 Page */}
           <Route path="*" element={<NotFoundPage />} />

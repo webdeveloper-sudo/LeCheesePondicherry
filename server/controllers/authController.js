@@ -572,35 +572,47 @@ const googleAuth = async (req, res) => {
       });
     }
 
-    // Merge guest cart items
+    // Ensure cart and wishlist arrays exist
+    if (!user.cart) user.cart = [];
+    if (!user.wishlist) user.wishlist = [];
+
+    // Merge guest cart items safely
     if (guestCart && Array.isArray(guestCart)) {
       for (const guestItem of guestCart) {
+        if (!guestItem || !guestItem.productId) continue;
+        const itemWeight = guestItem.weight || "200g";
         const existingItem = user.cart.find(
           (item) =>
-            item.productId === guestItem.productId &&
-            item.weight === guestItem.weight,
+            item &&
+            String(item.productId) === String(guestItem.productId) &&
+            item.weight === itemWeight,
         );
         if (existingItem) {
-          existingItem.quantity += guestItem.quantity;
+          existingItem.quantity = (existingItem.quantity || 0) + (Number(guestItem.quantity) || 1);
         } else {
           user.cart.push({
-            productId: guestItem.productId,
-            quantity: guestItem.quantity,
-            weight: guestItem.weight || "200g",
-            price: guestItem.price || 0,
+            productId: String(guestItem.productId),
+            quantity: Number(guestItem.quantity) || 1,
+            weight: itemWeight,
+            price: Number(guestItem.price) || 0,
             addedAt: new Date(),
           });
         }
       }
     }
 
-    // Merge guest wishlist items
+    // Merge guest wishlist items safely
     if (guestWishlist && Array.isArray(guestWishlist)) {
       for (const guestId of guestWishlist) {
-        const exists = user.wishlist.some((item) => item.productId === guestId);
+        if (!guestId) continue;
+        const idStr = typeof guestId === "object" ? String(guestId.productId || "") : String(guestId);
+        if (!idStr) continue;
+        const exists = user.wishlist.some(
+          (item) => item && String(item.productId) === idStr
+        );
         if (!exists) {
           user.wishlist.push({
-            productId: guestId,
+            productId: idStr,
             addedAt: new Date(),
           });
         }
@@ -619,7 +631,7 @@ const googleAuth = async (req, res) => {
       role: user.role,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Google login successful",
       token,
@@ -631,7 +643,7 @@ const googleAuth = async (req, res) => {
         profilePhoto: user.profilePhoto,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
-        cartItemCount: user.getCartItemCount(),
+        cartItemCount: typeof user.getCartItemCount === "function" ? user.getCartItemCount() : (user.cart?.length || 0),
         wishlistCount: user.wishlist?.length || 0,
         wishlistIds: user.wishlist?.map((item) => item.productId) || [],
         preferences: user.preferences || [],
@@ -639,9 +651,9 @@ const googleAuth = async (req, res) => {
     });
   } catch (error) {
     console.error("Google Auth error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Failed to sign in with Google. Please try again.",
+      message: error.message || "Failed to sign in with Google. Please try again.",
     });
   }
 };

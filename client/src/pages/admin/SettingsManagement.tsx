@@ -2,19 +2,26 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { useToastStore } from "@/store/useToastStore";
-import { Save, AlertCircle, ShieldAlert, Sparkles, Truck } from "lucide-react";
+import { Save, AlertCircle, ShieldAlert, Sparkles, Truck, Gift, Tag, CheckCircle2 } from "lucide-react";
 
 export default function SettingsManagement() {
   const { addToast } = useToastStore();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Form State
+  // Flash Sale Form State
   const [flashSaleEnabled, setFlashSaleEnabled] = useState(false);
   const [couponName, setCouponName] = useState("");
   const [validTime, setValidTime] = useState("");
   const [discountRate, setDiscountRate] = useState(0);
+
+  // Delivery Charges Form State
   const [deliveryChargesEnabled, setDeliveryChargesEnabled] = useState(true);
+
+  // First-Time Customer Offer Form State
+  const [firstTimeEnabled, setFirstTimeEnabled] = useState(true);
+  const [firstTimeCouponCode, setFirstTimeCouponCode] = useState("CHEESE15");
+  const [firstTimeDiscountPercent, setFirstTimeDiscountPercent] = useState(15);
 
   useEffect(() => {
     fetchSettings();
@@ -38,6 +45,7 @@ export default function SettingsManagement() {
           validTime,
           discountRate,
           deliveryChargesEnabled,
+          firstTimeOffer,
         } = response.data.data;
 
         setFlashSaleEnabled(flashSaleEnabled || false);
@@ -47,6 +55,14 @@ export default function SettingsManagement() {
         setDeliveryChargesEnabled(
           deliveryChargesEnabled !== undefined ? deliveryChargesEnabled : true
         );
+
+        if (firstTimeOffer) {
+          setFirstTimeEnabled(firstTimeOffer.isEnabled !== undefined ? firstTimeOffer.isEnabled : true);
+          setFirstTimeCouponCode(firstTimeOffer.couponCode || "CHEESE15");
+          setFirstTimeDiscountPercent(
+            firstTimeOffer.discountPercent !== undefined ? firstTimeOffer.discountPercent : 15
+          );
+        }
       }
     } catch (error: any) {
       console.error("Failed to fetch settings:", error);
@@ -71,6 +87,11 @@ export default function SettingsManagement() {
         validTime: validTime ? new Date(validTime).toISOString() : null,
         discountRate: Number(discountRate),
         deliveryChargesEnabled,
+        firstTimeOffer: {
+          isEnabled: firstTimeEnabled,
+          couponCode: (firstTimeCouponCode || "CHEESE15").trim().toUpperCase(),
+          discountPercent: Math.min(100, Math.max(1, Number(firstTimeDiscountPercent) || 15)),
+        },
       };
 
       const response = await axios.put(
@@ -119,6 +140,119 @@ export default function SettingsManagement() {
       </div>
 
       <form onSubmit={handleSave} className="space-y-8">
+        {/* First-Time Customer Offer Box */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-gray-200 bg-emerald-50/50 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-100 rounded-lg text-emerald-700">
+                <Gift size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">
+                  First-Time Customer Offer
+                </h3>
+                <p className="text-xs text-gray-500">
+                  Manage the homepage offer popup and welcome coupon code for new customers.
+                </p>
+              </div>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-bold uppercase ${firstTimeEnabled ? "text-emerald-700" : "text-gray-500"}`}>
+                {firstTimeEnabled ? "Enabled" : "Disabled"}
+              </span>
+              <button
+                type="button"
+                onClick={() => setFirstTimeEnabled(!firstTimeEnabled)}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+                  firstTimeEnabled ? "bg-emerald-600" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    firstTimeEnabled ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          <div className={`p-6 space-y-6 transition-opacity duration-300 ${firstTimeEnabled ? "opacity-100" : "opacity-50"}`}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Coupon Code */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 uppercase mb-2">
+                  First-Time Offer Coupon Code
+                </label>
+                <input
+                  type="text"
+                  required={firstTimeEnabled}
+                  value={firstTimeCouponCode}
+                  onChange={(e) => setFirstTimeCouponCode(e.target.value.toUpperCase().replace(/\s+/g, ""))}
+                  placeholder="e.g. CHEESE15"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none uppercase font-semibold text-gray-800"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Unique coupon code entered by customer or clicked at checkout.
+                </p>
+              </div>
+
+              {/* Discount Percentage */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 uppercase mb-2">
+                  First-Time Discount Percentage (%)
+                </label>
+                <input
+                  type="number"
+                  required={firstTimeEnabled}
+                  min={1}
+                  max={100}
+                  value={firstTimeDiscountPercent}
+                  onChange={(e) => setFirstTimeDiscountPercent(Math.min(100, Math.max(1, Number(e.target.value) || 1)))}
+                  placeholder="e.g. 15"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-semibold text-gray-800"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Percentage discount deducted from the cart merchandise subtotal.
+                </p>
+              </div>
+            </div>
+
+            {/* Live Customer Preview Pill */}
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+              <div className="flex items-center gap-2 mb-2 text-emerald-900 font-bold text-xs uppercase tracking-wide">
+                <Tag size={14} /> Live Customer Experience Preview
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-emerald-300 rounded-lg shadow-sm text-emerald-800 text-xs font-semibold">
+                  <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-mono font-bold">
+                    {firstTimeCouponCode || "CHEESE15"}
+                  </span>
+                  <span>• {firstTimeDiscountPercent}% OFF YOUR FIRST ORDER</span>
+                </div>
+                <span className="text-xs text-emerald-700">
+                  {firstTimeEnabled
+                    ? "✓ Active: Popup will appear on homepage scroll & coupon tag will show at checkout"
+                    : "✕ Disabled: Popup is hidden & coupon code is rejected"}
+                </span>
+              </div>
+            </div>
+
+            {/* Eligibility Note */}
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-600 text-xs flex gap-3">
+              <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-gray-800">Automatic Eligibility Protection</p>
+                <p className="mt-0.5">
+                  The backend automatically validates user order history. If an existing customer who has previously placed a completed order attempts to use this coupon, it will be securely rejected.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Flash Sale Banner & Coupon Settings Box */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-200 bg-gray-50 flex items-center justify-between">

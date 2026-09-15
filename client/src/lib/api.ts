@@ -402,6 +402,24 @@ export const userAPI = {
 
 // ============ ORDER API ============
 export const orderAPI = {
+  validateCoupon: async (couponCode: string, orderAmount: number) => {
+    return apiRequest<{
+      success: boolean;
+      message?: string;
+      data?: {
+        couponCode: string;
+        discountPercent: number;
+        discountAmount: number;
+        type: "first_time" | "flash_sale";
+        requiresLoginForFinal?: boolean;
+        message: string;
+      };
+    }>("/api/orders/validate-coupon", {
+      method: "POST",
+      body: JSON.stringify({ couponCode, orderAmount }),
+    });
+  },
+
   createOrder: async (orderData: any) => {
     return apiRequest<{
       success: boolean;
@@ -436,6 +454,65 @@ export const orderAPI = {
     });
   },
 };
+
+// ============ SETTINGS API ============
+export const settingsAPI = {
+  getSettings: async () => {
+    return apiRequest<{
+      success: boolean;
+      data: {
+        flashSaleEnabled?: boolean;
+        couponName?: string;
+        validTime?: string | null;
+        discountRate?: number;
+        deliveryChargesEnabled?: boolean;
+        firstTimeOffer?: {
+          isEnabled: boolean;
+          couponCode: string;
+          discountPercent: number;
+        };
+      };
+    }>("/api/settings", {
+      method: "GET",
+    });
+  },
+
+  updateSettings: async (settingsData: any) => {
+    return apiRequest<{
+      success: boolean;
+      message?: string;
+      data: any;
+    }>("/api/settings", {
+      method: "PUT",
+      body: JSON.stringify(settingsData),
+    });
+  },
+};
+
+// ============ ENQUIRY & LEAD API ============
+export const enquiryAPI = {
+  submitContact: async (data: { name: string; email: string; message: string; phone?: string; subject?: string }) => {
+    return apiRequest<{ success: boolean; message: string; referenceId?: string }>("/api/enquiries/contact", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  submitWholesale: async (data: any) => {
+    return apiRequest<{ success: boolean; message: string; referenceId?: string }>("/api/enquiries/wholesale", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  submitOfferLead: async (email: string, couponCode?: string) => {
+    return apiRequest<{ success: boolean; message: string; couponCode?: string }>("/api/enquiries/offer-lead", {
+      method: "POST",
+      body: JSON.stringify({ email, couponCode }),
+    });
+  },
+};
+
 
 // ============ ADMIN API ============
 export const adminAPI = {
@@ -516,6 +593,249 @@ export const adminAPI = {
       method: "DELETE",
     });
   },
+
+  // Admin Account & Permission Management (Super Admin Only)
+  getAdmins: async () => {
+    return apiRequest<{ success: boolean; data: any[] }>("/api/admin/admins", {
+      method: "GET",
+    });
+  },
+
+  createAdmin: async (adminData: {
+    name: string;
+    email: string;
+    password?: string;
+    permissions: string[];
+    isActive?: boolean;
+  }) => {
+    return apiRequest<{ success: boolean; message: string; data: any }>(
+      "/api/admin/admins",
+      {
+        method: "POST",
+        body: JSON.stringify(adminData),
+      }
+    );
+  },
+
+  updateAdmin: async (
+    id: string,
+    adminData: {
+      name?: string;
+      email?: string;
+      password?: string;
+      permissions?: string[];
+      isActive?: boolean;
+    }
+  ) => {
+    return apiRequest<{ success: boolean; message: string; data: any }>(
+      `/api/admin/admins/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(adminData),
+      }
+    );
+  },
+
+  deleteAdmin: async (id: string) => {
+    return apiRequest<{ success: boolean; message: string }>(
+      `/api/admin/admins/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+  },
+};
+
+// Customer Reviews API
+export const reviewAPI = {
+  // Get all reviews for a product with statistics
+  getProductReviews: async (
+    productId: string,
+    params?: { star?: number | string; withImages?: boolean; verified?: boolean; sort?: string }
+  ) => {
+    const query = new URLSearchParams();
+    if (params?.star) query.append("star", String(params.star));
+    if (params?.withImages) query.append("withImages", "true");
+    if (params?.verified) query.append("verified", "true");
+    if (params?.sort) query.append("sort", params.sort);
+
+    const queryString = query.toString() ? `?${query.toString()}` : "";
+    return apiRequest<{
+      success: boolean;
+      data: {
+        reviews: any[];
+        stats: {
+          averageRating: number;
+          totalReviews: number;
+          starCounts: Record<number, number>;
+          starPercentages: Record<number, number>;
+          totalWithImages: number;
+        };
+        allImages: Array<{
+          url: string;
+          reviewId: string;
+          userName: string;
+          rating: number;
+          createdAt: string;
+          comment: string;
+        }>;
+        userReview: any | null;
+      };
+    }>(`/api/reviews/product/${productId}${queryString}`, {
+      method: "GET",
+    });
+  },
+
+  // Create review
+  createReview: async (
+    productId: string,
+    reviewData: {
+      rating: number;
+      title?: string;
+      comment: string;
+      userArea?: string;
+      imagesBase64?: Array<{ name: string; mimeType: string; data: string }>;
+    }
+  ) => {
+    return apiRequest<{ success: boolean; message: string; data: any }>(
+      `/api/reviews/product/${productId}`,
+      {
+        method: "POST",
+        body: JSON.stringify(reviewData),
+      }
+    );
+  },
+
+  // Update existing review (owner only)
+  updateReview: async (
+    reviewId: string,
+    reviewData: {
+      rating?: number;
+      title?: string;
+      comment?: string;
+      existingImages?: string[];
+      imagesBase64?: Array<{ name: string; mimeType: string; data: string }>;
+    }
+  ) => {
+    return apiRequest<{ success: boolean; message: string; data: any }>(
+      `/api/reviews/${reviewId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(reviewData),
+      }
+    );
+  },
+
+  // Delete review (owner or admin)
+  deleteReview: async (reviewId: string) => {
+    return apiRequest<{ success: boolean; message: string }>(
+      `/api/reviews/${reviewId}`,
+      {
+        method: "DELETE",
+      }
+    );
+  },
+
+  // Vote review as helpful
+  voteHelpful: async (reviewId: string) => {
+    return apiRequest<{ success: boolean; voted: boolean; helpfulCount: number }>(
+      `/api/reviews/${reviewId}/helpful`,
+      {
+        method: "POST",
+      }
+    );
+  },
+
+  // Admin get all reviews
+  getAllReviewsAdmin: async (params?: { search?: string; rating?: number; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.search) query.append("search", params.search);
+    if (params?.rating) query.append("rating", String(params.rating));
+    if (params?.page) query.append("page", String(params.page));
+    if (params?.limit) query.append("limit", String(params.limit));
+
+    const queryString = query.toString() ? `?${query.toString()}` : "";
+    return apiRequest<{ success: boolean; count: number; total: number; data: any[] }>(
+      `/api/reviews/admin/all${queryString}`,
+      {
+        method: "GET",
+      }
+    );
+  },
+};
+
+// ============ BANNER & BREADCRUMB API ============
+export interface BannerSlideItem {
+  image: string;
+  title?: string;
+}
+
+export interface BannerConfigData {
+  _id?: string;
+  pageKey: string;
+  pageName: string;
+  variant: "BreadcrumbSlider" | "BannerAndBreadCrumb";
+  title?: string;
+  images: string[];
+  slides?: BannerSlideItem[];
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export const bannerAPI = {
+  // Get all banner configs
+  getAllBanners: async () => {
+    return apiRequest<{ success: boolean; data: BannerConfigData[] }>("/api/banners", {
+      method: "GET",
+    });
+  },
+
+  // Get banner config by page key
+  getBannerByPage: async (pageKey: string) => {
+    const safeKey = encodeURIComponent(pageKey.startsWith("/") ? pageKey.slice(1) : pageKey);
+    return apiRequest<{ success: boolean; data: BannerConfigData }>(`/api/banners/${safeKey}`, {
+      method: "GET",
+    });
+  },
+
+  // Update banner config for a page
+  updateBanner: async (
+    pageKey: string,
+    data: {
+      pageName?: string;
+      variant?: "BreadcrumbSlider" | "BannerAndBreadCrumb";
+      title?: string;
+      images?: string[];
+      slides?: BannerSlideItem[];
+      isActive?: boolean;
+    }
+  ) => {
+    const safeKey = encodeURIComponent(pageKey.startsWith("/") ? pageKey.slice(1) : pageKey);
+    return apiRequest<{ success: boolean; message: string; data: BannerConfigData }>(
+      `/api/banners/${safeKey}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }
+    );
+  },
+
+  // Upload banner image
+  uploadBannerImage: async (imagePayload: {
+    base64Data: string;
+    fileName?: string;
+    mimeType?: string;
+  }) => {
+    return apiRequest<{ success: boolean; message: string; url: string }>(
+      "/api/banners/upload-image",
+      {
+        method: "POST",
+        body: JSON.stringify(imagePayload),
+      }
+    );
+  },
 };
 
 export { API_BASE_URL, getAuthHeaders, apiRequest };
+

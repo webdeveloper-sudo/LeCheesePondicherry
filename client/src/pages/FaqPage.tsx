@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import faqBanner from "@/assets/images/process-hero-new.webp";
 import {
   MotionContainer,
@@ -84,8 +84,13 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-bg-cream-light">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="FAQ" img={faqBanner} />
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/faq"
+        fallbackTitle="Frequently Asked Questions"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={faqBanner}
+      />
 
       <div className="container mx-auto px-4 max-w-4xl py-16">
         <MotionContainer className="text-center mb-16" stagger>

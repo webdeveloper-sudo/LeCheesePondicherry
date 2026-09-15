@@ -25,15 +25,18 @@ export default function AdminLogin() {
       const result = await adminAPI.login(formData.email, formData.password);
 
       if (result.success && result.data) {
-        const { token, user } = result.data;
+        const payload = (result.data as any)?.data || result.data;
+        const { token, user } = payload;
 
-        // Set Store with 7-day session logic
+        // Set Store with 7-day session logic and RBAC permissions
         setUser({
-          uid: user.id,
+          uid: user.id || user._id,
           email: user.email,
           role: "admin",
           token: token,
-          name: "Admin",
+          name: user.name || "Administrator",
+          permissions: user.permissions || ["orders", "users", "products", "reviews", "blogs", "settings"],
+          isSuperAdmin: user.isSuperAdmin === true || user.email === "vp.expansions@hopemarket.in",
           loginAt: Date.now(), // Store current timestamp for session tracking
         });
 

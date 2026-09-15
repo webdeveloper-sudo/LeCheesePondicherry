@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { authAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
 import { useToastStore } from "@/store/useToastStore";
@@ -54,6 +54,17 @@ const sliderImages = [
 
 export default function UserLogin() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+
+  const getDestination = (role?: string) => {
+    if (redirectParam) {
+      const decoded = decodeURIComponent(redirectParam);
+      return decoded.startsWith("/") ? decoded : `/${decoded}`;
+    }
+    return role === "admin" ? "/admin/dashboard" : "/shop";
+  };
+
   const { setUser, fetchWishlist, wishlistIds } = useUserStore();
   const { isServerDown, items, syncWithBackend } = useCart();
   const [step, setStep] = useState<
@@ -360,7 +371,7 @@ export default function UserLogin() {
         }
       }
 
-      navigate("/shop");
+      navigate(getDestination());
     } catch (err: any) {
       setError(err.message || "Failed to save profile");
     } finally {
@@ -402,9 +413,7 @@ export default function UserLogin() {
         await syncWithBackend();
         await fetchWishlist();
 
-        const redirectPath =
-          user.role === "admin" ? "/admin/dashboard" : "/shop";
-        navigate(redirectPath);
+        navigate(getDestination(user.role));
       } else {
         setError(result.message || "Invalid email or password");
       }

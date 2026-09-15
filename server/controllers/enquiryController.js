@@ -67,7 +67,49 @@ const handleWholesaleEnquiry = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Handle Offer Lead capture from Homepage Popup
+ * @route   POST /api/enquiries/offer-lead
+ * @access  Public
+ */
+const handleOfferLead = async (req, res) => {
+  try {
+    const { email, couponCode } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide an email address",
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid email address",
+      });
+    }
+
+    console.log(`[OfferLead] New first-time offer lead captured: ${email}, Coupon: ${couponCode || 'CHEESE15'}`);
+
+    return res.status(200).json({
+      success: true,
+      message: "Offer claimed successfully! Use your coupon code at checkout.",
+      couponCode: couponCode || "CHEESE15",
+    });
+  } catch (error) {
+    console.error("Error capturing offer lead:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to process request. Please try again.",
+    });
+  }
+};
+
 module.exports = {
   handleContactEnquiry,
   handleWholesaleEnquiry,
+  handleOfferLead,
 };
+

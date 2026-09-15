@@ -1,19 +1,22 @@
 import React from "react";
-import { motion } from "framer-motion";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import galleryBanner from "@/assets/images/process-hero-new.webp";
 import MasonryGallery from "@/components/portfolio/MasonryGallery";
-import { headingVariant, viewportConfig } from "@/animations/variants";
 
 const GalleryPage: React.FC = () => {
   return (
-    <div className="bg-white min-h-screen ">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="Visual Portfolio" img={galleryBanner} />
+    <div className="bg-white min-h-screen">
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/portfolio/gallery"
+        fallbackTitle="Visual Gallery"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={galleryBanner}
+      />
 
-     <section className="py-20">
-       <MasonryGallery />
-     </section>
+      <section className="py-20">
+        <MasonryGallery />
+      </section>
     </div>
   );
 };

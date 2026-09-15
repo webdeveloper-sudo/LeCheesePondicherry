@@ -7,14 +7,26 @@ import ProductManagement from "@/pages/admin/ProductManagement";
 import OrderManagement from "@/pages/admin/OrderManagement";
 import BlogManagement from "@/pages/admin/BlogManagement";
 import SettingsManagement from "@/pages/admin/SettingsManagement";
-import { LogOut, Menu } from "lucide-react";
+import ReviewManagement from "@/pages/admin/ReviewManagement";
+import AdminManagement from "@/pages/admin/AdminManagement";
+import BannerManagement from "@/pages/admin/BannerManagement";
+import { LogOut, Menu, ShieldAlert } from "lucide-react";
 import { useToastStore } from "@/store/useToastStore";
 
+const SUPER_ADMIN_EMAIL = "vp.expansions@hopemarket.in";
+
 export default function AdminDashboardPage() {
-  const { role, logout } = useUserStore();
+  const { role, email, permissions = [], isSuperAdmin: isSuperAdminStore, logout } = useUserStore();
   const navigate = useNavigate();
   const { addToast } = useToastStore();
-  const [activeTab, setActiveTab] = useState("products");
+
+  const isSuperAdmin = email === SUPER_ADMIN_EMAIL || isSuperAdminStore === true;
+
+  // Initialize active tab to first permitted page
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    if (isSuperAdmin) return "products";
+    return permissions.length > 0 ? permissions[0] : "products";
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -43,12 +55,51 @@ export default function AdminDashboardPage() {
     }
   }, [role, navigate]);
 
+  // Enforce tab permissions: if user tries to access a tab they don't have permission for
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      if (activeTab === "admins" || (permissions.length > 0 && !permissions.includes(activeTab))) {
+        const fallbackTab = permissions.length > 0 ? permissions[0] : "products";
+        setActiveTab(fallbackTab);
+      }
+    }
+  }, [activeTab, permissions, isSuperAdmin]);
+
   const handleLogout = async () => {
     await logout();
     navigate("/admin");
   };
 
   const renderContent = () => {
+    // Super Admin Exclusive Tab
+    if (activeTab === "admins") {
+      if (!isSuperAdmin) {
+        return (
+          <div className="p-12 text-center flex flex-col items-center justify-center min-h-[60vh]">
+            <ShieldAlert size={48} className="text-red-500 mb-4" />
+            <h2 className="text-xl font-bold text-gray-800">Access Denied</h2>
+            <p className="text-sm text-gray-500 max-w-md mt-1">
+              Admin Management is exclusively restricted to the Super Administrator ({SUPER_ADMIN_EMAIL}).
+            </p>
+          </div>
+        );
+      }
+      return <AdminManagement />;
+    }
+
+    // Permission Guard for non-super admins
+    if (!isSuperAdmin && permissions.length > 0 && !permissions.includes(activeTab)) {
+      return (
+        <div className="p-12 text-center flex flex-col items-center justify-center min-h-[60vh]">
+          <ShieldAlert size={48} className="text-amber-500 mb-4" />
+          <h2 className="text-xl font-bold text-gray-800">Page Access Restricted</h2>
+          <p className="text-sm text-gray-500 max-w-md mt-1">
+            You do not have permission to view the {activeTab} management section. Please contact your Super Administrator.
+          </p>
+        </div>
+      );
+    }
+
     switch (activeTab) {
       case "orders":
         return <OrderManagement />;
@@ -56,8 +107,12 @@ export default function AdminDashboardPage() {
         return <UserManagement />;
       case "products":
         return <ProductManagement />;
+      case "reviews":
+        return <ReviewManagement />;
       case "blogs":
         return <BlogManagement />;
+      case "banners":
+        return <BannerManagement />;
       case "settings":
         return <SettingsManagement />;
       default:

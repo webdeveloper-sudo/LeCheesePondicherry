@@ -5,7 +5,7 @@ import SubmissionSuccessModal from "@/components/ui/SubmissionSuccessModal";
 import { useState, useRef, useEffect } from "react";
 import { MotionHeading, MotionText } from "@/components/ui/MotionPrimitives";
 import { fadeUp } from "@/animations/variants";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import wholesaleBanner from "@/assets/images/process-hero-new.webp";
 import fssai from "@/assets/icons/fssai.webp";
 import chef from "@/assets/icons/chef.webp";
@@ -86,8 +86,13 @@ export default function WholesalePage() {
   return (
     <>
       <div className="min-h-screen bg-bg-cream-light">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="Wholesale & Partnerships" img={wholesaleBanner} />
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/wholesale"
+        fallbackTitle="Wholesale & Partnerships"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={wholesaleBanner}
+      />
 
       {/* Signature Collection Intro Section */}
       {/* <section className="py-12 md:py-20 bg-pattern relative z-10 w-full">

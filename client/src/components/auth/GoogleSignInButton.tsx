@@ -87,8 +87,12 @@ export default function GoogleSignInButton({
         if (onSuccess) {
           onSuccess();
         } else {
-          const redirectPath =
-            user.role === "admin" ? "/admin/dashboard" : "/shop";
+          const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+          let redirectPath = user.role === "admin" ? "/admin/dashboard" : "/shop";
+          if (redirectParam) {
+            const decoded = decodeURIComponent(redirectParam);
+            redirectPath = decoded.startsWith("/") ? decoded : `/${decoded}`;
+          }
           navigate(redirectPath);
         }
       } else {

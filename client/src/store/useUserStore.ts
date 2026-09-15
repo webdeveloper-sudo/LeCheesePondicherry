@@ -17,6 +17,8 @@ interface UserState {
   mobile?: string;
   countryCode?: string;
   addresses: any[];
+  permissions?: string[];
+  isSuperAdmin?: boolean;
   preferences: any[]; // Current mode's list
   staticPreferences: any[];
   dynamicPreferences: any[];
@@ -64,6 +66,8 @@ export const useUserStore = create<UserState>()(
       mobile: "",
       countryCode: "+91",
       addresses: [],
+      permissions: ["orders", "users", "products", "reviews", "blogs", "settings"],
+      isSuperAdmin: false,
       preferences: [],
       staticPreferences: [],
       dynamicPreferences: [],

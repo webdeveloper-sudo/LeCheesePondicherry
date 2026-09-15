@@ -7,8 +7,12 @@ const {
   getOrders,
   updateOrder,
   deleteOrder,
+  validateCoupon,
 } = require("../controllers/orderController");
-const { protect, adminOnly } = require("../middleware/authMiddleware");
+const { protect, optionalAuth, adminOnly } = require("../middleware/authMiddleware");
+
+// Public / Optional Auth Routes
+router.post("/validate-coupon", optionalAuth, validateCoupon);
 
 // User Routes
 router.post("/session", protect, createPaymentSession);

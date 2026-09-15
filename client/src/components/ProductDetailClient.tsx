@@ -6,8 +6,9 @@ import { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useUserStore } from "@/store/useUserStore";
 import { useToastStore } from "@/store/useToastStore";
-import { BookOpenText, CookingPot, Heart, UtensilsCrossed, X } from "lucide-react";
+import { BookOpenText, Check, CookingPot, Heart, ShoppingCart, UtensilsCrossed, X, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
+import ProductReviewsSection from "./reviews/ProductReviewsSection";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -102,7 +103,8 @@ export default function ProductDetailClient({
 
   const handleBuyNow = () => {
     addToCart(product.id, quantity, selectedWeight, selectedPrice);
-    navigate("/checkout");
+    addToast(`${quantity}x ${product.name} added to cart!`, "success");
+    navigate("/cart");
   };
 
   const handleWishlistToggle = async () => {
@@ -211,22 +213,25 @@ export default function ProductDetailClient({
               </h1>
 
               {/* Rating */}
-              <div className="flex items-center gap-2 mb-4">
+              <a
+                href="#customer-reviews"
+                className="inline-flex items-center gap-2 mb-4 group cursor-pointer"
+              >
                 <div className="flex text-[#C9A961]">
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-5 h-5 ${i < product.rating ? "fill-current" : "fill-gray-300"}`}
+                      className={`w-5 h-5 ${i < Math.round(product.rating || 5) ? "fill-current" : "fill-gray-300"}`}
                       viewBox="0 0 20 20"
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
                 </div>
-                <span className="text-sm text-text-secondary">
-                  ({product.reviewCount} reviews)
+                <span className="text-sm text-text-secondary group-hover:text-brand-green group-hover:underline">
+                  ({product.reviewCount || 0} reviews)
                 </span>
-              </div>
+              </a>
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
@@ -329,38 +334,35 @@ export default function ProductDetailClient({
                 </div>
               </div>
 
-              {/* Add to Cart & Wishlist */}
-              <div className="flex flex-wrap gap-4 mb-8">
+              {/* Add to Cart & Buy Now Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <button
                   onClick={handleAddToCart}
-                  className={`flex-1 w-max-content btn ${addedToCart ? "bg-green-600 hover:bg-green-600" : "btn-primary"} text-lg py-4`}
+                  className={`flex-1 btn ${
+                    addedToCart
+                      ? "bg-green-600 hover:bg-green-700 text-white border-green-600"
+                      : "border-2 border-brand-green bg-white text-brand-green hover:bg-brand-green hover:text-white"
+                  } text-base md:text-lg py-3.5 px-6 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-sm`}
                 >
-                  {addedToCart ? "✓ Added to Cart!" : "Add to Cart"}
+                  {addedToCart ? (
+                    <>
+                      <Check size={20} />
+                      Added to Cart!
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart size={20} />
+                      Add to Cart
+                    </>
+                  )}
                 </button>
-                {/* <button
-                  onClick={handleWishlistToggle}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    inWishlist
-                      ? "border-red-400 bg-red-50"
-                      : "border-gray-300 hover:border-red-300"
-                  }`}
-                  disabled={isTogglingWishlist}
-                >
-                  <Heart
-                    size={24}
-                    className={`transition-all ${
-                      inWishlist
-                        ? "fill-red-500 text-red-500"
-                        : "fill-transparent text-gray-500"
-                    }`}
-                  />
-                </button> */}
-                {/* <button
+                <button
                   onClick={handleBuyNow}
-                  className="btn btn-accent text-lg py-4 px-8"
+                  className="flex-1 btn bg-brand-gold hover:bg-brand-gold-subtle text-gray-900 border-2 border-brand-gold hover:border-brand-gold-subtle text-base md:text-lg py-3.5 px-6 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                 >
+                  <Zap size={20} className="fill-current" />
                   Buy Now
-                </button> */}
+                </button>
               </div>
 
               {/* Trust Badges */}
@@ -538,54 +540,8 @@ export default function ProductDetailClient({
         </div>
       </section>
 
-      <section className="py-12 bg-bg-cream-light">
-        <div className="container mx-auto px-4">
-          <h2
-            className="text-2xl md:text-3xl mb-8 font-bold text-gray-800"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-           Customer Experiences
-          </h2>
-          {product.reviews && product.reviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {product.reviews.map((rev: any, i: number) => (
-                <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${i * 100}ms` }}>
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex gap-4">
-                      <div className="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-lg">
-                        {rev.username?.charAt(0) || "U"}
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">{rev.username || "Anonymous"}</p>
-                        <p className="text-xs text-text-secondary">{rev.restaurantName ? `${rev.restaurantName} • ` : ""}{rev.userArea}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-0.5 text-brand-gold-subtle">
-                      {[...Array(5)].map((_, j) => (
-                        <svg key={j} className={`w-4 h-4 ${j < rev.rating ? 'fill-current' : 'text-gray-200'}`} viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-gray-700 leading-relaxed italic relative">
-                    <span className="text-4xl text-gray-100 absolute -top-4 -left-2 font-serif">"</span>
-                    {rev.comment}
-                    <span className="text-4xl text-gray-100 absolute -bottom-8 right-0 font-serif">"</span>
-                  </p>
-                  <p className="text-[10px] text-gray-400 mt-4 uppercase tracking-widest">
-                    {new Date(rev.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-text-secondary italic mb-4">No reviews yet. Be the first to share your experience!</p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Product Reviews & Ratings (Amazon / Flipkart style) */}
+      <ProductReviewsSection product={product} />
 
       {/* Recipe Details Modal */}
       {selectedDish && (

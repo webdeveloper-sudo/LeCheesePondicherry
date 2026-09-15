@@ -42,25 +42,64 @@ const createPaymentSession = async (req, res) => {
           message: "Settings not found on server",
         });
       }
-      if (!settings.flashSaleEnabled) {
-        return res.status(400).json({
-          success: false,
-          message: "Flash sale coupon is currently disabled",
+
+      const inputCoupon = (couponName || "").trim().toUpperCase();
+      const firstTimeCoupon = (settings.firstTimeOffer?.couponCode || "CHEESE15").trim().toUpperCase();
+      const flashSaleCoupon = (settings.couponName || "").trim().toUpperCase();
+
+      let validated = false;
+      let expectedDiscount = 0;
+
+      // Check if it's the First-Time Customer Offer coupon
+      if (inputCoupon === firstTimeCoupon) {
+        if (!settings.firstTimeOffer?.isEnabled) {
+          return res.status(400).json({
+            success: false,
+            message: "First-time customer offer is currently disabled",
+          });
+        }
+
+        // Authoritative eligibility check: Count completed non-cancelled orders for this user
+        const priorOrdersCount = await Order.countDocuments({
+          user: req.user._id,
+          paymentStatus: "completed",
+          orderStatus: { $ne: "cancelled" },
         });
+
+        if (priorOrdersCount > 0) {
+          return res.status(400).json({
+            success: false,
+            message: "This offer is available for first-time orders only. It looks like you've already placed your first order.",
+          });
+        }
+
+        const discountPct = Number(settings.firstTimeOffer?.discountPercent) || 15;
+        expectedDiscount = Math.round(Number(orderAmount) * (discountPct / 100));
+        validated = true;
+      } else if (inputCoupon === flashSaleCoupon && flashSaleCoupon) {
+        if (!settings.flashSaleEnabled) {
+          return res.status(400).json({
+            success: false,
+            message: "Flash sale coupon is currently disabled",
+          });
+        }
+        if (settings.validTime && new Date() > new Date(settings.validTime)) {
+          return res.status(400).json({
+            success: false,
+            message: "Flash sale coupon has expired",
+          });
+        }
+        expectedDiscount = Math.round(Number(orderAmount) * (settings.discountRate / 100));
+        validated = true;
       }
-      if (settings.validTime && new Date() > new Date(settings.validTime)) {
-        return res.status(400).json({
-          success: false,
-          message: "Flash sale coupon has expired",
-        });
-      }
-      if (!couponName || couponName.trim().toUpperCase() !== settings.couponName.trim().toUpperCase()) {
+
+      if (!validated) {
         return res.status(400).json({
           success: false,
           message: "Invalid coupon name",
         });
       }
-      const expectedDiscount = Math.round(Number(orderAmount) * (settings.discountRate / 100));
+
       if (Math.abs(Number(discount) - expectedDiscount) > 2) {
         return res.status(400).json({
           success: false,
@@ -450,6 +489,120 @@ const deleteOrder = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Validate coupon code (First-time customer offer or Flash sale)
+ * @route   POST /api/orders/validate-coupon
+ * @access  Public / Optional Auth
+ */
+const validateCoupon = async (req, res) => {
+  try {
+    const { couponCode, orderAmount } = req.body;
+
+    if (!couponCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a coupon code",
+      });
+    }
+
+    const subtotal = Number(orderAmount) || 0;
+    const settings = await Setting.findOne();
+    if (!settings) {
+      return res.status(404).json({
+        success: false,
+        message: "Coupon settings not found",
+      });
+    }
+
+    const inputCode = couponCode.trim().toUpperCase();
+    const firstTimeCoupon = (settings.firstTimeOffer?.couponCode || "CHEESE15").trim().toUpperCase();
+    const flashSaleCoupon = (settings.couponName || "").trim().toUpperCase();
+
+    // 1. Check First-Time Customer Offer
+    if (inputCode === firstTimeCoupon) {
+      if (!settings.firstTimeOffer?.isEnabled) {
+        return res.status(400).json({
+          success: false,
+          message: "This coupon is currently disabled or unavailable",
+        });
+      }
+
+      // Check if user is logged in
+      if (req.user && req.user._id) {
+        const priorOrdersCount = await Order.countDocuments({
+          user: req.user._id,
+          paymentStatus: "completed",
+          orderStatus: { $ne: "cancelled" },
+        });
+
+        if (priorOrdersCount > 0) {
+          return res.status(400).json({
+            success: false,
+            message: "This offer is available for first-time orders only. It looks like you've already placed your first order.",
+          });
+        }
+      }
+
+      const discountPercent = Number(settings.firstTimeOffer?.discountPercent) || 15;
+      const discountAmount = Math.round(subtotal * (discountPercent / 100));
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          couponCode: settings.firstTimeOffer?.couponCode || "CHEESE15",
+          discountPercent,
+          discountAmount,
+          type: "first_time",
+          requiresLoginForFinal: !req.user,
+          message: `First-time offer applied! (${discountPercent}% OFF)`,
+        },
+      });
+    }
+
+    // 2. Check Flash Sale Coupon
+    if (flashSaleCoupon && inputCode === flashSaleCoupon) {
+      if (!settings.flashSaleEnabled) {
+        return res.status(400).json({
+          success: false,
+          message: "Flash sale coupon is currently disabled",
+        });
+      }
+      if (settings.validTime && new Date() > new Date(settings.validTime)) {
+        return res.status(400).json({
+          success: false,
+          message: "Flash sale coupon has expired",
+        });
+      }
+
+      const discountPercent = Number(settings.discountRate) || 0;
+      const discountAmount = Math.round(subtotal * (discountPercent / 100));
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          couponCode: settings.couponName,
+          discountPercent,
+          discountAmount,
+          type: "flash_sale",
+          message: `Flash sale coupon applied! (${discountPercent}% OFF)`,
+        },
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: "Invalid coupon code. Please check and try again.",
+    });
+  } catch (error) {
+    console.error("Coupon validation error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to validate coupon",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPaymentSession,
   verifyPayment,
@@ -457,4 +610,6 @@ module.exports = {
   getOrders,
   updateOrder,
   deleteOrder,
+  validateCoupon,
 };
+

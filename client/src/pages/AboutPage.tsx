@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import cheesemakerImage from "@/assets/images/process-hero-new.webp";
 import CompanyTimeline from "@/components/CompanyTimeline";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import {
   MotionContainer,
   MotionHeading,
@@ -46,7 +46,12 @@ export default function AboutPage() {
     {
       year: "2024",
       event:
-        "Pondicherry to Every Doorstep - Launch of our e-commerce platform. Pan-India shipping.",
+        "Reaching Across South India - From Chennai to Bangalore, Coimbatore to Kochi, Le Pondicherry expands.",
+    },
+    {
+      year: "2025",
+      event:
+        "The Zero-Waste Milestone - We closed the loop with 100% solar power and 0 single-use plastics.",
     },
     {
       year: "2026",
@@ -64,8 +69,13 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="About Us" img={cheesemakerImage} />
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/about"
+        fallbackTitle="About Us"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={cheesemakerImage}
+      />
 
       {/* ── Origin Story ─────────────────────────────────────────────────────── */}
       <section className="py-24 bg-pattern">

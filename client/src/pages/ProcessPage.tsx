@@ -4,7 +4,7 @@ import cow from "@/assets/icons/process/cow.webp";
 import curd from "@/assets/icons/process/curd.webp";
 import caves from "@/assets/icons/process/cave.webp";
 import quality from "@/assets/icons/process/badge.webp";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import {
   MotionContainer,
   MotionHeading,
@@ -49,8 +49,13 @@ export default function ProcessPage() {
 
   return (
     <div className="min-h-screen bg-pattern">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="The Artisan Process" img={cheesemakerImage} />
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/process"
+        fallbackTitle="The Artisan Process"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={cheesemakerImage}
+      />
 
       <section className="py-20">
         <div className="container mx-auto px-4">

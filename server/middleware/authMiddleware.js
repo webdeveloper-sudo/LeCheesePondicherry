@@ -102,6 +102,25 @@ const adminOnly = (req, res, next) => {
 };
 
 /**
+ * Super Admin only middleware - must be used after protect middleware
+ * Only vp.expansions@hopemarket.in or admins with isSuperAdmin=true
+ */
+const superAdminOnly = (req, res, next) => {
+  if (
+    req.user &&
+    req.user.role === "admin" &&
+    (req.user.email === "vp.expansions@hopemarket.in" || req.user.isSuperAdmin === true)
+  ) {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied. Super Administrator privileges required.",
+    });
+  }
+};
+
+/**
  * Rate limiting for sensitive operations (simple in-memory implementation)
  * For production, use redis-based rate limiting
  */
@@ -144,5 +163,6 @@ module.exports = {
   protect,
   optionalAuth,
   adminOnly,
+  superAdminOnly,
   rateLimit,
 };

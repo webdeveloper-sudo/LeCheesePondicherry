@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import facilityBanner from "@/assets/images/hero-cheese-board.webp";
 import {
   MotionContainer,
@@ -94,8 +94,13 @@ const teamHighlights = [
 const OurFacility: React.FC = () => {
   return (
     <div className="bg-white min-h-screen">
-      {/* ── Hero / Banner ─────────────────────────────────────────────────────── */}
-      <BannerAndBreadCrumb title="Our Modern Facility" img={facilityBanner} />
+      {/* ── Dynamic Hero / Banner ─────────────────────────────────────────────────────── */}
+      <DynamicPageBanner
+        pageKey="/portfolio/facility"
+        fallbackTitle="Our Modern Facility"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={facilityBanner}
+      />
 
       {/* ── Stats Bar ────────────────────────────────────────────────────────── */}
       {/* <section className="bg-brand-gold">

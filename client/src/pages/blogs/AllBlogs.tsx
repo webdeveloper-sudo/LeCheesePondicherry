@@ -1,12 +1,17 @@
 import heroImage from "@/assets/images/hero-cheese-board.webp";
-import BannerAndBreadCrumb from "@/components/BannerAndBreadCrumb";
+import DynamicPageBanner from "@/components/DynamicPageBanner";
 import { BlogsGrid } from "./components/BlogsGrid";
 
 export default function AllBlogs() {
   return (
     <div className="min-h-screen bg-pattern">
-      {/* Hero Banner */}
-      <BannerAndBreadCrumb title="The Cheese Journal" img={heroImage} />
+      {/* Dynamic Hero Banner */}
+      <DynamicPageBanner
+        pageKey="/stories"
+        fallbackTitle="The Cheese Journal"
+        fallbackVariant="BannerAndBreadCrumb"
+        fallbackImage={heroImage}
+      />
 
       {/* Post Grid */}
       <div className="py-16">

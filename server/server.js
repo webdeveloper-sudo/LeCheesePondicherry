@@ -59,6 +59,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", require("./routes/blogRoutes"));
 app.use("/api/settings", require("./routes/settingRoutes"));
 app.use("/api/enquiries", require("./routes/enquiryRoutes"));
+app.use("/api/reviews", require("./routes/reviewRoutes"));
+app.use("/api/banners", require("./routes/bannerRoutes"));
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -193,11 +195,11 @@ const startServer = async () => {
     // Seed Admin User if not exists
     const Admin = require("./models/Admin");
     const bcrypt = require("bcryptjs");
-    const adminExists = await Admin.findOne({ email: "admin@achariya.org" });
+    const adminExists = await Admin.findOne({ email: "vp.expansions@hopemarket.in" });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash("123", 12);
+      const hashedPassword = await bcrypt.hash("comathaagro@26", 12);
       await Admin.create({
-        email: "admin@achariya.org",
+        email: "vp.expansions@hopemarket.in",
         password: hashedPassword,
         role: "admin",
         isActive: true,

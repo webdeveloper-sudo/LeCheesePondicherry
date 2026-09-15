@@ -62,7 +62,13 @@ export default function OrderStatusPage() {
           (res.data?.success || res.data?.paymentStatus === "completed")
         ) {
           setStatus("success");
-          setOrderDetails(res.data.data || res.data);
+          const finalOrder = res.data.data || res.data;
+          setOrderDetails(finalOrder);
+          try {
+            localStorage.setItem("lepondy_last_order", JSON.stringify({ ...orderData, ...finalOrder, cfOrderId }));
+          } catch (e) {
+            console.error(e);
+          }
           clearCart();
         } else if (res.data?.canRetry && currentRetries < maxRetries) {
           currentRetries++;
@@ -154,16 +160,22 @@ export default function OrderStatusPage() {
             </div>
             <div className="flex flex-col gap-3 pt-4">
               <Link
+                to={`/thank-you?order_id=${orderId}`}
+                className="btn btn-primary w-full py-4 text-center shadow-lg shadow-brand-gold/15"
+              >
+                View Order Details & Receipt
+              </Link>
+              <Link
                 to="/orders"
                 onClick={() => localStorage.removeItem("lepondy_pending_order")}
-                className="btn btn-primary w-full py-4 text-center"
+                className="btn btn-secondary w-full py-3.5 text-center"
               >
                 View My Orders
               </Link>
               <Link
                 to="/shop"
                 onClick={() => localStorage.removeItem("lepondy_pending_order")}
-                className="btn btn-secondary w-full py-4 text-center"
+                className="w-full py-2.5 text-center text-sm font-bold text-gray-500 hover:text-brand-green transition-colors"
               >
                 Continue Shopping
               </Link>

@@ -23,6 +23,24 @@ const settingSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    firstTimeOffer: {
+      isEnabled: {
+        type: Boolean,
+        default: true,
+      },
+      couponCode: {
+        type: String,
+        default: "CHEESE15",
+        trim: true,
+        uppercase: true,
+      },
+      discountPercent: {
+        type: Number,
+        default: 15,
+        min: 1,
+        max: 100,
+      },
+    },
   },
   {
     timestamps: true,

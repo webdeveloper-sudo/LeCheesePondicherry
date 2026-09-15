@@ -32,6 +32,8 @@ import { products as staticProducts } from "@/data/products";
 import axios from "axios";
 import { HomeBlogsGrid } from "./HomeBlogsGrid";
 import TestimonialsSlider from "./portfolio/TestimonialsSlider";
+import FirstTimeOfferModal from "@/components/FirstTimeOfferModal";
+import { settingsAPI } from "@/lib/api";
 
 interface HomeClientProps {
   featuredProducts: Product[];
@@ -48,6 +50,69 @@ export default function HomeClient({
   const [subscribingId, setSubscribingId] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
   const { name, isAuthenticated, wishlistCount, role } = useUserStore();
+
+  // First-Time Customer Offer Modal State
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [offerCouponCode, setOfferCouponCode] = useState("CHEESE15");
+  const [offerDiscountPercent, setOfferDiscountPercent] = useState(15);
+
+  useEffect(() => {
+    // Only show to non-authenticated guest users
+    if (isAuthenticated()) return;
+
+    // Skip if already dismissed or claimed in current session
+    if (
+      sessionStorage.getItem("firstTimeOfferDismissed") ||
+      sessionStorage.getItem("firstTimeOfferClaimed")
+    ) {
+      return;
+    }
+
+    let isMounted = true;
+    let scrollListener: (() => void) | null = null;
+
+    // Fetch live settings to verify if feature is enabled and get customized coupon code / discount
+    settingsAPI.getSettings().then((res) => {
+      if (!isMounted) return;
+
+      if (res.success && res.data?.firstTimeOffer) {
+        if (res.data.firstTimeOffer.isEnabled === false) {
+          return;
+        }
+        if (res.data.firstTimeOffer.couponCode) {
+          setOfferCouponCode(res.data.firstTimeOffer.couponCode);
+        }
+        if (res.data.firstTimeOffer.discountPercent) {
+          setOfferDiscountPercent(res.data.firstTimeOffer.discountPercent);
+        }
+      }
+
+      scrollListener = () => {
+        if (window.scrollY > 180) {
+          if (
+            !sessionStorage.getItem("firstTimeOfferDismissed") &&
+            !sessionStorage.getItem("firstTimeOfferClaimed")
+          ) {
+            setShowOfferModal(true);
+          }
+          if (scrollListener) {
+            window.removeEventListener("scroll", scrollListener);
+          }
+        }
+      };
+
+      window.addEventListener("scroll", scrollListener, { passive: true });
+    }).catch((err) => {
+      console.warn("Could not fetch settings for offer modal:", err);
+    });
+
+    return () => {
+      isMounted = false;
+      if (scrollListener) {
+        window.removeEventListener("scroll", scrollListener);
+      }
+    };
+  }, [isAuthenticated]);
 
   const handleSubscribe = async (planId: string) => {
     setSubscribingId(planId);
@@ -615,6 +680,14 @@ Artisanal Excellence from Pondicherry
           </div>
         </div>
       </section>
+
+      {/* First-Time Customer Promotion Modal */}
+      <FirstTimeOfferModal
+        isOpen={showOfferModal}
+        onClose={() => setShowOfferModal(false)}
+        couponCode={offerCouponCode}
+        discountPercent={offerDiscountPercent}
+      />
     </>
   );
 }

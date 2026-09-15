@@ -144,14 +144,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
             .filter((p: any) => p.onHold !== true)
             .map((p: any) => {
               let hash = 0;
-              const id = p._id || "";
+              const id = p._id || p.slug || "";
               for (let i = 0; i < id.length; i++) {
                 hash = id.charCodeAt(i) + ((hash << 5) - hash);
               }
               const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
               return {
                 ...p,
-                id: p._id,
+                id: p.slug || p._id,
+                slug: p.slug || p._id,
+                _id: p._id,
                 rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
               };
             });
@@ -187,7 +189,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     fetchData();
   }, []);
 
-  const getProduct = (id: string) => allProducts.find((p) => p.id === id);
+  const getProduct = (id: string) => {
+    if (!id) return undefined;
+    const cleanId = String(id).trim().toLowerCase();
+
+    // 1. Search in dynamic allProducts
+    let found = allProducts.find(
+      (p) =>
+        (p.id && String(p.id).toLowerCase() === cleanId) ||
+        (p._id && String(p._id).toLowerCase() === cleanId) ||
+        (p.slug && String(p.slug).toLowerCase() === cleanId) ||
+        (p.name && String(p.name).toLowerCase() === cleanId) ||
+        (p.name && String(p.name).toLowerCase().replace(/\s+/g, "-") === cleanId)
+    );
+
+    // 2. Fallback to staticProducts
+    if (!found) {
+      found = staticProducts.find(
+        (p) =>
+          (p.id && String(p.id).toLowerCase() === cleanId) ||
+          ((p as any).slug && String((p as any).slug).toLowerCase() === cleanId) ||
+          (p.name && String(p.name).toLowerCase() === cleanId) ||
+          (p.name && String(p.name).toLowerCase().replace(/\s+/g, "-") === cleanId)
+      );
+    }
+
+    return found;
+  };
 
   // Sync with backend when user logs in
   const syncWithBackend = async () => {
@@ -198,7 +226,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const result = await cartAPI.getCart();
       if (result.success && result.data) {
         const backendItems = result.data.cart.map((item: any) => {
-          const product = allProducts.find((p) => p.id === item.productId);
+          const product = getProduct(item.productId);
           return {
             productId: item.productId,
             quantity: item.quantity,

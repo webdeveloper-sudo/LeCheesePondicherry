@@ -44,7 +44,9 @@ export default function ProductPage() {
 
               const mappedProduct = {
                 ...fetchedProduct,
-                id: fetchedProduct._id,
+                id: fetchedProduct.slug || slug || fetchedProduct._id,
+                slug: fetchedProduct.slug || slug,
+                _id: fetchedProduct._id,
                 rating:
                   fetchedProduct.rating && fetchedProduct.rating > 0
                     ? fetchedProduct.rating
@@ -56,11 +58,11 @@ export default function ProductPage() {
             if (allRes.data.success || allRes.data) {
               const allFetched = allRes.data.data || allRes.data;
               const mappedRelated = allFetched
-                .filter((p: any) => p._id !== slug)
+                .filter((p: any) => p._id !== slug && p.slug !== slug)
                 .slice(0, 4)
                 .map((p: any) => {
                   let rHash = 0;
-                  const rId = p._id || "";
+                  const rId = p.slug || p._id || "";
                   for (let i = 0; i < rId.length; i++) {
                     rHash = rId.charCodeAt(i) + ((rHash << 5) - rHash);
                   }
@@ -68,7 +70,8 @@ export default function ProductPage() {
 
                   return {
                     ...p,
-                    id: p._id,
+                    id: p.slug || p._id,
+                    slug: p.slug || p._id,
                     rating: p.rating && p.rating > 0 ? p.rating : rAssignedRating,
                   };
                 });
