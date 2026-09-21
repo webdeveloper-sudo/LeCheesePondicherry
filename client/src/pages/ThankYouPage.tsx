@@ -129,6 +129,9 @@ export default function ThankYouPage() {
   };
 
   const dynamicSource = allProducts && allProducts.length > 0 ? allProducts : staticProducts;
+  const recommendedCheeses: Product[] = dynamicSource
+    .filter((p: Product) => p.category !== "subscriptions")
+    .slice(0, 3);
 
   // 1. Direct Visit (SEO Services / Form Submissions): Simple Thank You Note Only
   if (!isOrderConfirmation) {

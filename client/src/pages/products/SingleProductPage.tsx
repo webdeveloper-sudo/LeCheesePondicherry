@@ -55,7 +55,7 @@ export default function ProductPage() {
             );
 
             // If not found yet and slug might be MongoDB ObjectId, try direct endpoint
-            if (!matchedProduct && /^[0-9a-fA-F]{24}$/.test(slug)) {
+            if (!matchedProduct && slug && /^[0-9a-fA-F]{24}$/.test(slug)) {
               try {
                 const singleRes = await axios.get(`${API_BASE_URL}/api/products/${slug}`);
                 if (singleRes.data?.data || singleRes.data) {

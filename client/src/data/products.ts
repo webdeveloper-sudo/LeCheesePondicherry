@@ -72,6 +72,9 @@ export interface Product {
   };
   pairings?: string;
   ingredients?: string[];
+  _id?: string;
+  slug?: string;
+  weightOptions?: string[];
 }
 
 export const products: Product[] = [

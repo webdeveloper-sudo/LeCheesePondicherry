@@ -410,7 +410,8 @@ export default function BannerManagement() {
           mimeType: file.type,
         });
 
-        const finalUrl = uploadRes.success && uploadRes.url ? uploadRes.url : base64;
+        const uploadData = uploadRes.data as any;
+        const finalUrl = uploadRes.success && (uploadData?.url || (uploadRes as any).url) ? (uploadData?.url || (uploadRes as any).url) : base64;
 
         setConfigs((prev) => {
           const cfg = prev[pageKey] || getSafeConfig(pageKey);

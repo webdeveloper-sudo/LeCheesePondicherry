@@ -72,18 +72,19 @@ export default function HomeClient({
     let scrollListener: (() => void) | null = null;
 
     // Fetch live settings to verify if feature is enabled and get customized coupon code / discount
-    settingsAPI.getSettings().then((res) => {
+    settingsAPI.getSettings().then((res: any) => {
       if (!isMounted) return;
 
-      if (res.success && res.data?.firstTimeOffer) {
-        if (res.data.firstTimeOffer.isEnabled === false) {
+      const settingsData = res?.data?.data || res?.data;
+      if (res.success && settingsData?.firstTimeOffer) {
+        if (settingsData.firstTimeOffer.isEnabled === false) {
           return;
         }
-        if (res.data.firstTimeOffer.couponCode) {
-          setOfferCouponCode(res.data.firstTimeOffer.couponCode);
+        if (settingsData.firstTimeOffer.couponCode) {
+          setOfferCouponCode(settingsData.firstTimeOffer.couponCode);
         }
-        if (res.data.firstTimeOffer.discountPercent) {
-          setOfferDiscountPercent(res.data.firstTimeOffer.discountPercent);
+        if (settingsData.firstTimeOffer.discountPercent) {
+          setOfferDiscountPercent(settingsData.firstTimeOffer.discountPercent);
         }
       }
 
