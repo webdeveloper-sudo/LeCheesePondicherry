@@ -35,9 +35,14 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
   const { totalItems, allProducts } = useCart();
-  const { name, isAuthenticated, wishlistCount, role } = useUserStore();
+  const { name, photoURL, isAuthenticated, wishlistCount, role } = useUserStore();
   const userName = name ? name.split(" ")[0] : "User"; // Get first name
+  const [avatarError, setAvatarError] = useState(false);
   const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [photoURL]);
   const location = useLocation(); // Add this import
   const isHomeRoute = location.pathname ;
   const logoVariants = {
@@ -125,12 +130,12 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   return (
-    <header className="fixed  top-0 z-50 w-full bg-white shadow-sm">
+    <header className="fixed top-0 z-50 w-full bg-white shadow-sm">
       {isFlashSaleActive && settings && <FlashSaleBanner settings={settings} />}
+      <TopHeader />
 
       {/* Desktop menu => */}
       <div className="hidden md:block">
-        <TopHeader />
         <div className=" mx-auto px-4 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link to="/" className="flex-shrink-0">
@@ -212,148 +217,152 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
 
             {/* Right Icons */}
             <div className="flex items-center gap-2 sm:gap-4">
-              {role === "user" || !isAuthenticated() ? (
-                <>
-                  {/* Search */}
-                  <div className="relative" ref={searchRef}>
-                    <button
-                      onClick={() => setSearchOpen(!searchOpen)}
-                      className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+              {/* Search */}
+              <div className="relative" ref={searchRef}>
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+
+                {searchOpen && (
+                  <div className="absolute right-0 mt-3 w-[280px] sm:w-80 bg-white shadow-2xl rounded-lg p-4 border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
+                    <div className="flex gap-2">
+                      <input
+                        autoFocus
+                        type="text"
+                        placeholder="Search cheeses..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" &&
+                          handleSearchSubmit(searchQuery)
+                        }
+                        className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-brand-gold"
+                      />
+                      <button
+                        onClick={() => handleSearchSubmit(searchQuery)}
+                        className="bg-brand-green text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-green-dark transition-colors"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                    </button>
+                        Go
+                      </button>
+                    </div>
 
-                    {searchOpen && (
-                      <div className="absolute right-0 mt-3 w-[280px] sm:w-80 bg-white shadow-2xl rounded-lg p-4 border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
-                        <div className="flex gap-2">
-                          <input
-                            autoFocus
-                            type="text"
-                            placeholder="Search cheeses..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" &&
-                              handleSearchSubmit(searchQuery)
-                            }
-                            className="flex-1 px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-brand-gold"
-                          />
-                          <button
-                            onClick={() => handleSearchSubmit(searchQuery)}
-                            className="bg-brand-green text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-brand-green-dark transition-colors"
-                          >
-                            Go
-                          </button>
-                        </div>
-
-                        {suggestions.length > 0 && (
-                          <div className="mt-4 border-t pt-4">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                              Suggestions
-                            </p>
-                            <ul className="space-y-2">
-                              {suggestions.map((product) => (
-                                <li key={product.id}>
-                                  <button
-                                    onClick={() => {
-                                      navigate(`/products/${product.id}`);
-                                      setSearchOpen(false);
-                                      setSearchQuery("");
-                                    }}
-                                    className="w-full flex items-center gap-3 p-2 hover:bg-bg-cream-light rounded-md transition-colors text-left group"
-                                  >
-                                    <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                                      <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                    <div>
-                                      <p className="text-sm font-semibold text-text-primary group-hover:text-brand-green">
-                                        {product.name}
-                                      </p>
-                                      <p className="text-[10px] text-text-secondary uppercase">
-                                        {product.category}
-                                      </p>
-                                    </div>
-                                  </button>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                    {suggestions.length > 0 && (
+                      <div className="mt-4 border-t pt-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                          Suggestions
+                        </p>
+                        <ul className="space-y-2">
+                          {suggestions.map((product) => (
+                            <li key={product.id}>
+                              <button
+                                onClick={() => {
+                                  navigate(`/products/${product.id}`);
+                                  setSearchOpen(false);
+                                  setSearchQuery("");
+                                }}
+                                className="w-full flex items-center gap-3 p-2 hover:bg-bg-cream-light rounded-md transition-colors text-left group"
+                              >
+                                <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                                  <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-semibold text-text-primary group-hover:text-brand-green">
+                                    {product.name}
+                                  </p>
+                                  <p className="text-[10px] text-text-secondary uppercase">
+                                    {product.category}
+                                  </p>
+                                </div>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     )}
                   </div>
+                )}
+              </div>
 
-                  {/* Wishlist */}
-                  <Link
-                    to="/wishlist"
-                    className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
-                  >
-                    <Heart
-                      size={20}
-                      className={
-                        wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
-                      }
-                    />
-                    {wishlistCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
-                        {wishlistCount}
-                      </span>
-                    )}
-                  </Link>
+              {/* Wishlist */}
+              <Link
+                to="/wishlist"
+                className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
+              >
+                <Heart
+                  size={20}
+                  className={
+                    wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
+                  }
+                />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
 
-                  {/* Cart */}
-                  <Link
-                    to="/cart"
-                    className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                      />
-                    </svg>
-                    {totalItems > 0 && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-brand-gold text-text-primary text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
-                        {totalItems}
-                      </span>
-                    )}
-                  </Link>
-                </>
-              ) : (
-                <div className="w-4"></div>
-              )}
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-brand-gold text-text-primary text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
 
               {/* User Profile / Sign In */}
-              {isClient && isAuthenticated() ? (
+              {isClient && isAuthenticated() && role === "user" ? (
                 <Link
-                  to={role === "user" ? "/user" : "/admin/dashboard"}
-                  className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1.5 font-medium text-sm"
+                  to="/user"
+                  className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-2 font-medium text-sm"
                 >
-                  <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center text-xs">
-                    {userName.charAt(0)}
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-brand-green text-white flex items-center justify-center text-xs font-bold border border-brand-green/20 shadow-xs shrink-0">
+                    {photoURL && !avatarError ? (
+                      <img
+                        src={photoURL}
+                        alt={name || "User"}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                        onError={() => setAvatarError(true)}
+                      />
+                    ) : (
+                      <span>{userName.charAt(0).toUpperCase()}</span>
+                    )}
                   </div>
                   <span className="hidden lg:inline">{userName}</span>
                 </Link>
@@ -451,29 +460,23 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
 
         {/* Right Icons */}
         <div className="flex items-center justify-end gap-2 py-3 bg-gradient-to-r from-brand-gold py-1 px-4 via-brand-gold-subtle to-brand-gold bg-[length:200%_100%] animate-shimmer shadow-md text-text-primary">
-          {role === "user" || !isAuthenticated() ? (
-            <>
-              {/* Wishlist */}
-              <Link
-                to="/wishlist"
-                className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
-              >
-                <Heart
-                  size={20}
-                  className={
-                    wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
-                  }
-                />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Link>
-            </>
-          ) : (
-            <div className="w-4"></div>
-          )}
+          {/* Wishlist */}
+          <Link
+            to="/wishlist"
+            className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
+          >
+            <Heart
+              size={20}
+              className={
+                wishlistCount > 0 ? "fill-red-500 text-red-500" : ""
+              }
+            />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-[10px] sm:text-xs rounded-full flex items-center justify-center font-medium">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
           {/* Search */}
           <div className="relative" ref={mobileSearchRef}>
             <button
@@ -583,13 +586,23 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
             )}
           </Link>
           {/* User Profile / Sign In */}
-          {isClient && isAuthenticated() ? (
+          {isClient && isAuthenticated() && role === "user" ? (
             <Link
-              to={role === "user" ? "/user" : "/admin/dashboard"}
-              className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-1.5 font-medium text-sm"
+              to="/user"
+              className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors flex items-center gap-2 font-medium text-sm"
             >
-              <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center text-xs">
-                {userName.charAt(0)}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-brand-green text-white flex items-center justify-center text-xs font-bold border border-brand-green/20 shadow-xs shrink-0">
+                {photoURL && !avatarError ? (
+                  <img
+                    src={photoURL}
+                    alt={name || "User"}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <span>{userName.charAt(0).toUpperCase()}</span>
+                )}
               </div>
               <span className="hidden lg:inline">{userName}</span>
             </Link>

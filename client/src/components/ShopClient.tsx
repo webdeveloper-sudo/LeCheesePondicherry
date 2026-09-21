@@ -25,6 +25,7 @@ import heroImage from "@/assets/images/hero-cheese-board.webp";
 import DynamicPageBanner from "@/components/DynamicPageBanner";
 import { Loader } from "lucide-react";
 import { useShopStore } from "@/store/useShopStore";
+import { trackViewItemList } from "@/lib/gtm";
 
 export default function ShopClient() {
   const {
@@ -172,6 +173,29 @@ export default function ShopClient() {
       return 0; // featured default
     });
   }, [filteredProducts, sortBy]);
+
+  // Track view_item_list event on product catalog view
+  const lastTrackedList = useRef<string>("");
+  useEffect(() => {
+    if (sortedProducts.length > 0) {
+      const listIdentifier = `${activeCategory}_${sortedProducts.length}`;
+      if (lastTrackedList.current !== listIdentifier) {
+        lastTrackedList.current = listIdentifier;
+        trackViewItemList(
+          sortedProducts.slice(0, 20).map((p, idx) => ({
+            item_id: p.id,
+            item_name: p.name,
+            price: Number(p.price),
+            item_category: p.category || "Artisanal Cheese",
+            item_variant: p.weightOptions?.[0] || "200g",
+            index: idx + 1,
+          })),
+          activeCategory === "all" ? "All Handcrafted Cheeses" : `Category: ${activeCategory}`,
+          activeCategory === "all" ? "shop_catalog" : `category_${activeCategory}`
+        );
+      }
+    }
+  }, [sortedProducts, activeCategory]);
 
   const hasActiveFilters = Boolean(
     activeCategory !== "all" ||

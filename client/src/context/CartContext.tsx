@@ -13,6 +13,7 @@ import { cartAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
+import { trackAddToCart, trackRemoveFromCart } from "@/lib/gtm";
 
 export interface CartItem {
   productId: string;
@@ -284,6 +285,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
         console.error("Failed to sync cart addition with backend:", error);
       }
     }
+
+    // Push add_to_cart event to GTM dataLayer
+    const product = getProduct(productId);
+    trackAddToCart({
+      item_id: productId,
+      item_name: product?.name || productId,
+      price: price || (product ? product.price : 0),
+      item_category: product?.category || "Artisanal Cheese",
+      item_variant: weight,
+    }, quantity);
   };
 
   const removeFromCart = async (index: number) => {
@@ -297,6 +308,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Failed to sync cart removal with backend:", error);
       }
+    }
+
+    // Push remove_from_cart event to GTM dataLayer
+    if (item) {
+      const product = getProduct(item.productId);
+      trackRemoveFromCart({
+        item_id: item.productId,
+        item_name: product?.name || item.productId,
+        price: item.price || (product ? product.price : 0),
+        item_variant: item.weight,
+      }, item.quantity);
     }
   };
 

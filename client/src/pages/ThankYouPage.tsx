@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useSearchParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -25,15 +25,19 @@ import {
   Calendar,
   CreditCard,
 } from "lucide-react";
-import DynamicPageBanner from "@/components/DynamicPageBanner";
 import { useUserStore } from "@/store/useUserStore";
+import { useCart } from "@/context/CartContext";
 import { products as staticProducts, Product } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
+
+import { orderAPI } from "@/lib/api";
+import { trackPurchase } from "@/lib/gtm";
 
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const { name: userName, email: userEmail, mobile: userMobile } = useUserStore();
+  const { name: userName, email: userEmail, mobile: userMobile, isAuthenticated } = useUserStore();
+  const { allProducts } = useCart();
 
   const [copied, setCopied] = useState(false);
   const [orderDetails, setOrderDetails] = useState<any>(null);
@@ -42,7 +46,22 @@ export default function ThankYouPage() {
   const queryOrderId = searchParams.get("order_id");
   const queryType = searchParams.get("type") || "order"; // 'order' | 'enquiry' | 'subscription'
 
+  // Only show order details if user came via order redirection with an order_id or location.state.order
+  const isOrderConfirmation = Boolean(
+    queryOrderId ||
+    (location.state && location.state.order)
+  );
+
   useEffect(() => {
+    document.title = isOrderConfirmation
+      ? "Order Confirmed | Le Pondicherry Cheese"
+      : "Thank You | Le Pondicherry Cheese";
+  }, [isOrderConfirmation]);
+
+  useEffect(() => {
+    // Only fetch / load order details if this is actually an order confirmation
+    if (!isOrderConfirmation) return;
+
     // 1. Try to get order from location state if passed from checkout
     if (location.state && location.state.order) {
       setOrderDetails(location.state.order);
@@ -59,7 +78,26 @@ export default function ThankYouPage() {
         console.error("Error parsing saved order", e);
       }
     }
-  }, [location.state]);
+
+    // 3. If queryOrderId is present and user is logged in, try to fetch order details from API
+    if (queryOrderId && isAuthenticated()) {
+      orderAPI.getMyOrders().then((res) => {
+        if (res.success && Array.isArray(res.data)) {
+          const found = res.data.find(
+            (o: any) =>
+              o.orderId === queryOrderId ||
+              o.cfOrderId === queryOrderId ||
+              o._id === queryOrderId
+          );
+          if (found) {
+            setOrderDetails(found);
+          }
+        }
+      }).catch((err) => {
+        console.error("Failed to fetch order details", err);
+      });
+    }
+  }, [location.state, queryOrderId, isOrderConfirmation, isAuthenticated]);
 
   const displayOrderId =
     queryOrderId ||
@@ -90,17 +128,91 @@ export default function ThankYouPage() {
     window.print();
   };
 
-  // Sample or actual order items
+  const dynamicSource = allProducts && allProducts.length > 0 ? allProducts : staticProducts;
+
+  // 1. Direct Visit (SEO Services / Form Submissions): Simple Thank You Note Only
+  if (!isOrderConfirmation) {
+    return (
+      <div className="min-h-screen bg-pattern py-12 sm:py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div className="max-w-2xl w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="bg-white rounded-3xl shadow-xl border border-amber-100/70 overflow-hidden text-center p-8 sm:p-12"
+          >
+            <div className="h-2 -mt-8 sm:-mt-12 -mx-8 sm:-mx-12 mb-8 bg-gradient-to-r from-brand-green via-brand-gold to-brand-gold-subtle" />
+
+            {/* Simple Clean Thank You Icon */}
+            <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-6 shadow-sm">
+              <CheckCircle2 className="w-10 h-10 sm:w-11 sm:h-11 text-emerald-600" />
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-brand-gold/15 text-brand-green font-bold text-xs sm:text-sm mb-3">
+              <span>Le Pondicherry Cheese</span>
+            </div>
+
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary mb-4"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              Thank You!
+            </h1>
+
+            <p className="text-base sm:text-lg text-text-secondary max-w-lg mx-auto mb-8 leading-relaxed">
+              We have received your message. Thank you for connecting with us. Our team will review your enquiry and get back to you shortly.
+            </p>
+
+            {/* Direct Contact Support Box */}
+            <div className="bg-bg-cream-light/60 p-5 rounded-2xl border border-amber-100/70 mb-8 text-sm text-text-secondary">
+              <p className="font-semibold text-text-primary mb-1">Have an urgent question or need immediate assistance?</p>
+              <p>
+                Reach our concierge at{" "}
+                <a href="tel:+919443202620" className="text-brand-green font-bold hover:underline">
+                  +91 94432 02620
+                </a>{" "}
+                or email{" "}
+                <a href="mailto:info@cheeseandchocolates.com" className="text-brand-green font-bold hover:underline">
+                  info@cheeseandchocolates.com
+                </a>
+              </p>
+            </div>
+
+            {/* Clean CTA Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                to="/"
+                className="btn btn-primary px-8 py-3.5 text-sm font-bold flex items-center gap-2 shadow-md shadow-brand-gold/15"
+              >
+                <Home className="w-4 h-4" />
+                Return to Home
+              </Link>
+              <Link
+                to="/shop"
+                className="btn btn-secondary px-8 py-3.5 text-sm font-bold flex items-center gap-2"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Browse Cheeses
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Order Placed Confirmation (When order_id is present)
+  // Actual order items
   const orderItems: any[] = orderDetails?.items && orderDetails.items.length > 0
     ? orderDetails.items
     : [
         {
-          productId: "baby-swiss",
-          name: "Artisanal Baby Swiss",
-          weight: "200g",
+          productId: dynamicSource[0]?.id || "baby-swiss",
+          name: dynamicSource[0]?.name || "Artisanal Baby Swiss",
+          weight: dynamicSource[0]?.weight || "200g",
           quantity: 1,
-          price: 480,
-          image: staticProducts[0]?.image,
+          price: dynamicSource[0]?.price || 420,
+          image: dynamicSource[0]?.image || staticProducts[0]?.image,
         },
       ];
 
@@ -112,26 +224,39 @@ export default function ThankYouPage() {
 
   const shippingInfo = orderDetails?.shippingAddress || {
     name: userName || "Valued Connoisseur",
-    phone: userMobile || "+91 98765 43210",
-    address: "Artisan Lane, White Town",
+    phone: userMobile || "+91 84388 92532",
+    address: "White Town",
     city: "Pondicherry",
     state: "Puducherry",
     pincode: "605001",
   };
 
-  const recommendedCheeses: Product[] = staticProducts.slice(0, 3);
+  const hasTrackedPurchase = useRef(false);
+
+  useEffect(() => {
+    if (isOrderConfirmation && displayOrderId && !hasTrackedPurchase.current) {
+      hasTrackedPurchase.current = true;
+      trackPurchase({
+        transactionId: String(displayOrderId),
+        value: Number(finalAmount),
+        tax: Number(taxAmount),
+        shipping: Number(deliveryCharge),
+        coupon: orderDetails?.couponCode || undefined,
+        items: orderItems.map((item) => ({
+          item_id: String(item.productId || item.id || "cheese"),
+          item_name: String(item.name || "Artisanal Cheese"),
+          price: Number(item.price || 0),
+          quantity: Number(item.quantity || 1),
+          item_variant: item.weight || "200g",
+        })),
+      });
+    }
+  }, [isOrderConfirmation, displayOrderId, finalAmount, taxAmount, deliveryCharge, orderDetails, orderItems]);
 
   return (
-    <div className="min-h-screen bg-pattern pb-20">
-      {/* Dynamic Banner with Breadcrumbs */}
-      <DynamicPageBanner
-        pageKey="/thank-you"
-        fallbackTitle="Order Confirmation"
-        fallbackVariant="BannerAndBreadCrumb"
-      />
-
+    <div className="min-h-screen bg-pattern py-12 sm:py-16">
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Thank You Card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -599,7 +724,17 @@ export default function ThankYouPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedCheeses.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  description={product.shortDescription || product.description}
+                  price={product.price}
+                  originalPrice={product.originalPrice}
+                  image={product.image}
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                />
               ))}
             </div>
           </div>

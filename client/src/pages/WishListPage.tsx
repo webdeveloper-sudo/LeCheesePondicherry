@@ -55,14 +55,16 @@ export default function WishlistPage() {
             const fetchedData = response.data.data || response.data;
             productsToUse = fetchedData.map((p: any) => {
               let hash = 0;
-              const id = p._id || "";
+              const id = p.slug || p._id || "";
               for (let i = 0; i < id.length; i++) {
                 hash = id.charCodeAt(i) + ((hash << 5) - hash);
               }
               const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
               return {
                 ...p,
-                id: p._id,
+                id: p.slug || p._id,
+                slug: p.slug || p._id,
+                _id: p._id,
                 rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
               };
             });
@@ -70,7 +72,7 @@ export default function WishlistPage() {
         }
 
         const wishlistProductsList = productsToUse.filter((p) =>
-          wishlistIds.includes(p.id),
+          wishlistIds.includes(p.id) || (p.slug && wishlistIds.includes(p.slug)) || (p._id && wishlistIds.includes(p._id))
         );
         setWishlistProducts(wishlistProductsList);
       } catch (err) {

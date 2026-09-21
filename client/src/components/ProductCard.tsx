@@ -6,6 +6,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
 import { useToastStore } from "@/store/useToastStore";
+import { trackSelectItem } from "@/lib/gtm";
 
 interface ProductCardProps {
   id: string;
@@ -57,6 +58,11 @@ export default function ProductCard({
   const handleProductClick = () => {
     // Track this product view for preferences
     trackProductView(id);
+    trackSelectItem({
+      item_id: id,
+      item_name: name,
+      price: Number(price),
+    });
   };
 
   return (

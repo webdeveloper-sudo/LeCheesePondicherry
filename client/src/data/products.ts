@@ -76,7 +76,7 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: "baby-swiss",
+    id: "baby-swiss-cheese",
     name: "Baby Swiss",
     shortDescription: "Mild & Gently Sweet",
     description:
@@ -154,7 +154,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "Veg Rennet"],
   },
   {
-    id: "daddy-swiss",
+    id: "daddy-swiss-cheese",
     name: "Daddy Swiss",
     shortDescription: "Rich, Mature Swiss-Style",
     description:
@@ -181,7 +181,7 @@ export const products: Product[] = [
   },
   // PondyOrange (Aged 6 Months)
   {
-    id: "pondyorange",
+    id: "pondy-orange-cheese",
     name: "Pondy Orange",
     shortDescription: "Smooth, Mature & Versatile",
     description:
@@ -207,7 +207,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
-    id: "grana-chery",
+    id: "grana-chery-cheese",
     name: "Grana Cherry",
     shortDescription: "Hard, Aged & Grate-Ready",
     description:
@@ -233,7 +233,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "veg Rennet"],
   },
   {
-    id: "burrata",
+    id: "burrata-cheese",
     name: "Burrata",
     shortDescription: "Creamy Inside, Glossy Outside",
     description:
@@ -259,7 +259,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cream", "salt", "veg rennet"],
   },
   {
-    id: "mozzarella",
+    id: "mozzarella-cheese",
     name: "Fresh Mozzarella",
     shortDescription: "Soft, Fresh & Gently Melting",
     description:
@@ -285,7 +285,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
-    id: "bocconcini",
+    id: "bocconcini-cheese",
     name: "Bocconcini",
     shortDescription: "Small, Fresh & Mild",
     description:
@@ -310,7 +310,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
-    id: "ricotta",
+    id: "ricotta-cheese",
     name: "Ricotta",
     shortDescription: "Light & Whey-Based",
     description:
@@ -335,7 +335,7 @@ export const products: Product[] = [
     ingredients: ["Whey", "milk solids", "salt"],
   },
   {
-    id: "halloumi",
+    id: "halloumi-cheese",
     name: "Halloumi",
     shortDescription: "The Grilling Cheese – High Heat Stable",
     description:
@@ -361,7 +361,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "salt", "veg rennet"],
   },
   {
-    id: "feta",
+    id: "feta-cheese",
     name: "Fetta",
     shortDescription: "Crumbly & Brined",
     description:
@@ -387,7 +387,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "veg rennet", "salt"],
   },
   {
-    id: "pizzaella",
+    id: "pizzaella-cheese",
     name: "Pizzaella",
     shortDescription: "Built for High-Heat Cooking",
     description:
@@ -412,7 +412,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "cultures", "salt", "veg rennet"],
   },
   {
-    id: "paneer",
+    id: "paneer-cheese",
     name: "Paneer",
     shortDescription: "Non-Melting Cooking Cheese",
     description:
@@ -437,7 +437,7 @@ export const products: Product[] = [
     ingredients: ["Cow milk", "food-grade Coagulant", "salt"],
   },
   {
-    id: "skyr",
+    id: "skyr-cheese",
     name: "Skyr",
     shortDescription: "Thick, High-Protein Cultured Dairy",
     description:

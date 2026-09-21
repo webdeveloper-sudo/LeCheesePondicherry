@@ -9,6 +9,7 @@ import { orderAPI } from "@/lib/api";
 import { useToastStore } from "@/store/useToastStore";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
+import { trackViewCart } from "@/lib/gtm";
 
 export default function CartPage() {
   const {
@@ -64,6 +65,26 @@ export default function CartPage() {
       }
     }
   }, [subtotal]);
+
+  // Track view_cart event on CartPage view
+  useEffect(() => {
+    if (items.length > 0) {
+      trackViewCart(
+        items.map((item) => {
+          const prod = getProduct(item.productId);
+          return {
+            item_id: item.productId,
+            item_name: prod?.name || item.productId,
+            price: Number(item.price || (prod ? prod.price : 0)),
+            quantity: Number(item.quantity || 1),
+            item_variant: item.weight,
+            item_category: prod?.category || "Artisanal Cheese",
+          };
+        }),
+        subtotal
+      );
+    }
+  }, [items.length]);
 
   const executeApplyCoupon = async (codeToApply: string, showToast = true) => {
     const trimmed = codeToApply.trim().toUpperCase();

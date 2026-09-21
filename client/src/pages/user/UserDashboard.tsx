@@ -8,10 +8,15 @@ import { orderAPI } from "@/lib/api";
 import YourPicks from "../../components/YourPicks";
 
 export default function UserDashboard() {
+  const navigate = useNavigate();
   const { uid, name, email, photoURL, logout, syncProfile, addresses } =
     useUserStore();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [avatarError, setAvatarError] = useState(false);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [photoURL]);
 
   useEffect(() => {
     const init = async () => {
@@ -48,16 +53,18 @@ export default function UserDashboard() {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-4 flex flex-col md:flex-row items-center gap-6">
-          <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-bg-cream shadow-sm">
-            {photoURL ? (
+          <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-bg-cream shadow-sm bg-brand-green shrink-0 flex items-center justify-center">
+            {photoURL && !avatarError ? (
               <img
                 src={photoURL}
-                alt={name}
+                alt={name || "User"}
                 className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={() => setAvatarError(true)}
               />
             ) : (
               <div className="w-full h-full bg-brand-green text-white flex items-center justify-center text-3xl font-bold">
-                {name?.charAt(0) || "U"}
+                {name?.charAt(0).toUpperCase() || "U"}
               </div>
             )}
           </div>

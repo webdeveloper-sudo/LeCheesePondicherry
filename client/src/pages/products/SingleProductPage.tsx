@@ -5,6 +5,7 @@ import ProductDetailClient from "@/components/ProductDetailClient";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
 import { Loader } from "lucide-react";
+import { trackViewItem } from "@/lib/gtm";
 
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -25,57 +26,62 @@ export default function ProductPage() {
             );
           }
         } else {
-          // Dynamic Mode
+          // Dynamic Mode - fetch from DB
           try {
-            const [productRes, allRes] = await Promise.all([
-              axios.get(`${API_BASE_URL}/api/products/${slug}`),
-              axios.get(`${API_BASE_URL}/api/products`),
-            ]);
+            const allRes = await axios.get(`${API_BASE_URL}/api/products`);
+            const allFetched = allRes.data?.data || allRes.data || [];
 
-            if (productRes.data.success || productRes.data) {
-              const fetchedProduct = productRes.data.data || productRes.data;
-
+            const mapProduct = (p: any) => {
               let hash = 0;
-              const id = fetchedProduct._id || "";
-              for (let i = 0; i < id.length; i++) {
-                hash = id.charCodeAt(i) + ((hash << 5) - hash);
+              const pid = p.slug || p._id || "";
+              for (let i = 0; i < pid.length; i++) {
+                hash = pid.charCodeAt(i) + ((hash << 5) - hash);
               }
               const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
-
-              const mappedProduct = {
-                ...fetchedProduct,
-                id: fetchedProduct.slug || slug || fetchedProduct._id,
-                slug: fetchedProduct.slug || slug,
-                _id: fetchedProduct._id,
-                rating:
-                  fetchedProduct.rating && fetchedProduct.rating > 0
-                    ? fetchedProduct.rating
-                    : assignedRating,
+              return {
+                ...p,
+                id: p.slug || p._id,
+                slug: p.slug || p._id,
+                _id: p._id,
+                rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
               };
-              setProduct(mappedProduct);
+            };
+
+            const mappedAll: Product[] = allFetched.map(mapProduct);
+
+            // Find current product in mapped dynamic products
+            let matchedProduct = mappedAll.find(
+              (p: any) => p.slug === slug || p._id === slug || p.id === slug
+            );
+
+            // If not found yet and slug might be MongoDB ObjectId, try direct endpoint
+            if (!matchedProduct && /^[0-9a-fA-F]{24}$/.test(slug)) {
+              try {
+                const singleRes = await axios.get(`${API_BASE_URL}/api/products/${slug}`);
+                if (singleRes.data?.data || singleRes.data) {
+                  matchedProduct = mapProduct(singleRes.data.data || singleRes.data);
+                }
+              } catch (singleErr) {
+                console.warn("Direct product lookup error:", singleErr);
+              }
             }
 
-            if (allRes.data.success || allRes.data) {
-              const allFetched = allRes.data.data || allRes.data;
-              const mappedRelated = allFetched
-                .filter((p: any) => p._id !== slug && p.slug !== slug)
-                .slice(0, 4)
-                .map((p: any) => {
-                  let rHash = 0;
-                  const rId = p.slug || p._id || "";
-                  for (let i = 0; i < rId.length; i++) {
-                    rHash = rId.charCodeAt(i) + ((rHash << 5) - rHash);
-                  }
-                  const rAssignedRating = 4.0 + (Math.abs(rHash) % 6) / 10;
-
-                  return {
-                    ...p,
-                    id: p.slug || p._id,
-                    slug: p.slug || p._id,
-                    rating: p.rating && p.rating > 0 ? p.rating : rAssignedRating,
-                  };
-                });
-              setRelatedProducts(mappedRelated);
+            if (matchedProduct) {
+              setProduct(matchedProduct);
+              setRelatedProducts(
+                mappedAll
+                  .filter((p: any) => p.id !== matchedProduct?.id && p.slug !== slug)
+                  .slice(0, 4)
+              );
+            } else {
+              // Fallback to static if not found in DB
+              const staticMatch = staticProducts.find((p) => p.id === slug);
+              if (staticMatch) {
+                setProduct(staticMatch);
+                setRelatedProducts(
+                  staticProducts.filter((p) => p.id !== slug).slice(0, 4)
+                );
+              }
             }
           } catch (apiError) {
             console.warn("Failed to fetch dynamic product details, falling back to static:", apiError);
@@ -83,7 +89,7 @@ export default function ProductPage() {
             if (currentProduct) {
               setProduct(currentProduct);
               setRelatedProducts(
-                staticProducts.filter((p) => p.id !== slug).slice(0, 4),
+                staticProducts.filter((p) => p.id !== slug).slice(0, 4)
               );
             }
           }
@@ -99,6 +105,18 @@ export default function ProductPage() {
       fetchProductData();
     }
   }, [slug]);
+
+  useEffect(() => {
+    if (product) {
+      trackViewItem({
+        item_id: String(product.id || product.slug || slug),
+        item_name: product.name,
+        price: Number(product.price),
+        item_category: product.category || "Artisanal Cheese",
+        item_variant: product.weight || "200g",
+      });
+    }
+  }, [product?.id, product?.name]);
 
   if (loading) {
     return (

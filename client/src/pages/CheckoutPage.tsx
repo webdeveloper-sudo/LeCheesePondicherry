@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useUserStore } from "@/store/useUserStore";
@@ -27,6 +27,7 @@ import { useToastStore } from "@/store/useToastStore";
 import { calculateShipping } from "@/lib/shippingUtils";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
+import { trackBeginCheckout } from "@/lib/gtm";
 
 
 declare global {
@@ -88,6 +89,29 @@ export default function CheckoutPage() {
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [couponType, setCouponType] = useState<"first_time" | "flash_sale" | null>(null);
   const [validatingCoupon, setValidatingCoupon] = useState(false);
+  const hasTrackedCheckout = useRef(false);
+
+  // Track begin_checkout event on CheckoutPage
+  useEffect(() => {
+    if (selectedItems.length > 0 && !hasTrackedCheckout.current) {
+      hasTrackedCheckout.current = true;
+      trackBeginCheckout(
+        selectedItems.map((item) => {
+          const prod = getProduct(item.productId);
+          return {
+            item_id: item.productId,
+            item_name: prod?.name || item.productId,
+            price: Number(item.price || (prod ? prod.price : 0)),
+            quantity: Number(item.quantity || 1),
+            item_variant: item.weight,
+            item_category: prod?.category || "Artisanal Cheese",
+          };
+        }),
+        subtotal,
+        appliedCoupon || undefined
+      );
+    }
+  }, [selectedItems.length, subtotal, appliedCoupon]);
 
   useEffect(() => {
     const fetchSettings = async () => {

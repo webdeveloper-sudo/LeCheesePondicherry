@@ -185,7 +185,9 @@ Action: Item added to cart for checkout.
             const assignedRating = 4.0 + (Math.abs(hash) % 6) / 10;
             return {
               ...p,
-              id: p._id,
+              id: p.slug || p._id,
+              slug: p.slug || p._id,
+              _id: p._id,
               rating: p.rating && p.rating > 0 ? p.rating : assignedRating,
             };
           });
