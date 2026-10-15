@@ -84,6 +84,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", require("./routes/blogRoutes"));
 app.use("/api/settings", require("./routes/settingRoutes"));
 app.use("/api/enquiries", require("./routes/enquiryRoutes"));
+app.use("/api/challenge", require("./routes/challengeRoutes"));
 app.use("/api/reviews", require("./routes/reviewRoutes"));
 app.use("/api/banners", require("./routes/bannerRoutes"));
 

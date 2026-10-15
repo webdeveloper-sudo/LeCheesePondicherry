@@ -64,32 +64,37 @@ export default function ProductDetailClient({
 
   const weightOptions = isBurrata
     ? [
-        { label: "150g", price: product.price },
-        { label: "300g", price: Math.round(product.price * 1.85) },
-        { label: "450g", price: Math.round(product.price * 2.65) },
-        { label: "600g", price: Math.round(product.price * 3.4) },
-        { label: "750g", price: Math.round(product.price * 4.1) },
+        { label: "150g", multiplier: 1 },
+        { label: "300g", multiplier: 2 },
+        { label: "450g", multiplier: 3 },
+        { label: "600g", multiplier: 4 },
+        { label: "750g", multiplier: 5 },
       ]
     : isBocconcini
     ? [
-        { label: "100g", price: product.price },
-        { label: "200g", price: Math.round(product.price * 1.85) },
-        { label: "300g", price: Math.round(product.price * 2.65) },
-        { label: "400g", price: Math.round(product.price * 3.4) },
-        { label: "500g", price: Math.round(product.price * 4.1) },
-        { label: "600g", price: Math.round(product.price * 4.8) },
+        { label: "100g", multiplier: 1 },
+        { label: "200g", multiplier: 2 },
+        { label: "300g", multiplier: 3 },
+        { label: "400g", multiplier: 4 },
+        { label: "500g", multiplier: 5 },
+        { label: "600g", multiplier: 6 },
       ]
     : [
-        { label: "200g", price: product.price },
-        { label: "400g", price: Math.round(product.price * 1.85) },
-        { label: "600g", price: Math.round(product.price * 2.65) },
-        { label: "800g", price: Math.round(product.price * 3.4) },
-        { label: "1kg", price: Math.round(product.price * 4.1) },
+        { label: "200g", multiplier: 1 },
+        { label: "400g", multiplier: 2 },
+        { label: "600g", multiplier: 3 },
+        { label: "800g", multiplier: 4 },
+        { label: "1kg", multiplier: 5 },
       ];
 
-  const selectedPrice =
-    weightOptions.find((w) => w.label === selectedWeight)?.price ||
-    product.price;
+  const selectedMultiplier =
+    weightOptions.find((w) => w.label === selectedWeight)?.multiplier || 1;
+
+  const selectedPrice = Math.round(product.price * selectedMultiplier);
+
+  const selectedOriginalPrice = product.originalPrice
+    ? Math.round(product.originalPrice * selectedMultiplier)
+    : undefined;
 
   const handleAddToCart = () => {
     addToCart(product.id, quantity, selectedWeight, selectedPrice);
@@ -235,12 +240,12 @@ export default function ProductDetailClient({
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-3xl font-bold text-brand-green">
+                <span className="text-4xl font-bold text-brand-green">
                   ₹{selectedPrice.toLocaleString()}
                 </span>
-                {product.originalPrice && (
+                {selectedOriginalPrice && (
                   <span className="text-lg text-text-secondary line-through">
-                    ₹{product.originalPrice.toLocaleString()}
+                    ₹{selectedOriginalPrice.toLocaleString()}
                   </span>
                 )}
               </div>

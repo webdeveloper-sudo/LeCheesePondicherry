@@ -122,6 +122,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
         { href: "/portfolio/testimonials", label: "Testimonials" },
       ],
     },
+    { href: "/cheese-cooking-challenge", label: "Contest 🛵", isContest: true },
     { href: "/wholesale", label: "Wholesale" },
     { href: "/stories", label: "Journal" },
     { href: "/contact", label: "Contact" },
@@ -202,11 +203,13 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                 </motion.div>
               </Link>
               <ul className="flex items-center gap-6 xl:gap-8">
-                {navLinks.slice(3, 6).map((link) => (
+                {navLinks.slice(3).map((link) => (
                   <li key={link.label}>
                     <Link
                       to={link.href!}
-                      className="nav-link text-xs xl:text-sm uppercase tracking-wider"
+                      className={`nav-link text-xs xl:text-sm uppercase tracking-wider ${
+                        link.isContest ? "text-[#FAB519] font-bold" : ""
+                      }`}
                     >
                       {link.label}
                     </Link>

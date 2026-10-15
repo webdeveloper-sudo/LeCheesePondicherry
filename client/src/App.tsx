@@ -44,6 +44,8 @@ import ReturnPolicyPage from "./pages/ReturnPolicyPage";
 import OurFacilityPage from "./pages/portfolio/OurFacility";
 import GalleryPage from "./pages/portfolio/Gallery";
 import TestimonialsPage from "./pages/portfolio/TestimonialsPage";
+import CheeseCookingChallengePage from "@/pages/challenge/CheeseCookingChallengePage";
+import CookingChallengeLeaderboardPage from "@/pages/challenge/CookingChallengeLeaderboardPage";
 
 export default function App() {
   const location = useLocation();
@@ -93,6 +95,10 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/cheese-cooking-challenge" element={<CheeseCookingChallengePage />} />
+          <Route path="/cheese-cooking-challenge/leaderboard" element={<CookingChallengeLeaderboardPage />} />
+          <Route path="/cooking-challenge" element={<CheeseCookingChallengePage />} />
+          <Route path="/cooking-challenge/leaderboard" element={<CookingChallengeLeaderboardPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/cart" element={<CartPage />} />

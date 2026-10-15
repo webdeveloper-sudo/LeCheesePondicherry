@@ -107,9 +107,18 @@ const handleOfferLead = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Handle Le Pondicherry Cheese Cooking Challenge Entry Submission
+ * @route   POST /api/enquiries/challenge-entry
+ * @access  Public
+ */
+const { submitChallengeEntry } = require("./challengeController");
+const handleChallengeEntry = submitChallengeEntry;
+
 module.exports = {
   handleContactEnquiry,
   handleWholesaleEnquiry,
   handleOfferLead,
+  handleChallengeEntry,
 };
 

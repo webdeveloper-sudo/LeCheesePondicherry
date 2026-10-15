@@ -1,6 +1,7 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, X, ExternalLink } from "lucide-react";
 
 interface SubmissionSuccessModalProps {
   isOpen: boolean;
@@ -8,6 +9,8 @@ interface SubmissionSuccessModalProps {
   title?: string;
   message?: string;
   referenceId?: string;
+  actionLink?: string;
+  actionLabel?: string;
 }
 
 export default function SubmissionSuccessModal({
@@ -16,13 +19,15 @@ export default function SubmissionSuccessModal({
   title = "Message Sent!",
   message = "Thank you for reaching out. We'll get back to you shortly.",
   referenceId,
+  actionLink,
+  actionLabel,
 }: SubmissionSuccessModalProps) {
-  // Auto-close after 6 seconds
+  // Auto-close after 8 seconds if there's an action, else 6 seconds
   useEffect(() => {
     if (!isOpen) return;
-    const timer = setTimeout(onClose, 6000);
+    const timer = setTimeout(onClose, actionLink ? 9000 : 6000);
     return () => clearTimeout(timer);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, actionLink]);
 
   // Close on Escape key
   useEffect(() => {
@@ -60,7 +65,7 @@ export default function SubmissionSuccessModal({
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full pointer-events-auto overflow-hidden">
 
               {/* Gold top bar */}
-              <div className="h-1.5 bg-gradient-to-r from-[#2C5530] via-[#C9A961] to-[#2C5530]" />
+              <div className="h-1.5 bg-gradient-to-r from-[#051F44] via-[#FAB519] to-[#051F44]" />
 
               {/* Close button */}
               <div className="flex justify-end p-4 pb-0">
@@ -82,7 +87,7 @@ export default function SubmissionSuccessModal({
                   className="flex items-center justify-center mb-5"
                 >
                   <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center">
-                    <CheckCircle2 className="text-[#2C5530]" size={48} strokeWidth={1.5} />
+                    <CheckCircle2 className="text-[#051F44]" size={48} strokeWidth={1.5} />
                   </div>
                 </motion.div>
 
@@ -113,26 +118,38 @@ export default function SubmissionSuccessModal({
                     className="inline-block bg-[#FAF7F2] border border-[#C9A961]/30 rounded-lg px-4 py-2 mb-5"
                   >
                     <p className="text-xs text-[#6B6B6B] mb-0.5">Reference ID</p>
-                    <p className="text-sm font-mono font-semibold text-[#2C5530]">{referenceId}</p>
+                    <p className="text-sm font-mono font-semibold text-[#051F44]">{referenceId}</p>
                   </motion.div>
                 )}
 
                 {/* Auto-close progress bar */}
                 <motion.div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden mt-2 mb-5">
                   <motion.div
-                    className="h-full bg-[#C9A961] rounded-full"
+                    className="h-full bg-[#FAB519] rounded-full"
                     initial={{ width: "100%" }}
                     animate={{ width: "0%" }}
-                    transition={{ duration: 6, ease: "linear" }}
+                    transition={{ duration: actionLink ? 9 : 6, ease: "linear" }}
                   />
                 </motion.div>
 
-                <button
-                  onClick={onClose}
-                  className="btn btn-primary px-8 py-2.5 text-sm"
-                >
-                  Done
-                </button>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  {actionLink && actionLabel && (
+                    <Link
+                      to={actionLink}
+                      onClick={onClose}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#FAB519] hover:bg-[#C9A961] text-[#1A1A1A] font-bold px-6 py-2.5 rounded-full text-sm shadow-md transition-all"
+                    >
+                      <span>{actionLabel}</span>
+                      <ExternalLink size={14} />
+                    </Link>
+                  )}
+                  <button
+                    onClick={onClose}
+                    className="w-full sm:w-auto btn btn-secondary px-6 py-2.5 text-sm"
+                  >
+                    Done
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

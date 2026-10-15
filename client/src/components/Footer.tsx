@@ -116,6 +116,15 @@ export default function Footer() {
               <ul className="space-y-4 text-sm text-white/90">
                 <li>
                   <Link
+                    to="/cheese-cooking-challenge"
+                    className="text-[#FAB519] font-bold hover:text-white transition-colors flex items-center gap-1.5"
+                  >
+                    <span>Cooking Challenge</span>
+                    <span className="px-1.5 py-0.2 bg-[#FAB519] text-[#051F44] text-[10px] font-extrabold rounded">WIN 🛵</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/about"
                     className="hover:text-brand-gold-subtle transition-colors"
                   >
