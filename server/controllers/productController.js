@@ -1,5 +1,5 @@
 const Product = require("../models/Product");
-const { createFolder, uploadFile } = require("../utils/googleDrive");
+const { uploadFile } = require("../utils/imageUpload");
 
 /**
  * @desc    Get all products
@@ -103,15 +103,14 @@ const createProduct = async (req, res) => {
     if (imagesBase64 && Array.isArray(imagesBase64)) {
       for (const img of imagesBase64) {
         try {
-          if (mainFolderId) {
-            const url = await uploadFile(
-              img.name,
-              img.mimeType,
-              img.data,
-              mainFolderId,
-            );
-            imageUrls.push(url);
-          }
+          const url = await uploadFile(
+            img.name,
+            img.mimeType,
+            img.data,
+            mainFolderId,
+            { folder: "products" },
+          );
+          imageUrls.push(url);
         } catch (uploadError) {
           console.error(`❌ Image upload failed for ${img.name}:`, uploadError.message);
         }
@@ -122,7 +121,7 @@ const createProduct = async (req, res) => {
     if (bestPairingDishes && Array.isArray(bestPairingDishes)) {
       for (let i = 0; i < bestPairingDishes.length; i++) {
         const dish = bestPairingDishes[i];
-        if (dish.data && mainFolderId) {
+        if (dish.data) {
           try {
             console.log(`📂 Uploading image for dish: ${dish.dishName || i}`);
             const url = await uploadFile(
@@ -130,6 +129,7 @@ const createProduct = async (req, res) => {
               dish.imageMimeType || "image/jpeg",
               dish.data,
               mainFolderId,
+              { folder: "products" },
             );
             dish.image = url;
           } catch (uploadError) {
@@ -245,6 +245,7 @@ const updateProduct = async (req, res) => {
             img.mimeType,
             img.data,
             mainFolderId,
+            { folder: "products" },
           );
           newImageUrls.push(url);
         } catch (uploadError) {
@@ -262,13 +263,14 @@ const updateProduct = async (req, res) => {
       const mainFolderId = driveFolderId;
       for (let i = 0; i < updateData.bestPairingDishes.length; i++) {
         const dish = updateData.bestPairingDishes[i];
-        if (dish.data && mainFolderId) {
+        if (dish.data) {
           try {
             const url = await uploadFile(
               `dish_update_${Date.now()}_${i}.jpg`,
               dish.imageMimeType || "image/jpeg",
               dish.data,
               mainFolderId,
+              { folder: "products" },
             );
             dish.image = url;
           } catch (uploadError) {

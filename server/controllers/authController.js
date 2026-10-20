@@ -279,6 +279,13 @@ const completeProfile = async (req, res) => {
       req.body;
     const userId = req.user._id;
 
+    if (!mobile || !/^\d{7,15}$/.test(String(mobile))) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid mobile number is required",
+      });
+    }
+
     const updateData = {};
     if (name) updateData.name = name;
     if (mobile) updateData.mobile = mobile;

@@ -150,7 +150,7 @@ export default function TopHeader() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-[#FAB519] py-3 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-sm text-text-primary">
+    <div className="relative md:block hidden overflow-hidden bg-gradient-to-r from-[#FAB519] py-3 via-[#fadea0] to-[#FAB519] bg-[length:200%_100%] animate-shimmer shadow-sm text-text-primary">
       {/* Sparkle/Glitter Effects overlay */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.webp')] opacity-30 mix-blend-overlay pointer-events-none" />
 

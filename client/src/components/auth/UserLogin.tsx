@@ -609,7 +609,7 @@ export default function UserLogin() {
               <div className="space-y-5">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Enter your Email
+                    Enter your Email <span className="text-red-500">*</span>
                   </label>
                   <div className="relative group">
                     <Mail
@@ -618,6 +618,7 @@ export default function UserLogin() {
                     />
                     <input
                       type="email"
+                      required
                       className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-brand-green/40 rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400"
                       placeholder="you@example.com"
                       value={formData.email}
@@ -627,9 +628,62 @@ export default function UserLogin() {
                     />
                   </div>
                 </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Mobile Number <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative w-24">
+                      <select
+                        className="w-full pl-3 pr-6 py-3 bg-gray-50 border border-brand-green/40 rounded-xl outline-none appearance-none text-sm"
+                        value={formData.countryCode}
+                        onChange={(e) =>
+                          setFormData({ ...formData, countryCode: e.target.value })
+                        }
+                      >
+                        {countries.map((c) => (
+                          <option key={c.name} value={c.code}>
+                            {c.code}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                        size={12}
+                      />
+                    </div>
+                    <div className="relative group flex-1">
+                      <Phone
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold-subtle transition-colors"
+                        size={20}
+                      />
+                      <input
+                        name="mobile"
+                        type="tel"
+                        required
+                        className={`w-full pl-12 pr-4 py-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold-subtle/50 focus:border-brand-gold-subtle outline-none transition-all placeholder:text-gray-400 ${
+                          errors.mobile ? "border-red-300" : "border-brand-green/40"
+                        }`}
+                        placeholder="Enter mobile number"
+                        value={formData.mobile}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  {errors.mobile && (
+                    <p className="text-[10px] text-red-500 mt-1">
+                      {errors.mobile}
+                    </p>
+                  )}
+                </div>
                 <button
                   onClick={() => handleSendOtp()}
-                  disabled={!formData.email || loading || isServerDown}
+                  disabled={
+                    !/^\S+@\S+\.\S+$/.test(formData.email) ||
+                    !/^\d{7,15}$/.test(formData.mobile) ||
+                    loading ||
+                    isServerDown
+                  }
                   className="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold text-lg shadow-lg hover:bg-[#1a3a20] transition-all disabled:opacity-50"
                 >
                   {loading ? "Sending OTP..." : "Send OTP"}

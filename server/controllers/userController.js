@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const { uploadFile } = require("../utils/imageUpload");
 
 /**
  * @desc    Get user profile
@@ -51,6 +52,7 @@ const updateProfile = async (req, res) => {
       name,
       mobile,
       profilePhoto,
+      profilePhotoBase64, // { name, mimeType, data }
       emailNotifications,
       smsNotifications,
       newsletterSubscribed,
@@ -60,6 +62,32 @@ const updateProfile = async (req, res) => {
     if (name !== undefined) updateData.name = name;
     if (mobile !== undefined) updateData.mobile = mobile;
     if (profilePhoto !== undefined) updateData.profilePhoto = profilePhoto;
+
+    // Upload a new profile photo via the configured CDN
+    if (profilePhotoBase64 && profilePhotoBase64.data) {
+      const mimeType = profilePhotoBase64.mimeType || "image/jpeg";
+      if (!mimeType.startsWith("image/")) {
+        return res.status(400).json({
+          success: false,
+          message: "Profile photo must be an image",
+        });
+      }
+      try {
+        updateData.profilePhoto = await uploadFile(
+          profilePhotoBase64.name || `profile_${req.user._id}.jpg`,
+          mimeType,
+          profilePhotoBase64.data,
+          process.env.GOOGLE_DRIVE_FOLDER_ID,
+          { folder: "profiles" },
+        );
+      } catch (uploadError) {
+        console.error("❌ Profile photo upload failed:", uploadError.message);
+        return res.status(502).json({
+          success: false,
+          message: "Failed to upload profile photo",
+        });
+      }
+    }
     if (emailNotifications !== undefined)
       updateData.emailNotifications = emailNotifications;
     if (smsNotifications !== undefined)

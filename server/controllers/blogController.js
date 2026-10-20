@@ -1,5 +1,5 @@
 const Blog = require("../models/Blog");
-const { uploadFile } = require("../utils/googleDrive");
+const { uploadFile } = require("../utils/imageUpload");
 
 /**
  * @desc    Get all blogs
@@ -95,6 +95,7 @@ const createBlog = async (req, res) => {
           mainImageBase64.mimeType,
           mainImageBase64.data,
           mainFolderId,
+          { folder: "blogs" },
         );
       } catch (uploadError) {
         console.error("❌ Main Blog Image upload failed:", uploadError.message);
@@ -110,6 +111,7 @@ const createBlog = async (req, res) => {
           authorImageBase64.mimeType,
           authorImageBase64.data,
           mainFolderId,
+          { folder: "blogs" },
         );
       } catch (uploadError) {
         console.error("❌ Author Image upload failed:", uploadError.message);
@@ -126,6 +128,7 @@ const createBlog = async (req, res) => {
             img.mimeType,
             img.data,
             mainFolderId,
+            { folder: "blogs" },
           );
           galleryUrls.push(url);
         } catch (uploadError) {
@@ -232,6 +235,7 @@ const updateBlog = async (req, res) => {
           mainImageBase64.mimeType,
           mainImageBase64.data,
           mainFolderId,
+          { folder: "blogs" },
         );
         updateData.image = url;
       } catch (uploadError) {
@@ -247,6 +251,7 @@ const updateBlog = async (req, res) => {
           authorImageBase64.mimeType,
           authorImageBase64.data,
           mainFolderId,
+          { folder: "blogs" },
         );
         updateData.authorImage = url;
       } catch (uploadError) {
@@ -268,6 +273,7 @@ const updateBlog = async (req, res) => {
             img.mimeType,
             img.data,
             mainFolderId,
+            { folder: "blogs" },
           );
           newGalleryUrls.push(url);
         } catch (uploadError) {

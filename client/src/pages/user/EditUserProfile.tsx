@@ -53,12 +53,14 @@ export default function EditUserProfile() {
     email,
     mobile,
     countryCode,
+    photoURL,
     addresses,
     syncProfile,
     setUser,
   } = useUserStore();
 
   const [loading, setLoading] = useState(false);
+  const [photoUploading, setPhotoUploading] = useState(false);
   const [personalInfo, setPersonalInfo] = useState({
     name: name || "",
     mobile: mobile || "",
@@ -149,6 +151,55 @@ export default function EditUserProfile() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setErrors((prev) => ({ ...prev, photo: "Please select an image file" }));
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, photo: "Image must be under 5MB" }));
+      return;
+    }
+    setErrors((prev) => {
+      const { photo, ...rest } = prev;
+      return rest;
+    });
+
+    setPhotoUploading(true);
+    try {
+      const data = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+
+      const result = await userAPI.updateProfile({
+        profilePhotoBase64: { name: file.name, mimeType: file.type, data },
+      });
+      if (result.success) {
+        const data = result.data as { user?: { profilePhoto?: string } };
+        setUser({ photoURL: data?.user?.profilePhoto || "" });
+        setSuccess("Profile photo updated successfully!");
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          photo: result.message || "Failed to upload photo",
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+      setErrors((prev) => ({ ...prev, photo: "Failed to upload photo" }));
+    } finally {
+      setPhotoUploading(false);
     }
   };
 
@@ -267,6 +318,43 @@ export default function EditUserProfile() {
               )}
 
               <div className="space-y-6">
+                <div className="flex items-center gap-5">
+                  <div className="w-20 h-20 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0">
+                    {photoURL ? (
+                      <img
+                        src={photoURL}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <UserIcon className="text-gray-400" size={32} />
+                    )}
+                  </div>
+                  <div>
+                    <label
+                      className={`inline-block cursor-pointer px-5 py-2 rounded-xl border border-brand-green text-brand-green font-bold hover:bg-brand-green hover:text-white transition-all ${
+                        photoUploading ? "opacity-50 pointer-events-none" : ""
+                      }`}
+                    >
+                      {photoUploading ? "Uploading..." : "Change Photo"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handlePhotoChange}
+                        disabled={photoUploading}
+                      />
+                    </label>
+                    <p className="text-xs text-gray-500 mt-2">
+                      JPG, PNG or WEBP, up to 5MB
+                    </p>
+                    {errors.photo && (
+                      <p className="text-xs text-red-500 mt-1">{errors.photo}</p>
+                    )}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">
                     Full Name

@@ -1,5 +1,5 @@
 const BannerConfig = require("../models/BannerConfig");
-const { uploadFile } = require("../utils/googleDrive");
+const { uploadFile } = require("../utils/imageUpload");
 
 const DEFAULT_BANNER_CONFIGS = [
   {
@@ -353,7 +353,7 @@ const uploadBannerImage = async (req, res) => {
     const name = fileName || `banner-${Date.now()}.jpg`;
     const type = mimeType || "image/jpeg";
 
-    const publicUrl = await uploadFile(name, type, base64Data);
+    const publicUrl = await uploadFile(name, type, base64Data, undefined, { folder: "banners" });
 
     res.status(200).json({
       success: true,

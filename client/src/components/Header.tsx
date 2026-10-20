@@ -122,7 +122,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
         { href: "/portfolio/testimonials", label: "Testimonials" },
       ],
     },
-    { href: "/cheese-cooking-challenge", label: "Contest 🛵", isContest: true },
+    // { href: "/cheese-cooking-challenge", label: "Contest 🛵", isContest: true },
     { href: "/wholesale", label: "Wholesale" },
     { href: "/stories", label: "Journal" },
     { href: "/contact", label: "Contact" },

@@ -340,6 +340,7 @@ export const userAPI = {
     name?: string;
     mobile?: string;
     profilePhoto?: string;
+    profilePhotoBase64?: { name: string; mimeType: string; data: string };
   }) => {
     return apiRequest("/api/user/profile", {
       method: "PUT",
