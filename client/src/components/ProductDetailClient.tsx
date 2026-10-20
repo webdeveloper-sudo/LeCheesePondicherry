@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useToastStore } from "@/store/useToastStore";
 import { BookOpenText, Check, CookingPot, Heart, ShoppingCart, UtensilsCrossed, X, Zap } from "lucide-react";
 import ProductCard from "./ProductCard";
+import ProductImageGallery from "./ProductImageGallery";
 import ProductReviewsSection from "./reviews/ProductReviewsSection";
 
 interface ProductDetailClientProps {
@@ -47,6 +48,11 @@ export default function ProductDetailClient({
   const [selectedDish, setSelectedDish] = useState<any>(null);
 
   const inWishlist = isInWishlist(product.id);
+
+  // Main image first, then the rest, without duplicates
+  const galleryImages = Array.from(
+    new Set([product.image, ...(product.images || [])].filter(Boolean)),
+  );
 
   // Sync state when product changes (for similar items navigation)
   useEffect(() => {
@@ -158,13 +164,11 @@ export default function ProductDetailClient({
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="relative">
-              <div className="aspect-square bg-bg-cream-light rounded-lg overflow-hidden relative">
-                <img
-                  src={mainImage}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-all duration-300"
-                />
-                {/* Wishlist button on image */}
+              <ProductImageGallery
+                src={mainImage}
+                alt={product.name}
+                images={galleryImages}
+                overlay={
                 <button
                   onClick={handleWishlistToggle}
                   className={`absolute top-4 right-4 p-3 rounded-full transition-all duration-300 shadow-lg ${
@@ -183,7 +187,8 @@ export default function ProductDetailClient({
                     }`}
                   />
                 </button>
-              </div>
+                }
+              />
               {/* Thumbnails */}
               {product.images && product.images.length > 0 && (
                 <div className="flex gap-2 mt-4 overflow-x-auto pb-2">

@@ -64,12 +64,19 @@ export default function OrderStatusPage() {
           setStatus("success");
           const finalOrder = res.data.data || res.data;
           setOrderDetails(finalOrder);
+          const completedOrder = { ...orderData, ...finalOrder, cfOrderId };
           try {
-            localStorage.setItem("lepondy_last_order", JSON.stringify({ ...orderData, ...finalOrder, cfOrderId }));
+            localStorage.setItem("lepondy_last_order", JSON.stringify(completedOrder));
+            localStorage.removeItem("lepondy_pending_order");
           } catch (e) {
             console.error(e);
           }
           clearCart();
+          // Go straight to the thank-you page; replace so "back" doesn't re-run verification
+          navigate(`/thank-you?order_id=${encodeURIComponent(cfOrderId)}`, {
+            replace: true,
+            state: { order: completedOrder },
+          });
         } else if (res.data?.canRetry && currentRetries < maxRetries) {
           currentRetries++;
           setRetryCount(currentRetries);
