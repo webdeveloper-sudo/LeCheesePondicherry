@@ -747,7 +747,7 @@ export default function CookingChallengeLeaderboardPage() {
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              to="/shop"
+              to="/buy-cheese-online"
               className="inline-flex items-center gap-2 bg-[#FAB519] hover:bg-[#C9A961] text-[#1A1A1A] font-bold text-sm px-8 py-3.5 rounded-full transition-all shadow-xl"
             >
               <ShoppingBag className="w-4 h-4" />

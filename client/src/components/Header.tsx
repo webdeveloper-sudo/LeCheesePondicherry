@@ -20,6 +20,7 @@ import logo from "@/assets/images/logo.webp";
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, imageVariant } from "@/animations/variants";
 import TopHeader from "./TopHeader";
+import { productDisplayName, productPath } from "@/seo/seoConfig";
 
 interface HeaderProps {
   settings?: any;
@@ -106,13 +107,13 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
 
   const handleSearchSubmit = (query: string) => {
     if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query)}`);
+      navigate(`/buy-cheese-online?search=${encodeURIComponent(query)}`);
       setSearchOpen(false);
     }
   };
 
   const navLinks = [
-    { href: "/shop", label: "Shop" },
+    { href: "/buy-cheese-online", label: "Shop" },
     { href: "/about", label: "About Us" },
     {
       label: "Portfolio",
@@ -274,7 +275,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                             <li key={product.id}>
                               <button
                                 onClick={() => {
-                                  navigate(`/products/${product.id}`);
+                                  navigate(productPath(product.id));
                                   setSearchOpen(false);
                                   setSearchQuery("");
                                 }}
@@ -283,7 +284,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                                 <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                                   <img
                                     src={product.image}
-                                    alt={product.name}
+                                    alt={productDisplayName(product.id, product.name)}
                                     className="w-full h-full object-cover"
                                   />
                                 </div>
@@ -533,7 +534,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                         <li key={product.id}>
                           <button
                             onClick={() => {
-                              navigate(`/products/${product.id}`);
+                              navigate(productPath(product.id));
                               setSearchOpen(false);
                               setSearchQuery("");
                             }}
@@ -542,7 +543,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                             <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                               <img
                                 src={product.image}
-                                alt={product.name}
+                                alt={productDisplayName(product.id, product.name)}
                                 className="w-full h-full object-cover"
                               />
                             </div>

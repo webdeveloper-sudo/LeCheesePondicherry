@@ -180,7 +180,7 @@ export default function OrderStatusPage() {
                 View My Orders
               </Link>
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 onClick={() => localStorage.removeItem("lepondy_pending_order")}
                 className="w-full py-2.5 text-center text-sm font-bold text-gray-500 hover:text-brand-green transition-colors"
               >
@@ -222,7 +222,7 @@ export default function OrderStatusPage() {
                 View My Orders
               </Link>
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 onClick={() => localStorage.removeItem("lepondy_pending_order")}
                 className="btn btn-secondary w-full py-4 text-center"
               >
@@ -272,7 +272,7 @@ export default function OrderStatusPage() {
                 Try Again
               </button>
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 onClick={() => localStorage.removeItem("lepondy_pending_order")}
                 className="btn btn-secondary w-full py-4"
               >

@@ -122,7 +122,7 @@ export default function FlashSaleBanner({ settings: initialSettings }: FlashSale
           </div>
 
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="bg-brand-green text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:bg-brand-green-dark hover:scale-105 transition-all duration-300 border-2 border-brand-green flex items-center gap-2"
           >
             Buy Now

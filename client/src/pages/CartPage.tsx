@@ -10,6 +10,7 @@ import { useToastStore } from "@/store/useToastStore";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { trackViewCart } from "@/lib/gtm";
+import { productDisplayName, productPath } from "@/seo/seoConfig";
 
 export default function CartPage() {
   const {
@@ -175,7 +176,7 @@ export default function CartPage() {
               Looks like you haven't added any delicious cheeses yet. Explore
               our collection and find your perfect match!
             </p>
-            <Link to="/shop" className="btn btn-primary">
+            <Link to="/buy-cheese-online" className="btn btn-primary">
               Start Shopping
             </Link>
           </div>
@@ -344,7 +345,7 @@ export default function CartPage() {
                   <div className="w-24 h-24 md:w-32 md:h-32 bg-bg-cream-light rounded-lg overflow-hidden relative flex-shrink-0">
                     <img
                       src={product.image}
-                      alt={product.name}
+                      alt={productDisplayName(product.id, product.name)}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -354,11 +355,11 @@ export default function CartPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <Link
-                          to={`/products/${product.id}`}
+                          to={productPath(product.id)}
                           className="text-lg font-semibold hover:text-brand-gold-subtle transition-colors text-text-primary"
                           style={{ fontFamily: "var(--font-heading)" }}
                         >
-                          {product.name}
+                          {productDisplayName(product.id, product.name)}
                         </Link>
                         <div className="mt-2">
                           <div className="flex flex-wrap gap-2">
@@ -448,7 +449,7 @@ export default function CartPage() {
 
             {/* Continue Shopping */}
             <Link
-              to="/shop"
+              to="/buy-cheese-online"
               className="inline-flex items-center gap-2 text-text-secondary hover:text-brand-gold-subtle transition-colors"
             >
               <svg
@@ -498,7 +499,7 @@ export default function CartPage() {
                             <span className="font-medium text-text-primary">
                               {item.quantity}x
                             </span>{" "}
-                            {product.name}
+                            {productDisplayName(product.id, product.name)}
                           </div>
                           <button
                             onClick={() => removeFromCart(idx)}

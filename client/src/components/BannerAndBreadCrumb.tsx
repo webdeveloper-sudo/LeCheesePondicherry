@@ -23,6 +23,7 @@ const BannerAndBreadCrumb = ({
     "/",
     "/about",
     "/shop",
+    "/buy-cheese-online",
     "/cart",
     "/checkout",
     "/contact",

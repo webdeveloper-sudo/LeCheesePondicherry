@@ -69,6 +69,7 @@ const BreadcrumbSlider: React.FC<BreadcrumbSliderProps> = ({
     "/",
     "/about",
     "/shop",
+    "/buy-cheese-online",
     "/cart",
     "/checkout",
     "/contact",

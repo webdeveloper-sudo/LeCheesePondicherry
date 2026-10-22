@@ -60,7 +60,7 @@ export default function FinalCTA() {
         {/* Dual Primary CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#FAB519] hover:bg-[#C9A961] text-[#1A1A1A] font-bold text-sm sm:text-base px-9 py-4 rounded-full transition-all duration-300 shadow-2xl hover:-translate-y-0.5"
           >
             <ShoppingBag className="w-5 h-5" />

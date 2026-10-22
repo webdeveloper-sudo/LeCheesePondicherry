@@ -97,7 +97,7 @@ const OrderHistory = () => {
           </select>
 
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="text-sm font-bold text-[#2C5530] hover:underline"
           >
             New Purchase
@@ -110,7 +110,7 @@ const OrderHistory = () => {
           <p className="text-[#6B6B6B] mb-4">
             You haven't placed any orders in this period.
           </p>
-          <Link to="/shop" className="btn btn-primary px-8">
+          <Link to="/buy-cheese-online" className="btn btn-primary px-8">
             Browse the Shop
           </Link>
         </div>

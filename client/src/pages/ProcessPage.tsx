@@ -69,7 +69,7 @@ export default function ProcessPage() {
                 variants={fadeUp}
                 className="bg-white p-8 rounded-lg shadow-lg border border-border-light text-center"
               >
-                <img className="w-36 mx-auto h-36 mb-6" src={step.icon} />
+                <img className="w-36 mx-auto h-36 mb-6" src={step.icon} alt={`${step.title} - artisan cheese making process`} />
                 <h3
                   className="text-xl font-bold mb-4"
                   style={{ fontFamily: "var(--font-heading)" }}
@@ -83,7 +83,7 @@ export default function ProcessPage() {
 
           <div className="mt-20 text-center">
             <Link
-              to="/shop"
+              to="/buy-cheese-online"
               className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
             >
               Explore the Collection

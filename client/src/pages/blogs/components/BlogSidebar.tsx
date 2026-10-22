@@ -129,7 +129,7 @@ export default function BlogSidebar({ blogs = [] }: BlogSidebarProps) {
             >
               <img
                 src={item}
-                alt="Gallery"
+                alt={`Le Pondicherry Cheese journal gallery image ${idx + 1}`}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 referrerPolicy="no-referrer"
                 loading="lazy"

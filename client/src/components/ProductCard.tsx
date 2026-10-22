@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
 import { useToastStore } from "@/store/useToastStore";
 import { trackSelectItem } from "@/lib/gtm";
+import { productDisplayName, productPath } from "@/seo/seoConfig";
 
 interface ProductCardProps {
   id: string;
@@ -21,7 +22,7 @@ interface ProductCardProps {
 
 export default function ProductCard({
   id,
-  name,
+  name: rawName,
   description,
   price,
   originalPrice,
@@ -29,6 +30,7 @@ export default function ProductCard({
   rating = 4.5,
   reviewCount = 0,
 }: ProductCardProps) {
+  const name = productDisplayName(id, rawName);
   const { isInWishlist, toggleWishlist, trackProductView } = useUserStore();
   const { addToast } = useToastStore();
   const [isToggling, setIsToggling] = useState(false);
@@ -94,7 +96,7 @@ export default function ProductCard({
 
       {/* Image Container */}
       <Link
-        to={`/products/${id}`}
+        to={productPath(id)}
         className="block relative aspect-square overflow-hidden bg-bg-cream-light"
         onClick={handleProductClick}
       >
@@ -116,7 +118,7 @@ export default function ProductCard({
       {/* Content */}
       <div className="p-4 flex flex-col flex-grow">
         {/* Product Name */}
-        <Link to={`/products/${id}`} onClick={handleProductClick}>
+        <Link to={productPath(id)} onClick={handleProductClick}>
           <h3
             className="text-lg font-medium text-text-primary mb-1 hover:text-brand-gold-subtle transition-colors"
             style={{ fontFamily: "var(--font-heading)" }}
@@ -164,7 +166,7 @@ export default function ProductCard({
 
         {/* View Details Button */}
         <Link
-          to={`/products/${id}`}
+          to={productPath(id)}
           className="group/btn mt-auto inline-flex items-center justify-center gap-2 w-full bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-xs md:text-sm py-2.5 rounded-full transition-all duration-300 shadow hover:-translate-y-0.5"
           onClick={handleProductClick}
         >

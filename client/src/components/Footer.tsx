@@ -62,7 +62,7 @@ export default function Footer() {
               <ul className="space-y-4 text-sm text-white/90">
                 <li>
                   <Link
-                    to="/shop"
+                    to="/buy-cheese-online"
                     className="hover:text-brand-gold-subtle transition-colors"
                     onClick={() => window.scrollTo(0, 0)}
                   >
@@ -71,7 +71,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=aged"
+                    to="/buy-cheese-online?category=aged"
                     className="hover:text-brand-gold-subtle transition-colors"
                     onClick={() => window.scrollTo(0, 0)}
                   >
@@ -80,7 +80,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=fresh"
+                    to="/buy-cheese-online?category=fresh"
                     className="hover:text-brand-gold-subtle transition-colors"
                     onClick={() => window.scrollTo(0, 0)}
                   >
@@ -89,7 +89,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=specialty"
+                    to="/buy-cheese-online?category=specialty"
                     className="hover:text-brand-gold-subtle transition-colors"
                     onClick={() => window.scrollTo(0, 0)}
                   >
@@ -98,7 +98,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    to="/shop?category=melting"
+                    to="/buy-cheese-online?category=melting"
                     className="hover:text-brand-gold-subtle transition-colors"
                     onClick={() => window.scrollTo(0, 0)}
                   >

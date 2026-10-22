@@ -12,6 +12,7 @@ import axios from "axios";
 import { MotionContainer } from "@/components/ui/MotionPrimitives";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
+import { productDisplayName, productPath } from "@/seo/seoConfig";
 
 interface WishlistItem {
   productId: string;
@@ -149,7 +150,7 @@ export default function WishlistPage() {
               Start exploring our artisan cheeses and save your favorites!
             </p>
             <Link
-              to="/shop"
+              to="/buy-cheese-online"
               className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
             >
               Explore Shop
@@ -172,24 +173,24 @@ export default function WishlistPage() {
               >
                 {/* Product Image */}
                 <Link
-                  to={`/products/${product.id}`}
+                  to={productPath(product.id)}
                   className="block relative aspect-square bg-bg-cream-light overflow-hidden group"
                 >
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={productDisplayName(product.id, product.name)}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </Link>
 
                 {/* Product Info */}
                 <div className="p-4">
-                  <Link to={`/products/${product.id}`}>
+                  <Link to={productPath(product.id)}>
                     <h3
                       className="text-lg font-medium text-text-primary mb-1 hover:text-brand-gold-subtle transition-colors"
                       style={{ fontFamily: "var(--font-heading)" }}
                     >
-                      {product.name}
+                      {productDisplayName(product.id, product.name)}
                     </h3>
                   </Link>
 

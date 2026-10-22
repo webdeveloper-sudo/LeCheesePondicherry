@@ -88,7 +88,7 @@ export default function GoogleSignInButton({
           onSuccess();
         } else {
           const redirectParam = new URLSearchParams(window.location.search).get("redirect");
-          let redirectPath = user.role === "admin" ? "/admin/dashboard" : "/shop";
+          let redirectPath = user.role === "admin" ? "/admin/dashboard" : "/buy-cheese-online";
           if (redirectParam) {
             const decoded = decodeURIComponent(redirectParam);
             redirectPath = decoded.startsWith("/") ? decoded : `/${decoded}`;

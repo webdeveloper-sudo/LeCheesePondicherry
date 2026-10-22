@@ -155,7 +155,7 @@ export default function RecipeInspiration() {
               {/* Card Footer Link */}
               <div className="mt-5 pt-4 border-t border-gray-100">
                 <Link
-                  to="/shop"
+                  to="/buy-cheese-online"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#051F44] group-hover:text-[#FAB519] transition-colors"
                 >
                   <span>Shop cheeses for this</span>
@@ -172,7 +172,7 @@ export default function RecipeInspiration() {
             Have a family recipe, street food fusion, or experimental concept? You can enter with <strong>any dish</strong>!
           </p>
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="inline-flex items-center gap-2 bg-[#051F44] hover:bg-[#1A3A20] text-white font-semibold text-sm px-8 py-3.5 rounded-full transition-all shadow-md"
           >
             <span>Explore All Cheeses In Shop</span>

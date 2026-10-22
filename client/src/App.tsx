@@ -8,7 +8,8 @@ import DecorativeWrapper from "@/components/DecorativeWrapper";
 import LoaderComponent from "@/components/Loader";
 import ToastContainer from "@/components/ToastContainer";
 import { CartProvider } from "@/context/CartContext";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { SHOP_PATH } from "@/seo/seoConfig";
 import { API_BASE_URL } from "@/config";
 
 import HomePage from "@/pages/HomePage";
@@ -100,7 +101,8 @@ export default function App() {
           <Route path="/cooking-challenge" element={<CheeseCookingChallengePage />} />
           <Route path="/cooking-challenge/leaderboard" element={<CookingChallengeLeaderboardPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/shop" element={<ShopPage />} />
+          <Route path={SHOP_PATH} element={<ShopPage />} />
+          <Route path="/shop" element={<Navigate to={{ pathname: SHOP_PATH, search: location.search }} replace />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/checkout/status" element={<OrderStatusPage />} />

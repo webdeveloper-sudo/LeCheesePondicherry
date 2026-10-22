@@ -150,7 +150,7 @@ export default function ChallengeOverview() {
             {/* CTA */}
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-4">
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 className="inline-flex items-center gap-2 bg-[#051F44] hover:bg-[#1A3A20] text-white font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-md hover:-translate-y-0.5"
               >
                 <span>Shop Le Pondicherry Cheese</span>

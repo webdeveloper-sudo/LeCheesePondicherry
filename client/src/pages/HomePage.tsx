@@ -8,6 +8,8 @@ import { FETCH_MODE } from "@/config";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useCart } from "@/context/CartContext";
+import Seo from "@/components/Seo";
+import { HOME_SEO } from "@/seo/seoConfig";
 
 export default function HomePage() {
   const { allProducts, loading: cartLoading, isServerDown } = useCart();
@@ -22,19 +24,20 @@ export default function HomePage() {
     (p: Product) => p.category === "subscriptions",
   );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-pattern">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2C5530]"></div>
-      </div>
-    );
-  }
-
   return (
-    <HomeClient
-      featuredProducts={featuredProducts}
-      subscriptionPlans={subscriptionPlans}
-      testimonials={testimonials}
-    />
+    <>
+      <Seo {...HOME_SEO} />
+      {loading ? (
+        <div className="min-h-screen flex items-center justify-center bg-pattern">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2C5530]"></div>
+        </div>
+      ) : (
+        <HomeClient
+          featuredProducts={featuredProducts}
+          subscriptionPlans={subscriptionPlans}
+          testimonials={testimonials}
+        />
+      )}
+    </>
   );
 }

@@ -191,7 +191,7 @@ export default function ThankYouPage() {
                 Return to Home
               </Link>
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 className="btn btn-secondary px-8 py-3.5 text-sm font-bold flex items-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
@@ -426,7 +426,7 @@ export default function ThankYouPage() {
               </Link>
 
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 className="btn btn-secondary px-8 py-3.5 text-sm font-bold flex items-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
@@ -717,7 +717,7 @@ export default function ThankYouPage() {
                 </h2>
               </div>
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 className="text-sm font-bold text-brand-green hover:text-brand-gold flex items-center gap-1.5 transition-colors"
               >
                 View Full Catalog

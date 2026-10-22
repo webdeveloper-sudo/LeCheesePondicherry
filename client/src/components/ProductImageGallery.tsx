@@ -89,7 +89,7 @@ export default function ProductImageGallery({ src, alt, images, overlay }: Produ
           >
             <img
               src={src}
-              alt=""
+              alt={`${alt} zoomed view`}
               className="absolute max-w-none object-cover"
               style={{
                 width: lens.w * LENS_ZOOM,
@@ -294,7 +294,7 @@ function ImageViewer({ images, alt, index, onIndexChange, onClose }: ImageViewer
               }`}
               aria-label={`View image ${i + 1}`}
             >
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={img} alt={`${alt} thumbnail ${i + 1}`} className="w-full h-full object-cover" />
             </button>
           ))}
         </div>

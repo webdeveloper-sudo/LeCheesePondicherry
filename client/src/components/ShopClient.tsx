@@ -224,7 +224,7 @@ export default function ShopClient() {
     clearFilters();
     setCustomMinPrice("");
     setCustomMaxPrice("");
-    window.history.replaceState(null, "", "/shop");
+    window.history.replaceState(null, "", "/buy-cheese-online");
   };
 
   if (loading) {
@@ -407,7 +407,7 @@ export default function ShopClient() {
                   onClick={() => {
                     setSearchTerm("");
                     setIsSearchOpen(false);
-                    window.history.replaceState(null, "", "/shop");
+                    window.history.replaceState(null, "", "/buy-cheese-online");
                   }}
                   className="text-brand-green font-medium ml-2 whitespace-nowrap hover:underline"
                 >

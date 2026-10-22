@@ -149,7 +149,7 @@ export default function ProductDetailClient({
             </li>
             <li className="mx-2">/</li>
             <li>
-              <Link to="/shop" className="hover:text-brand-gold-subtle">
+              <Link to="/buy-cheese-online" className="hover:text-brand-gold-subtle">
                 Shop
               </Link>
             </li>

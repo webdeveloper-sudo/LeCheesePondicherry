@@ -234,7 +234,7 @@ export default function SingleBlogDetails() {
                           <img
                             src={img}
                             className="w-full h-64 object-cover"
-                            alt={`Gallery ${idx}`}
+                            alt={`${blog.title} - gallery image ${idx + 1}`}
                             referrerPolicy="no-referrer"
                             loading="lazy"
                           />
@@ -394,7 +394,7 @@ export default function SingleBlogDetails() {
             </p>
             <div className="flex items-center justify-center gap-4">
               <Link
-                to="/shop"
+                to="/buy-cheese-online"
                 className="px-8 py-3 bg-white text-[#2C5530] rounded-lg font-bold hover:bg-[#F5E6D3] transition-all"
               >
                 Shop Now

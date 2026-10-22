@@ -189,7 +189,7 @@ function OrderHistory() {
           Your Orders
         </h2>
         <Link
-          to="/shop"
+          to="/buy-cheese-online"
           className="text-sm font-bold text-brand-green hover:underline"
         >
           New Purchase
@@ -201,7 +201,7 @@ function OrderHistory() {
           <p className="text-text-secondary mb-4">
             You haven't placed any orders yet.
           </p>
-          <Link to="/shop" className="btn btn-primary px-8">
+          <Link to="/buy-cheese-online" className="btn btn-primary px-8">
             Browse the Shop
           </Link>
         </div>

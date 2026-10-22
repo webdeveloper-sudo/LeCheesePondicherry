@@ -183,7 +183,7 @@ const OurFacility: React.FC = () => {
                 <div className="aspect-square bg-bg-cream-light overflow-hidden shadow-2xl border border-brand-green/5 rounded-3xl">
                   <img
                     src="https://i.postimg.cc/KvvBvVn3/french-camembert-pieces-served-slate-surface.jpg"
-                    alt="Our Team"
+                    alt="Artisanal cheese pieces crafted by the Le Pondicherry Cheese team"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -327,7 +327,7 @@ const OurFacility: React.FC = () => {
               <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                 <img
                   src="https://i.postimg.cc/KvvBvVn3/french-camembert-pieces-served-slate-surface.jpg"
-                  alt="Logistics"
+                  alt="Artisanal cheese prepared for cold-chain delivery"
                   className="w-full h-full object-cover"
                 />
                 {/* <div className="absolute inset-0 bg-gradient-to-t from-brand-green/80 to-transparent" /> */}
@@ -421,7 +421,7 @@ const OurFacility: React.FC = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Link
-              to="/shop"
+              to="/buy-cheese-online"
               className="group inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
             >
               Shop Our Cheeses

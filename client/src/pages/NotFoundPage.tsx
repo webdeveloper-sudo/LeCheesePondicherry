@@ -36,7 +36,7 @@ export default function NotFoundPage() {
           <Link to="/" className="btn btn-primary w-full">
             Back to Home
           </Link>
-          <Link to="/shop" className="btn btn-secondary w-full">
+          <Link to="/buy-cheese-online" className="btn btn-secondary w-full">
             Browse Our Cheeses
           </Link>
         </motion.div>

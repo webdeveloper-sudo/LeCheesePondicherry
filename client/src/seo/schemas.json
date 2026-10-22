@@ -1,0 +1,2490 @@
+{
+  "home": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://www.lepondicheese.com/#localbusiness",
+        "name": "Le Pondicherry Cheese",
+        "url": "https://www.lepondicheese.com/",
+        "image": "https://www.lepondicheese.com/icon.webp",
+        "logo": "https://www.lepondicheese.com/icon.webp",
+        "description": "Le Pondicherry Cheese is a premium artisanal cheese brand offering specialty cheeses including Mozzarella, Halloumi, Feta, Burrata and aged cheeses.",
+        "priceRange": "₹₹",
+        "telephone": [
+          "+91 84388 92532",
+          "+91 72005 04628"
+        ],
+        "email": "vp.expansions@hopemarket.in",
+        "address": {
+          "@type": "PostalAddress",
+          "@id": "https://www.lepondicheese.com/#address",
+          "streetAddress": "No: 16/3, Pondy to Vazhudavur Road, Perambai",
+          "addressLocality": "Villupuram",
+          "addressRegion": "Tamil Nadu",
+          "postalCode": "605109",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 11.939803184594592,
+          "longitude": 79.75678734045528
+        },
+        "areaServed": {
+          "@type": "Place",
+          "name": "Villupuram, India"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday"
+            ],
+            "opens": "11:00",
+            "closes": "17:00"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.lepondicheese.com/#website",
+        "url": "https://www.lepondicheese.com/",
+        "name": "Le Pondicherry Cheese",
+        "description": "Le Pondicherry Cheese is a premium artisanal cheese brand offering specialty cheeses including Mozzarella, Halloumi, Feta, Burrata and aged cheeses in India.",
+        "keywords": [
+          "Best cheese brand in India",
+          "Best cheese company in India",
+          "Premium cheese brand",
+          "Artisanal cheese",
+          "Mozzarella cheese",
+          "Halloumi cheese",
+          "Feta cheese",
+          "Burrata cheese",
+          "Aged cheese",
+          "Specialty cheese",
+          "Fresh cheese",
+          "European cheese",
+          "Cheese making"
+        ],
+        "sameAs": [
+          "https://www.facebook.com/profile.php?id=61582680524556",
+          "https://www.instagram.com/lepondicherrycheese/",
+          "https://www.linkedin.com/company/le-pondicherry-cheese/",
+          "https://www.youtube.com/@lepondicherrycheese"
+        ]
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "@id": "https://www.lepondicheese.com/#header-nav",
+        "name": [
+          "Shop",
+          "About Us",
+          "Portfolio",
+          "Wholesale",
+          "Journal",
+          "Contact"
+        ],
+        "url": [
+          "https://www.lepondicheese.com/buy-cheese-online",
+          "https://www.lepondicheese.com/about",
+          "https://www.lepondicheese.com/portfolio/facility",
+          "https://www.lepondicheese.com/wholesale",
+          "https://www.lepondicheese.com/stories",
+          "https://www.lepondicheese.com/contact"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://www.lepondicheese.com/#cheese-catalog",
+        "name": "Le Pondicherry Cheese Collection",
+        "url": "https://www.lepondicheese.com/buy-cheese-online",
+        "numberOfItems": 8,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-feta",
+              "name": "Feta",
+              "description": "Crumbly and brined soft salad cheese.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "360.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-fetta-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-halloumi",
+              "name": "Halloumi",
+              "description": "The grilled cheese with high heat stability.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "360.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-fresh-mozzarella",
+              "name": "Fresh Mozzarella",
+              "description": "Soft, fresh and gently melting.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "300.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-burrata",
+              "name": "Burrata",
+              "description": "Soft, fresh and gently melting.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "175.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-burrata-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-grana-cherry",
+              "name": "Grana Cherry",
+              "description": "Hard, aged and grate-ready.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "450.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-pondy-orange",
+              "name": "Pondy Orange",
+              "description": "Smooth, mature and versatile.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "420.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#product-daddy-swiss",
+              "name": "Daddy Swiss",
+              "description": "Rich, mature Swiss-style cheese.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "450.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese"
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 8,
+            "item": {
+              "@type": "Product",
+              "@id": "https://www.lepondicheese.com/#productbuy-baby-swiss-cheese",
+              "name": "Baby Swiss Cheese",
+              "description": "Mild and gently sweet.",
+              "brand": {
+                "@type": "Brand",
+                "name": "Le Pondicherry Cheese"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "420.00",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "@type": "Review",
+        "@id": "https://www.lepondicheese.com/#review-rajesh-kumar",
+        "author": {
+          "@type": "Person",
+          "name": "Rajesh Kumar"
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "reviewBody": "The artisanal cheeses from Le Pondicherry are simply unmatched. The texture and flavor profiles are exactly what I was looking for in premium cheese. My favorites are the aged cheddar and the truffle-infused varieties."
+      },
+      {
+        "@type": "Review",
+        "@id": "https://www.lepondicheese.com/#review-sophie-laurent",
+        "author": {
+          "@type": "Person",
+          "name": "Sophie Laurent"
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "reviewBody": "As a French chef, I'm very picky about my cheese. I was pleasantly surprised to find such high-quality, authentic artisanal cheese in Pondicherry. It has become a staple in my restaurant's cheese platters."
+      },
+      {
+        "@type": "Review",
+        "@id": "https://www.lepondicheese.com/#review-anita-desai",
+        "author": {
+          "@type": "Person",
+          "name": "Anita Desai"
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "4",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "reviewBody": "Le Pondicherry Cheese isn't just about food; it's about the craft. Their commitment to traditional methods is evident in every bite. A must-try for any cheese lover."
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://www.lepondicheese.com/#cheese-assistant",
+        "name": "Cheese Assistant",
+        "alternateName": "Le Pondicherry Cheese Assistant",
+        "url": "https://www.lepondicheese.com/",
+        "description": "AI-powered cheese assistant for Le Pondicherry Cheese.",
+        "applicationCategory": "CustomerService",
+        "applicationSubCategory": "AI Chatbot",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires a modern web browser",
+        "isAccessibleForFree": true,
+        "featureList": [
+          "AI-powered cheese assistance",
+          "Cheese recommendations",
+          "Product information",
+          "Customer support"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://www.lepondicheese.com/#cta-links",
+        "name": "Le Pondicherry Cheese Quick Links",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Shop Our Cheeses",
+            "url": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Our Story",
+            "url": "https://www.lepondicheese.com/about"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "View All Cheeses",
+            "url": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Discover Our Journey",
+            "url": "https://www.lepondicheese.com/about"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "name": "Enquire for Wholesale",
+            "url": "https://www.lepondicheese.com/wholesale"
+          }
+        ]
+      },
+      {
+        "@type": "DigitalDocument",
+        "@id": "https://www.lepondicheese.com/#fssai-certification",
+        "name": "Le Pondicherry Cheese FSSAI Certification",
+        "description": "FSSAI certification document for Le Pondicherry Cheese.",
+        "url": "https://www.lepondicheese.com/assets/lpc-fssai-certifcation-BksdJ9fO.pdf",
+        "encodingFormat": "application/pdf"
+      }
+    ]
+  },
+  "shop": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#webpage",
+        "url": "https://www.lepondicheese.com/buy-cheese-online",
+        "name": "Buy Cheese Online | Le Pondicherry Cheese",
+        "description": "Explore premium cheese online at Le Pondicherry Cheese. Shop Mozzarella, Cheddar, Feta, Halloumi, Ricotta, and other quality cheeses.",
+        "inLanguage": "en-IN"
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#pizza-cheese",
+        "name": "Pizza Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1rEKFoS2D0IbzlUgMjVkOn9-Pr54AlsDX&sz=w1000 ",
+        "description": "Built for High-Heat Cooking",
+        "url": "",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "275",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-pizza-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#fetta-cheese",
+        "name": "Fetta Cheese",
+        "image": "https://drive.google.com/thumbnail?id=16iUjgfeT-isKZOWi7zGoOCoW0olQXp5m&sz=w1000 ",
+        "description": "Crumbly and moist",
+        "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "360",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-fetta-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#halloumi-cheese",
+        "name": "Halloumi Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1I3lschsmW_iZ7bLYyWJlCBCCx4tW950I&sz=w1000 ",
+        "description": "The Grilling Cheese – High Heat Stable",
+        "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "360",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#ricotta-cheese",
+        "name": "Ricotta Cheese",
+        "image": "RICOTTA-IMAGE-URL",
+        "description": "Light & Whey-Based",
+        "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "275",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#bocconcini-cheese",
+        "name": "Bocconcini Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1NI_BGC3oGtcWvjJExkYqAAGB4XUtBecp&sz=w1000",
+        "description": "Small, Fresh & Mild",
+        "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "300",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#mozzarella-cheese",
+        "name": "Mozzarella Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1R8TqTOigCA0eZ9QbcAM52Rk7Fy12-IZl&sz=w1000 ",
+        "description": "Soft, Fresh & Gently Melting",
+        "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "300",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#burrata-cheese",
+        "name": "Burrata Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1MwzV2g8p8_m9H8oDZSn06RfwJpqAcpfJ&sz=w1000 ",
+        "description": "Creamy Inside, Glossy Outside",
+        "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "175",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-burrata-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#pondy-orange-cheese",
+        "name": "Pondy Orange Cheese",
+        "Image": "https://drive.google.com/thumbnail?id=1kS61BOzWDhF4whBF_7odNndwmg6K3zbY&sz=w1000 ",
+        "description": "Smooth, Mature & Versatile",
+        "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "420",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#grana-cherry-cheese",
+        "name": "Grana Cherry Cheese",
+        "image": "GRANA-CHERRY-IMAGE-URL",
+        "description": "Hard, Aged & Grate-Ready",
+        "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "450",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#Baby-swiss-cheese",
+        "name": "Baby Swiss Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1V_r44qSncnKtoCWrIaFznc4vQnFE1FGv&sz=w1000 ",
+        "description": "Mild & Gently Sweet",
+        "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "420",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#daddy-swiss-cheese",
+        "name": "Daddy Swiss Cheese",
+        "image": "https://drive.google.com/thumbnail?id=1pt7_obtupzq26SrwgIyyuJg6Nbspbt7n&sz=w1000 ",
+        "description": "Rich, Mature Swiss-Style",
+        "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "450",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#paneer",
+        "name": "Paneer",
+        "image": "https://lh3.googleusercontent.com/d/126NV97ttLy8Z77kaBbO2oDfXTXpFXxEs",
+        "description": "Firm and crumbly",
+        "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": "110",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.lepondicheese.com/products/buy-paneer-online"
+        }
+      },
+      {
+        "@type": "WebPageElement",
+        "@id": "https://www.lepondicheese.com/buy-cheese-online#wholesale-partnerships",
+        "name": "Wholesale & Partnerships",
+        "description": "Elevate your menu with Pondicherry's finest handcrafted artisan cheeses. We partner with premium restaurants, hotels, and cafes across India.",
+        "url": "https://www.lepondicheese.com/wholesale",
+        "potentialAction": {
+          "@type": "CommunicateAction",
+          "name": "Enquire for Wholesale",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.lepondicheese.com/wholesale"
+          }
+        }
+      }
+    ]
+  },
+  "pizzaella": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#product",
+        "name": "Pizza Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Pizzaella is a block-style mozzarella crafted for high-temperature cooking, delivering a controlled melt, delicious stretch, and minimal moisture release. Buy premium Pizza Cheese with rich flavour, perfect for homemade pizzas, restaurants, and professional kitchens. Check the pizza cheese price and shop today!",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494258/lepondicheese.com/products/PIZZAELLA_Front_result_1792494254993_dqnfmz.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494259/lepondicheese.com/products/PIZZAELLA_Side_result_1792494259250_s3ah53.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494262/lepondicheese.com/products/PIZZAELLA_Back_result_1792494261528_x3azmi.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494262/lepondicheese.com/products/PIZZAELLA_Bottom_result_1792494262456_9csuzy.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Ideal for pizzas, toasts and all melty bakes. Gives a longer shelf life due to low moisture"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Firm and elastic"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Pizza Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+            "price": "275",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pizza Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+            "price": "509",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pizza Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+            "price": "729",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pizza Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+            "price": "935",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pizza Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+            "price": "1128",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494258/lepondicheese.com/products/PIZZAELLA_Front_result_1792494254993_dqnfmz.webp",
+        "caption": "Buy Pizza Cheese | Le Pondicherry Cheese",
+        "name": "Pizza Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-pizza-cheese",
+        "name": "Buy Pizza Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-pizza-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Pizza Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-pizza-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "feta": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#product",
+        "name": "Fetta Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Buy premium Fetta Cheese, a brined Greek cheese with a crumbly texture and bold, salty flavour. Its slightly tangy, acidic profile adds brightness to salads, baked dishes, and gourmet recipes. Check the Fetta Cheese price and shop premium Feta Cheese online at Le Pondicherry Cheese to bring authentic Greek flavour to your table.",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494310/lepondicheese.com/products/FETTA_Front_result_1792494307107_snh7m8.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494311/lepondicheese.com/products/FETTA_Side_result_1792494310707_ctuag8.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494312/lepondicheese.com/products/FETTA_Bottom_result_1792494311639_qpqv8w.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494312/lepondicheese.com/products/FETTA_Back_result_1792494312489_djgofz.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Pairs well with fresh fruits and vegetables in salads, crumbled over pizzas, used as stuffing, blended in dips"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Crumbly and moist"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Fetta Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+            "price": "360",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Fetta Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+            "price": "666",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Fetta Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+            "price": "954",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Fetta Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+            "price": "1224",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Fetta Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+            "price": "1476",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494310/lepondicheese.com/products/FETTA_Front_result_1792494307107_snh7m8.webp",
+        "caption": "Buy Fresh Fetta cheese | Le Pondicherry Cheese",
+        "name": "Fetta Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-fetta-cheese",
+        "name": "Buy Fresh Fetta cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-fetta-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Fetta Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-fetta-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "hallomi": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#product",
+        "name": "Halloumi Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Buy Halloumi Cheese is a premium Cypriot cheese known for its firm, chewy texture and rich, savoury flavour. Ideal for grilling, frying, and baking, it develops a golden crust while maintaining its texture. Perfect for salads, wraps, sandwiches, and gourmet recipes, Le Pondicherry Cheese offers premium quality. Check the Halloumi Cheese price and shop online today!",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494357/lepondicheese.com/products/Hallomi_Front_result_1792494353366_hq1gki.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494357/lepondicheese.com/products/Hallomi_Side_result_1792494357392_92iv5v.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494359/lepondicheese.com/products/Hallomi_Back_result_1792494358485_xdspgs.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Perfect for frying and grilling and adding to salads, wraps, and pairing with grilled vegetables"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Firm and slightly elastic, squeaky when bitten"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Halloumi Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+            "price": "360",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Halloumi Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+            "price": "666",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Halloumi Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+            "price": "954",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Halloumi Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+            "price": "1224",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Halloumi Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+            "price": "1476",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494357/lepondicheese.com/products/Hallomi_Front_result_1792494353366_hq1gki.webp",
+        "caption": "Buy Halloumi Cheese Online | Le Pondicherry Cheese",
+        "name": "Halloumi Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-halloumi-cheese",
+        "name": "Buy Halloumi Cheese Online | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-halloumi-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Halloumi Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-halloumi-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "ricotta": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#product",
+        "name": "Ricotta Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Ricotta is a premium fresh whey cheese from Le Pondicherry Cheese, known for its soft, creamy texture and sweet, milky flavour. Perfect for pasta, lasagna, desserts, and gourmet recipes. Check the Ricotta Cheese price and buy online today!",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494424/lepondicheese.com/products/RICOTTA_Top_result_1792494422988_7an3fj.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494425/lepondicheese.com/products/RICOTTA_Side_result_1792494424578_rmivv5.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494426/lepondicheese.com/products/RICOTTA_Back_result_1792494425653_z5ie1l.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494453/lepondicheese.com/products/RICOTTA_Front_result_1792494449438_lrppia.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Works well with sweet and savoury. Spread on toast with honey, cakes, pasta fillings etc"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Light and grainy"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g, and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Ricotta Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+            "price": "275",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Ricotta Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+            "price": "509",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Ricotta Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+            "price": "729",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Ricotta Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+            "price": "935",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Ricotta Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+            "price": "1128",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494424/lepondicheese.com/products/RICOTTA_Top_result_1792494422988_7an3fj.webp",
+        "caption": "Buy Fresh Ricotta Cheese | Le Pondicherry Cheese",
+        "name": "Ricotta Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-ricotta-cheese",
+        "name": "Buy Fresh Ricotta Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-ricotta-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Ricotta Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-ricotta-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "bocconcini": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#product",
+        "name": "Bocconcini Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Bocconcini is a premium, bite-sized mozzarella cheese known for its soft, delicate texture, fresh milky flavour, and subtle tanginess. Perfect for salads, appetisers, pasta, pizzas, and gourmet dishes, it adds a creamy touch to every meal. Buy Bocconcini Cheese Online from Le Pondicherry Cheese and explore the Bocconcini cheese price. Order today and enjoy premium cheese delivered to your doorstep!",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494511/lepondicheese.com/products/BOCCONCINI_Top_result_1792494507339_1vdzzn.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494512/lepondicheese.com/products/BOCCONCINI_Front_result_1792494511772_lrccn8.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494513/lepondicheese.com/products/BOCCONCINI_Back_result_1792494512829_d5f15z.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Small bite sized mozzarella balls with milky and tangy taste"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Soft and moist"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "100g, 200g, 300g, 400g, 500g and 600g"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 100g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "300",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "555",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 300g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "795",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "1020",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 500g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "1230",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Bocconcini Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+            "price": "1440",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494511/lepondicheese.com/products/BOCCONCINI_Top_result_1792494507339_1vdzzn.webp",
+        "caption": "Buy Bocconcini Cheese | Le Pondicherry Cheese",
+        "name": "Bocconcini Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-bocconcini-cheese",
+        "name": "Buy Bocconcini Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-bocconcini-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Bocconcini Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-bocconcini-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "mozzarella": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#product",
+        "name": "Mozzarella Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Buy Fresh Mozzarella Cheese with a soft, moist texture, delicate milky flavour, subtle tang, and gentle salty undertone. Perfect for fresh salads, pizzas, pasta, and light cooking, this versatile cheese adds a creamy touch to your favourite dishes. Check the mozzarella cheese price and shop online today!",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494558/lepondicheese.com/products/MOZZARELLA_Top_result_1792494556315_v0ad4q.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494559/lepondicheese.com/products/MOZZARELLA_Side_result_1792494559054_lwpkat.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494560/lepondicheese.com/products/MOZZARELLA_Front_result_1792494559951_m9tct0.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494561/lepondicheese.com/products/MOZZARELLA_Back_result_1792494560738_bgex3r.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Popular for pizzas and bakes. Use raw and fresh on salads and pastas"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Soft and moist"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Mozzarella Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+            "price": "300",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Mozzarella Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+            "price": "555",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Mozzarella Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+            "price": "795",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Mozzarella Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+            "price": "1020",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Mozzarella Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+            "price": "1230",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494558/lepondicheese.com/products/MOZZARELLA_Top_result_1792494556315_v0ad4q.webp",
+        "caption": "Buy Mozzarella Cheese Online | Le Pondicherry Cheese",
+        "name": "Mozzarella Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-mozzarella-cheese",
+        "name": "Buy Mozzarella Cheese Online | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-mozzarella-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Mozzarella Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-mozzarella-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "burrata": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#product",
+        "name": "Burrata Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Buy Burrata Cheese featuring a delicate outer shell and rich, creamy centre with a smooth texture and fresh, indulgent flavour. Perfect for salads, appetisers, pasta, and gourmet dishes, Burrata Cheese is best enjoyed fresh. Check the Burrata Cheese price online and elevate your dining experience with this premium cheese.",
+        "image": [
+          "https://lepondicheese.com/assets/burrata-package-CptbtFu_.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Creamy burrata pairs beautifully with ripe tomatoes, fresh basil, crusty bread, grilled vegetables, and light pasta dishes"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Soft outside with a creamy centre"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "150g, 300g, 450g, 600g and 750g"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Burrata Cheese 150g",
+            "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+            "price": "175",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Burrata Cheese 300g",
+            "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+            "price": "324",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Burrata Cheese 450g",
+            "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+            "price": "464",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Burrata Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+            "price": "595",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Burrata Cheese 750g",
+            "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+            "price": "717",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#product-image",
+        "contentUrl": "https://lepondicheese.com/assets/burrata-package-CptbtFu_.webp",
+        "caption": "Buy Fresh Burrata Cheese | Le Pondicherry Cheese",
+        "name": "Burrata Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-burrata-cheese",
+        "name": "Buy Fresh Burrata Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-burrata-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Burrata Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-burrata-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "grana-chery": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#product",
+        "name": "Grana Cherry Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Grana Cherry Cheese from Le Pondicherry Cheese is a hard Parmesan-style cheese aged for nine months, offering a dense, crumbly texture and rich savoury umami flavour with delicate hints of toasted nuts. Winner of a Silver Award at the International Cheese & Dairy Awards 2024, this premium aged cheese is perfect for grating over pasta, risotto, salads, soups, and gourmet dishes. Shop Grana Cherry Cheese Online from Le Pondicherry Cheese for an award-winning cheese experience.",
+        "image": [
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494660/lepondicheese.com/products/GRANA_CHERY_Front_result_1792494656206_o3x456.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494660/lepondicheese.com/products/GRANA_CHERY_Side_result_1792494660494_55ai45.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494661/lepondicheese.com/products/GRANA_CHERY_Bottom_result_1792494661301_5j78wr.webp",
+          "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494662/lepondicheese.com/products/GRANA_CHERY_Back_result_1792494662215_wymuiq.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "A hard cheese similar to Parmigiana with a savoury umami flavour with hints of toasted nuts "
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Hard and granular"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Ageing",
+            "value": "Nine to Twelve months"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Flavour",
+            "value": "savoury umami"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Award",
+            "value": "Silver Award Winner at the International Cheese & Dairy Awards 2024"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Grana Cherry 200g",
+            "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+            "price": "450",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Grana Cherry 400g",
+            "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+            "price": "833",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Grana Cherry 600g",
+            "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+            "price": "1193",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Grana Cherry 800g",
+            "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+            "price": "1530",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Grana Cherry 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+            "price": "1845",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#product-image",
+        "contentUrl": "https://res.cloudinary.com/dn743e2bt/image/upload/v1792494660/lepondicheese.com/products/GRANA_CHERY_Front_result_1792494656206_o3x456.webp",
+        "caption": "Buy Grana parmesan Cheese | Le Pondicherry Cheese",
+        "name": "Grana Cherry"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese",
+        "name": "Buy Grana parmesan Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Grana Cherry Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-grana-parmesan-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "pondyorange": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#product",
+        "name": "Pondy Orange Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Pondy Orange is a semi-hard Cheddar-style cheese aged for around six months, developing a balanced tangy flavour and smooth texture. Perfect for slicing, melting, sandwiches, and everyday cooking, it adds rich flavour to your favourite dishes. Check the cheddar cheese price and buy online today!",
+        "image": [
+          "https://lepondicheese.com/assets/pondy-orange-package-D5aGjQvQ.webp",
+          "https://lepondicheese.com/assets/pondy-orange-texture-CYo6lyzb.webp",
+          "https://lepondicheese.com/assets/pondy-orange-pairing-DOtzMnNw.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "When you need strong cheesy flavour like Mac ‘n’ Cheese, Baked Potatoes, Burgers etc"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Firm and smooth"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Ageing",
+            "value": "Five to six months"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Flavour",
+            "value": "tangy flavour"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Award",
+            "value": "Silver Award Winner at the International Cheese & Dairy Awards 2024"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Pondy Orange 200g",
+            "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+            "price": "420",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pondy Orange 400g",
+            "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+            "price": "777",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pondy Orange 600g",
+            "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+            "price": "1113",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pondy orange 800g",
+            "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+            "price": "1428",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pondy Orange 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+            "price": "1722",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#product-image",
+        "contentUrl": "https://lepondicheese.com/assets/pondy-orange-package-D5aGjQvQ.webp",
+        "caption": "Buy Cheddar Cheese | Le Pondicherry Cheese",
+        "name": "Pondy Orange"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-cheddar-cheese",
+        "name": "Buy Cheddar Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-cheddar-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Pondy Orange Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-cheddar-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "daddy-swiss": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#product",
+        "name": "Daddy Swiss Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Daddy Swiss is a premium Swiss-style cheese aged for five to six months, offering a rich buttery, nutty flavour and a firm, smooth texture. A Bronze Award Winner at the International Cheese & Dairy Awards 2024, it is perfect for sandwiches, cheese boards, gourmet recipes, and fondue. Check the fondue cheese price and enjoy premium quality from Le Pondicherry Cheese.",
+        "image": [
+          "https://lepondicheese.com/assets/daddy-swiss-package-B9LqSjZP.webp",
+          "https://lepondicheese.com/assets/daddy-swiss-texture-BUDi53ZM.webp ",
+          "https://lepondicheese.com/assets/daddy-swiss-pairing-Fh0jlpS7.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Bold flavour addition to your sandwiches, pastas and cheese board"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Firm and elastic"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Ageing",
+            "value": "Five to six months"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Flavour",
+            "value": "Buttery and nutty flavour"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Award",
+            "value": "Bronze Award Winner at the International Cheese & Dairy Awards 2024"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Daddy Swiss 200g",
+            "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+            "price": "450",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Daddy Swiss 400g",
+            "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+            "price": "833",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Daddy Swiss 600g",
+            "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+            "price": "1193",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Daddy Swiss 800g",
+            "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+            "price": "1530",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Daddy Swiss 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+            "price": "1845",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#product-image",
+        "contentUrl": "https://lepondicheese.com/assets/daddy-swiss-package-B9LqSjZP.webp",
+        "caption": "Buy Daddy Swiss Fondue Cheese - Le Pondicherry Cheese",
+        "name": "Daddy Swiss"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese",
+        "name": "Buy Daddy Swiss Fondue Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Daddy Swiss Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-daddy-swiss-fondue-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "baby-swiss": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese#product",
+        "name": "Baby Swiss Cheese",
+        "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Cheese",
+        "description": "Baby Swiss is a Swiss-style cheese aged for three months, developing a mild nutty flavour, slight tang, and smooth texture with small eyes. Its semi-firm and smooth texture makes it ideal for sandwiches, burgers, cheese platters, and gourmet dishes.",
+        "image": [
+          "https://lepondicheese.com/assets/baby-swiss-package-BRqrM2EA.webp",
+          "https://lepondicheese.com/assets/baby-swiss-texture-DcLxgmsw.webp",
+          "https://lepondicheese.com/assets/baby-swiss-pairing-CmH6VO8q.webp"
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": 5,
+          "bestRating": 5,
+          "worstRating": 1,
+          "reviewCount": 3
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "A versatile cheese that pairs well with fruits and salads. Melts well in fondues, omelettes, and casseroles."
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Semi-firm and smooth"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Ageing",
+            "value": "Three months"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Flavour",
+            "value": "Mild nutty flavour with a slight tang"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Baby Swiss Cheese 200g",
+            "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+            "price": "420",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Baby Swiss Cheese 400g",
+            "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+            "price": "777",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Baby Swiss Cheese 600g",
+            "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+            "price": "1113",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Baby Swiss Cheese 800g",
+            "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+            "price": "1428",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Baby Swiss Cheese 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+            "price": "1722",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese#product-image",
+        "contentUrl": "https://lepondicheese.com/assets/baby-swiss-package-BRqrM2EA.webp",
+        "caption": "Buy Baby Swiss Cheese - Le Pondicherry Cheese",
+        "name": "Baby Swiss Cheese"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese",
+        "name": "Baby Swiss Cheese | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Baby Swiss Cheese",
+            "item": "https://www.lepondicheese.com/products/buy-baby-swiss-cheese"
+          }
+        ]
+      }
+    ]
+  },
+  "paneer": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": "https://www.lepondicheese.com/products/buy-paneer-online#product",
+        "name": "Paneer",
+        "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+        "brand": {
+          "@type": "Brand",
+          "name": "Le Pondicherry Cheese"
+        },
+        "category": "Paneer",
+        "description": "Enjoy the rich taste and creamy texture of premium Paneer from Le Pondicherry Cheese. Made for freshness and quality, our paneer is perfect for preparing delicious paneer butter masala, tikka, curries, sandwiches, and everyday meals. Looking to Buy Paneer Online, Explore Le Pondicherry Cheese, check the latest paneer price, and bring home fresh, delicious cottage cheese. Order online today!",
+        "image": [
+          "https://lepondicheese.com/assets/cottage-cheese-package-Dp2_vMXS.webp"
+        ],
+        "aggregateRating": {
+          "@id": "https://www.lepondicheese.com/products/buy-paneer-online#rating"
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Best Pairings",
+            "value": "Common ingredient in Indian cuisine, used raw or grilled with gravies or fried as finger food"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Texture",
+            "value": "Firm and crumbly"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Available Sizes",
+            "value": "200g, 400g, 600g, 800g and 1kg"
+          }
+        ],
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Paneer 200g",
+            "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+            "price": "110",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Paneer 400g",
+            "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+            "price": "204",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Paneer 600g",
+            "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+            "price": "292",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Paneer 800g",
+            "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+            "price": "374",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          {
+            "@type": "Offer",
+            "name": "Paneer 1kg",
+            "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+            "price": "451",
+            "priceCurrency": "INR",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        ]
+      },
+      {
+        "@type": "AggregateRating",
+        "@id": "https://www.lepondicheese.com/products/buy-paneer-online#rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "reviewCount": 3,
+        "itemReviewed": {
+          "@id": "https://www.lepondicheese.com/products/buy-paneer-online#product"
+        }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://www.lepondicheese.com/products/buy-paneer-online#product-image",
+        "contentUrl": "https://lepondicheese.com/assets/cottage-cheese-package-Dp2_vMXS.webp",
+        "caption": "Buy Paneer Online | Le Pondicherry Cheese",
+        "name": "Paneer"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.lepondicheese.com/products/buy-paneer-online#webpage",
+        "url": "https://www.lepondicheese.com/products/buy-paneer-online",
+        "name": "Buy Paneer Online | Le Pondicherry Cheese",
+        "mainEntity": {
+          "@id": "https://www.lepondicheese.com/products/buy-paneer-online#product"
+        },
+        "potentialAction": [
+          {
+            "@type": "AddAction",
+            "name": "Add to Cart",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/cart"
+            }
+          },
+          {
+            "@type": "BuyAction",
+            "name": "Buy Now",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.lepondicheese.com/checkout"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.lepondicheese.com/products/buy-paneer-online#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.lepondicheese.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Shop",
+            "item": "https://www.lepondicheese.com/buy-cheese-online"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Paneer",
+            "item": "https://www.lepondicheese.com/products/buy-paneer-online"
+          }
+        ]
+      }
+    ]
+  }
+}

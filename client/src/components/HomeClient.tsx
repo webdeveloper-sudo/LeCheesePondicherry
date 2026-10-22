@@ -299,7 +299,7 @@ Action: Item added to cart for checkout.
                 variants={fadeUp}
               >
                 <Link
-                  to="/shop"
+                  to="/buy-cheese-online"
                   className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
                 >
                   Shop Our Cheeses
@@ -357,7 +357,7 @@ Action: Item added to cart for checkout.
             <img
               src={logo}
               className="w-full h-full object-cover rounded-full"
-              alt="Logo"
+              alt="Le Pondicherry Cheese Logo"
             />
           </motion.div>
         </div>
@@ -379,7 +379,7 @@ Action: Item added to cart for checkout.
             Experience the fusion of French tradition and Indian craftsmanship
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animate-delay-200">
-            <Link to="/shop" className="btn btn-primary text-lg px-8 py-4">
+            <Link to="/buy-cheese-online" className="btn btn-primary text-lg px-8 py-4">
               Discover Our Collection
             </Link>
             <Link
@@ -469,7 +469,7 @@ Artisanal Excellence from Pondicherry
               </div>
               <div className="text-center mt-10 md:mt-12">
                 <Link
-                  to="/shop"
+                  to="/buy-cheese-online"
                   className="group inline-flex items-center gap-2 bg-brand-gold hover:bg-brand-gold-subtle text-[#1A1A1A] font-semibold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl hover:-translate-y-0.5"
                 >
                   View All Cheeses
@@ -527,7 +527,7 @@ Artisanal Excellence from Pondicherry
               <div className="aspect-video md:aspect-[4/3] bg-bg-cream rounded-2xl overflow-hidden relative shadow-2xl">
                 <MotionImage
                   src={cheesemaker}
-                  alt="Cheesemaker"
+                  alt="Artisan cheesemaker crafting cheese at Le Pondicherry Cheese"
                   className="w-full h-full object-cover"
                 />
               </div>

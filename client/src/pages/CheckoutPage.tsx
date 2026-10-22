@@ -28,6 +28,7 @@ import { calculateShipping } from "@/lib/shippingUtils";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { trackBeginCheckout } from "@/lib/gtm";
+import { productDisplayName } from "@/seo/seoConfig";
 
 
 declare global {
@@ -512,7 +513,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen py-20 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-          <Link to="/shop" className="btn btn-primary">
+          <Link to="/buy-cheese-online" className="btn btn-primary">
             Continue Shopping
           </Link>
         </div>
@@ -1106,13 +1107,13 @@ export default function CheckoutPage() {
                         <div className="w-16 h-16 bg-bg-cream-light rounded-xl overflow-hidden flex-shrink-0">
                           <img
                             src={product.image}
-                            alt={product.name}
+                            alt={productDisplayName(product.id, product.name)}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="flex-1">
                           <p className="font-bold text-sm text-text-primary line-clamp-1">
-                            {product.name}
+                            {productDisplayName(product.id, product.name)}
                           </p>
                           <p className="text-[10px] font-bold text-text-secondary">
                             {item.weight} × {item.quantity}

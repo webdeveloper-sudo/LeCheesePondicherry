@@ -332,7 +332,7 @@ export default function WholesalePage() {
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
-              <img src={coldchain} className="w-32 h-32 my-2 mx-auto" />
+              <img src={coldchain} alt="Cold-chain cheese delivery for wholesale orders" className="w-32 h-32 my-2 mx-auto" />
               <h4 className="font-bold mb-2 mt-4">Cold-Chain Reliability</h4>
               <p className="text-sm text-text-secondary">
                 Our logistics network ensures every batch arrives at your
@@ -340,7 +340,7 @@ export default function WholesalePage() {
               </p>
             </div>
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
-              <img src={chef} className="w-32 h-32 mx-auto my-2" />
+              <img src={chef} alt="Chef using customized bulk cheese supply" className="w-32 h-32 mx-auto my-2" />
               <h4 className="font-bold mb-2 mt-4">Customized Bulk Supply</h4>
               <p className="text-sm text-text-secondary">
                 Bespoke cheese portions and maturation profiles tailored
@@ -348,7 +348,7 @@ export default function WholesalePage() {
               </p>
             </div>
             <div className="text-center border border-gray-200 p-6 bg-white rounded-lg shadow-sm">
-              <img src={fssai} className="w-32 h-32 mx-auto rounded-[100%]" />
+              <img src={fssai} alt="FSSAI certified cheese manufacturer" className="w-32 h-32 mx-auto rounded-[100%]" />
               <h4 className="font-bold mb-2 mt-4">FSSAI Certified</h4>
               <p className="text-sm text-text-secondary">
                 Fully compliant with Indian food safety standards and

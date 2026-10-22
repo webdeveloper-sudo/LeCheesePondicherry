@@ -168,7 +168,7 @@ export default function YourPicks({
           icon={Star}
           items={recommendedProducts}
           emptyText={FETCH_MODE === "dynamic" ? "Update your preferences by browsing products to see personalized matches." : "Browse products in static mode to see your top picks."}
-          linkTo="/shop"
+          linkTo="/buy-cheese-online"
           linkText="Explore Shop"
         />
         )

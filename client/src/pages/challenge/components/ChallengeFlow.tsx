@@ -15,7 +15,7 @@ export default function ChallengeFlow() {
       detail: "Order any handcrafted cheese — Baby Swiss, Mozzarella, Burrata, Cheddar, Ricotta or more. Keep your order confirmation handy.",
       action: {
         label: "Shop Now",
-        link: "/shop",
+        link: "/buy-cheese-online",
       },
       tag: "Mandatory Step",
     },
@@ -230,7 +230,7 @@ export default function ChallengeFlow() {
             </p>
           </div>
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="flex-shrink-0 bg-[#FAB519] hover:bg-[#C9A961] text-[#1A1A1A] font-bold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all shadow-md"
           >
             Shop Cheese Now

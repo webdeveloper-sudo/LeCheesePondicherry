@@ -62,7 +62,7 @@ export default function UserLogin() {
       const decoded = decodeURIComponent(redirectParam);
       return decoded.startsWith("/") ? decoded : `/${decoded}`;
     }
-    return role === "admin" ? "/admin/dashboard" : "/shop";
+    return role === "admin" ? "/admin/dashboard" : "/buy-cheese-online";
   };
 
   const { setUser, fetchWishlist, wishlistIds } = useUserStore();
@@ -1281,7 +1281,7 @@ export default function UserLogin() {
                     <div className="relative w-[500px] h-[500px]">
                       <img
                         src={img}
-                        alt="Cheese Product"
+                        alt="Le Pondicherry Cheese artisanal cheese product"
                         className="w-full h-full object-contain drop-shadow-2xl"
                       />
                     </div>

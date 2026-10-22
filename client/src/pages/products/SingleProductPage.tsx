@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { products as staticProducts, Product } from "@/data/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { trackViewItem } from "@/lib/gtm";
+import Seo from "@/components/Seo";
+import { getProductSeo, resolveDbSlug } from "@/seo/seoConfig";
 
 export default function ProductPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug: urlSlug } = useParams<{ slug: string }>();
+  // URLs use the SEO slug (e.g. buy-pizza-cheese); lookups use the DB slug.
+  const slug = urlSlug ? resolveDbSlug(urlSlug) : urlSlug;
+  const productSeo = getProductSeo(slug);
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -118,6 +123,10 @@ export default function ProductPage() {
     }
   }, [product?.id, product?.name]);
 
+  if (productSeo && urlSlug !== productSeo.seoSlug) {
+    return <Navigate to={productSeo.path} replace />;
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-pattern">
@@ -134,41 +143,45 @@ export default function ProductPage() {
     );
   }
 
-  // Product Schema
-  const productSchema = {
+  const displayProduct = productSeo
+    ? { ...product, name: productSeo.productName, description: productSeo.productDescription }
+    : product;
+
+  // Fallback schema for products without an entry in schema.md
+  const fallbackSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
-    image: `https://lepondicheese.com${product.image}`,
-    description: product.description,
+    name: displayProduct.name,
+    image: displayProduct.image,
+    description: displayProduct.description,
     brand: {
       "@type": "Brand",
       name: "Le Pondicherry Cheese",
     },
     offers: {
       "@type": "Offer",
-      url: `https://lepondicheese.com/products/${product.id}`,
+      url: `https://www.lepondicheese.com/products/${product.id}`,
       priceCurrency: "INR",
       price: product.price,
       availability: product.inStock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: product.rating,
-      reviewCount: product.reviews,
-    },
   };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      <Seo
+        title={productSeo?.title || `${displayProduct.name} | Le Pondicherry Cheese`}
+        description={productSeo?.description || displayProduct.shortDescription || displayProduct.description}
+        keywords={productSeo?.keywords}
+        ogTitle={productSeo?.ogTitle}
+        ogImage={displayProduct.image}
+        path={productSeo?.path || `/products/${product.id}`}
+        schema={productSeo?.schema || fallbackSchema}
       />
       <ProductDetailClient
-        product={product}
+        product={displayProduct}
         relatedProducts={relatedProducts}
       />
     </>

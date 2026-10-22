@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useUserStore } from "@/store/useUserStore";
 import { products, Product } from "@/data/products";
 import { Clock, ArrowRight } from "lucide-react";
+import { productDisplayName, productPath } from "@/seo/seoConfig";
 
 export default function RecentlyViewedSection() {
   const { recentlyViewed, isAuthenticated } = useUserStore();
@@ -36,7 +37,7 @@ export default function RecentlyViewedSection() {
             </h2>
           </div>
           <Link
-            to="/shop"
+            to="/buy-cheese-online"
             className="text-brand-green font-medium hover:text-brand-gold-subtle transition-colors flex items-center gap-1"
           >
             View All <ArrowRight size={18} />
@@ -47,13 +48,13 @@ export default function RecentlyViewedSection() {
           {viewedProducts.map((product) => (
             <Link
               key={product.id}
-              to={`/products/${product.id}`}
+              to={productPath(product.id)}
               className="group bg-bg-cream-light rounded-lg overflow-hidden border border-gray-100 hover:shadow-md transition-all"
             >
               <div className="aspect-square relative overflow-hidden">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={productDisplayName(product.id, product.name)}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>

@@ -128,7 +128,7 @@ export default function PrizeSection() {
                   </button>
 
                   <Link
-                    to="/shop"
+                    to="/buy-cheese-online"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/30 hover:border-[#FAB519] text-white hover:text-[#FAB519] font-semibold text-sm px-6 py-3.5 rounded-full transition-all duration-300"
                   >
                     <span>Order Cheese</span>

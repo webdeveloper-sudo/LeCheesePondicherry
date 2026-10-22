@@ -39,6 +39,8 @@ const allowedOrigins = [
   "https://cheeseandchocolates.com",
   "https://www.cheeseandchocolates.com",
   "https://server.cheeseandchocolates.com",
+  "https://lepondicheese.com",
+  "https://www.lepondicheese.com",
   ...(process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean)
     : []),
