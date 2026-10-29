@@ -20,10 +20,51 @@ import {
   Sliders,
   ExternalLink,
   Type,
+  Smartphone,
+  Tablet,
+  Monitor,
+  AlertTriangle,
 } from "lucide-react";
 import { bannerAPI, BannerConfigData, BannerSlideItem } from "@/lib/api";
 import { clearBannerCache } from "@/components/DynamicPageBanner";
 import { useToastStore } from "@/store/useToastStore";
+import { prepareImageUpload } from "@/lib/imageUpload";
+
+type SlotField = "mobileImage" | "tabletImage" | "image";
+type PreviewDevice = "mobile" | "tablet" | "large";
+
+// One upload slot per device view. Tab is optional and falls back to the large screen image.
+const VIEW_SLOTS: {
+  field: SlotField;
+  device: PreviewDevice;
+  label: string;
+  size: string;
+  required: boolean;
+  Icon: typeof Monitor;
+}[] = [
+  { field: "mobileImage", device: "mobile", label: "Mobile", size: "800 × 600", required: true, Icon: Smartphone },
+  { field: "tabletImage", device: "tablet", label: "Tab", size: "1200 × 450", required: false, Icon: Tablet },
+  { field: "image", device: "large", label: "Large Screen", size: "1920 × 500", required: true, Icon: Monitor },
+];
+
+const PREVIEW_FRAME: Record<PreviewDevice, string> = {
+  mobile: "max-w-[260px] h-[200px]",
+  tablet: "max-w-[480px] h-[200px]",
+  large: "w-full h-[190px] sm:h-[230px]",
+};
+
+const getPreviewImage = (slide: BannerSlideItem | undefined, device: PreviewDevice) => {
+  if (!slide) return "";
+  if (device === "mobile") return slide.mobileImage || slide.image;
+  if (device === "tablet") return slide.tabletImage || slide.image;
+  return slide.image;
+};
+
+// 1-based numbers of slides that still need a mobile image
+const getSlidesMissingMobile = (cfg: BannerConfigData) =>
+  (cfg.slides || [])
+    .map((s, i) => (s.mobileImage?.trim() ? 0 : i + 1))
+    .filter(Boolean);
 
 interface PageDefinition {
   pageKey: string;
@@ -206,6 +247,7 @@ export default function BannerManagement() {
   const [customUrlInput, setCustomUrlInput] = useState<Record<string, string>>({});
   const [customTitleInput, setCustomTitleInput] = useState<Record<string, string>>({});
   const [previewSlideIndex, setPreviewSlideIndex] = useState<Record<string, number>>({});
+  const [previewDevice, setPreviewDevice] = useState<Record<string, PreviewDevice>>({});
 
   useEffect(() => {
     fetchConfigs();
@@ -235,6 +277,8 @@ export default function BannerManagement() {
               if (item.slides && item.slides.length > 0) {
                 normalizedSlides = item.slides.map((s) => ({
                   image: s.image,
+                  tabletImage: s.tabletImage || "",
+                  mobileImage: s.mobileImage || "",
                   title: s.title || "",
                 }));
               } else if (item.images && item.images.length > 0) {
@@ -403,15 +447,7 @@ export default function BannerManagement() {
       }
 
       try {
-        const base64 = await convertFileToBase64(file);
-        const uploadRes = await bannerAPI.uploadBannerImage({
-          base64Data: base64,
-          fileName: file.name,
-          mimeType: file.type,
-        });
-
-        const uploadData = uploadRes.data as any;
-        const finalUrl = uploadRes.success && (uploadData?.url || (uploadRes as any).url) ? (uploadData?.url || (uploadRes as any).url) : base64;
+        const finalUrl = await uploadImageFile(file);
 
         setConfigs((prev) => {
           const cfg = prev[pageKey] || getSafeConfig(pageKey);
@@ -434,20 +470,73 @@ export default function BannerManagement() {
         addToast(`Uploaded ${file.name} successfully`, "success");
       } catch (err: any) {
         console.error("Upload error:", err);
-        addToast(`Failed to upload ${file.name}`, "error");
+        addToast(`Failed to upload ${file.name}: ${err.message || "unknown error"}`, "error");
       }
     }
 
     setUploadingFor(null);
   };
 
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
+  // Compressed to ≤ 1 MB WebP, uploaded to the CDN; only the returned URL is kept
+  const uploadImageFile = async (file: File): Promise<string> => {
+    const prepared = await prepareImageUpload(file);
+    const uploadRes = await bannerAPI.uploadBannerImage({
+      base64Data: prepared.data,
+      fileName: prepared.name,
+      mimeType: prepared.mimeType,
     });
+
+    const uploadData = uploadRes.data as any;
+    const url = uploadData?.url || (uploadRes as any).url;
+    if (!uploadRes.success || !url) {
+      throw new Error(uploadRes.message || "Upload failed");
+    }
+    return url;
+  };
+
+  const setSlideField = (pageKey: string, index: number, field: SlotField, value: string) => {
+    setConfigs((prev) => {
+      const cfg = prev[pageKey] || getSafeConfig(pageKey);
+      const updatedSlides = [...(cfg.slides || [])];
+      if (!updatedSlides[index]) return prev;
+      updatedSlides[index] = { ...updatedSlides[index], [field]: value };
+
+      return {
+        ...prev,
+        [pageKey]: {
+          ...cfg,
+          slides: updatedSlides,
+          images: updatedSlides.map((s) => s.image),
+        },
+      };
+    });
+  };
+
+  const handleSlotUpload = async (
+    pageKey: string,
+    index: number,
+    field: SlotField,
+    files: FileList | null
+  ) => {
+    const file = files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      addToast(`File ${file.name} is not an image`, "error");
+      return;
+    }
+
+    const slot = VIEW_SLOTS.find((s) => s.field === field);
+    setUploadingFor(`${pageKey}|${index}|${field}`);
+    try {
+      const finalUrl = await uploadImageFile(file);
+      setSlideField(pageKey, index, field, finalUrl);
+      addToast(`${slot?.label} image for slide #${index + 1} uploaded`, "success");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      addToast(`Failed to upload ${file.name}: ${err.message || "unknown error"}`, "error");
+    } finally {
+      setUploadingFor(null);
+    }
   };
 
   const handleRemoveSlide = (pageKey: string, index: number) => {
@@ -507,6 +596,16 @@ export default function BannerManagement() {
   const handleSaveSingle = async (pageKey: string) => {
     const config = configs[pageKey] || getSafeConfig(pageKey);
 
+    const missingMobile = getSlidesMissingMobile(config);
+    if (missingMobile.length > 0) {
+      setExpandedPages((prev) => ({ ...prev, [pageKey]: true }));
+      addToast(
+        `Upload a mobile image for slide ${missingMobile.map((n) => `#${n}`).join(", ")} of "${config.pageName}" before saving.`,
+        "error"
+      );
+      return;
+    }
+
     try {
       setSavingKey(pageKey);
       const res = await bannerAPI.updateBanner(pageKey, {
@@ -536,9 +635,14 @@ export default function BannerManagement() {
     try {
       setSavingAll(true);
       let successCount = 0;
+      const skippedPages: string[] = [];
 
       for (const page of MENU_PAGES) {
         const config = configs[page.pageKey] || getSafeConfig(page.pageKey);
+        if (getSlidesMissingMobile(config).length > 0) {
+          skippedPages.push(config.pageName);
+          continue;
+        }
         const res = await bannerAPI.updateBanner(page.pageKey, {
           pageName: config.pageName,
           variant: config.variant,
@@ -551,7 +655,21 @@ export default function BannerManagement() {
       }
 
       clearBannerCache();
-      addToast(`Successfully saved banner settings for all ${successCount} pages!`, "success");
+      if (skippedPages.length > 0) {
+        setExpandedPages((prev) => {
+          const next = { ...prev };
+          MENU_PAGES.forEach((p) => {
+            if (skippedPages.includes(getSafeConfig(p.pageKey).pageName)) next[p.pageKey] = true;
+          });
+          return next;
+        });
+        addToast(
+          `Saved ${successCount} page(s). Skipped ${skippedPages.join(", ")} — mobile images missing.`,
+          "error"
+        );
+      } else {
+        addToast(`Successfully saved banner settings for all ${successCount} pages!`, "success");
+      }
     } catch (err: any) {
       console.error("Save all error:", err);
       addToast("Failed to save some banner configurations", "error");
@@ -630,6 +748,9 @@ export default function BannerManagement() {
               <strong>BannerAndBreadCrumb:</strong> Single background image + page title.
             </li>
             <li>
+              <strong>Device Images:</strong> Every slide has 3 images — <strong>Mobile</strong> (required, below 768px), <strong>Tab</strong> (optional, 768–1023px) and <strong>Large Screen</strong> (required, 1024px+). If no Tab image is uploaded, the Large Screen image is used on tabs.
+            </li>
+            <li>
               <strong>Title & Overlay Rule:</strong> Whenever a title is applied to a slide/banner, a <span className="font-mono bg-amber-200/60 px-1 py-0.5 rounded text-amber-950 font-bold">black/35 gradient overlay (rgba(0,0,0,0.35))</span> is automatically applied to ensure crisp, elegant readability.
             </li>
           </ul>
@@ -652,6 +773,13 @@ export default function BannerManagement() {
           const currentPreviewSlide = slides[activeSlideIdx];
           const activeTitle = currentPreviewSlide?.title?.trim() || (cfg.title?.trim() || "");
           const hasActiveTitle = Boolean(activeTitle.length > 0);
+          const device = previewDevice[page.pageKey] || "large";
+          const previewImage = getPreviewImage(currentPreviewSlide, device);
+          const previewUsesFallback =
+            !!currentPreviewSlide &&
+            ((device === "mobile" && !currentPreviewSlide.mobileImage) ||
+              (device === "tablet" && !currentPreviewSlide.tabletImage));
+          const missingMobile = getSlidesMissingMobile(cfg);
 
           return (
             <div
@@ -680,6 +808,15 @@ export default function BannerManagement() {
                       <span>Active Variant: <strong className="text-gray-800">{cfg.variant}</strong></span>
                       <span>•</span>
                       <span>{slides.length} / {maxSlides} slide(s)</span>
+                      {missingMobile.length > 0 && (
+                        <>
+                          <span>•</span>
+                          <span className="text-red-600 font-semibold flex items-center gap-1">
+                            <AlertTriangle size={12} />
+                            {missingMobile.length} slide(s) missing mobile image
+                          </span>
+                        </>
+                      )}
                       {cfg.title && (
                         <>
                           <span>•</span>
@@ -843,8 +980,8 @@ export default function BannerManagement() {
                               {uploadingFor === page.pageKey
                                 ? "Uploading to Cloud..."
                                 : isSlider
-                                ? `Upload Banner Images (up to ${maxSlides})`
-                                : "Upload Background Image"}
+                                ? `Upload Large Screen Images (up to ${maxSlides})`
+                                : "Upload Large Screen Image"}
                             </span>
                           </label>
 
@@ -859,7 +996,7 @@ export default function BannerManagement() {
                                   [page.pageKey]: e.target.value,
                                 }))
                               }
-                              placeholder="Direct image URL (e.g. https://...)"
+                              placeholder="Large screen image URL (e.g. https://...)"
                               disabled={slides.length >= maxSlides}
                               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-yellow-500 bg-white"
                             />
@@ -890,6 +1027,12 @@ export default function BannerManagement() {
                               <span>Add to Slider</span>
                             </button>
                           </div>
+
+                          <p className="text-[11px] text-gray-500 leading-relaxed">
+                            Each new {isSlider ? "slide" : "banner"} starts with its large screen image. Then add its{" "}
+                            <strong className="text-gray-700">Mobile</strong> image (required) and{" "}
+                            <strong className="text-gray-700">Tab</strong> image (optional) in the list on the right.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -918,81 +1061,29 @@ export default function BannerManagement() {
                             </p>
                           </div>
                         ) : (
-                          <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                          <div className="space-y-3 max-h-[560px] overflow-y-auto pr-1">
                             {slides.map((slide, sIdx) => (
                               <div
                                 key={sIdx}
-                                className={`p-2.5 rounded-xl border transition-all flex flex-col sm:flex-row items-center gap-3 ${
+                                onClick={() =>
+                                  setPreviewSlideIndex((prev) => ({
+                                    ...prev,
+                                    [page.pageKey]: sIdx,
+                                  }))
+                                }
+                                className={`p-2.5 rounded-xl border transition-all space-y-3 cursor-pointer ${
                                   activeSlideIdx === sIdx
                                     ? "bg-yellow-50/50 border-yellow-400 shadow-xs"
                                     : "bg-gray-50/80 border-gray-200 hover:border-gray-300"
                                 }`}
                               >
-                                {/* Thumbnail */}
-                                <div
-                                  onClick={() =>
-                                    setPreviewSlideIndex((prev) => ({
-                                      ...prev,
-                                      [page.pageKey]: sIdx,
-                                    }))
-                                  }
-                                  className="group relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100 w-28 h-16 flex-shrink-0 cursor-pointer shadow-2xs"
-                                >
-                                  <img
-                                    src={slide.image}
-                                    alt={`Slide ${sIdx + 1}`}
-                                    className="w-full h-full object-cover"
-                                  />
-                                  <span className="absolute top-1 left-1 bg-black/70 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-                                    #{sIdx + 1}
-                                  </span>
-
-                                  {/* Quick Actions on Hover */}
-                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 p-1">
-                                    {isSlider && sIdx > 0 && (
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleMoveSlide(page.pageKey, sIdx, "left");
-                                        }}
-                                        className="p-1 bg-white text-gray-800 rounded hover:bg-yellow-400 transition-colors"
-                                        title="Move Up/Left"
-                                      >
-                                        <MoveLeft size={12} />
-                                      </button>
-                                    )}
-
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleRemoveSlide(page.pageKey, sIdx);
-                                      }}
-                                      className="p-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                                      title="Delete Slide"
-                                    >
-                                      <Trash2 size={12} />
-                                    </button>
-
-                                    {isSlider && sIdx < slides.length - 1 && (
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleMoveSlide(page.pageKey, sIdx, "right");
-                                        }}
-                                        className="p-1 bg-white text-gray-800 rounded hover:bg-yellow-400 transition-colors"
-                                        title="Move Down/Right"
-                                      >
-                                        <MoveRight size={12} />
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
+                              <div className="flex flex-col sm:flex-row items-center gap-3">
+                                <span className="w-8 h-8 rounded-lg bg-gray-900 text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0">
+                                  #{sIdx + 1}
+                                </span>
 
                                 {/* Slide Title Input */}
-                                <div className="flex-1 w-full space-y-1">
+                                <div className="flex-1 w-full space-y-1" onClick={(e) => e.stopPropagation()}>
                                   <div className="flex items-center justify-between">
                                     <span className="text-[11px] font-bold text-gray-700 flex items-center gap-1">
                                       <Type size={12} className="text-yellow-600" />
@@ -1024,7 +1115,7 @@ export default function BannerManagement() {
                                 </div>
 
                                 {/* Action Buttons */}
-                                <div className="flex items-center gap-1 flex-shrink-0">
+                                <div className="flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                                   {isSlider && (
                                     <>
                                       <button
@@ -1055,6 +1146,102 @@ export default function BannerManagement() {
                                   >
                                     <Trash2 size={13} />
                                   </button>
+                                </div>
+                              </div>
+
+                                {/* Device Image Slots: Mobile / Tab / Large Screen */}
+                                <div className="grid grid-cols-3 gap-2" onClick={(e) => e.stopPropagation()}>
+                                  {VIEW_SLOTS.map(({ field, label, size, required, Icon }) => {
+                                    const url = slide[field] || "";
+                                    const isUploading = uploadingFor === `${page.pageKey}|${sIdx}|${field}`;
+                                    const isMissing = required && !url;
+
+                                    return (
+                                      <div key={field} className="space-y-1 min-w-0">
+                                        <div className="flex items-center justify-between gap-1">
+                                          <span className="text-[10px] font-bold text-gray-700 flex items-center gap-1 truncate">
+                                            <Icon size={11} className="text-yellow-600 flex-shrink-0" />
+                                            {label}
+                                          </span>
+                                          <span
+                                            className={`text-[9px] font-semibold px-1.5 rounded flex-shrink-0 ${
+                                              required ? "bg-red-50 text-red-600" : "bg-gray-200/70 text-gray-500"
+                                            }`}
+                                          >
+                                            {required ? "Required" : "Optional"}
+                                          </span>
+                                        </div>
+
+                                        <label
+                                          className={`group relative block h-20 rounded-lg overflow-hidden border cursor-pointer ${
+                                            isMissing
+                                              ? "border-2 border-dashed border-red-300 bg-red-50/50"
+                                              : url
+                                              ? "border-gray-200 bg-gray-100"
+                                              : "border-2 border-dashed border-gray-300 bg-gray-50"
+                                          }`}
+                                        >
+                                          <input
+                                            type="file"
+                                            accept="image/*"
+                                            disabled={isUploading}
+                                            onChange={(e) => {
+                                              handleSlotUpload(page.pageKey, sIdx, field, e.target.files);
+                                              e.target.value = "";
+                                            }}
+                                            className="hidden"
+                                          />
+
+                                          {url ? (
+                                            <img src={url} alt={`Slide ${sIdx + 1} ${label}`} className="w-full h-full object-cover" />
+                                          ) : field === "tabletImage" ? (
+                                            // Tab falls back to the large screen image
+                                            <>
+                                              <img src={slide.image} alt="" className="w-full h-full object-cover opacity-40" />
+                                              <span className="absolute inset-x-1 bottom-1 text-[9px] font-semibold text-gray-700 bg-white/90 rounded px-1 py-0.5 text-center">
+                                                Using large image
+                                              </span>
+                                            </>
+                                          ) : (
+                                            <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-red-500">
+                                              <Upload size={14} />
+                                              <span className="text-[9px] font-bold">Upload {label}</span>
+                                            </span>
+                                          )}
+
+                                          {isUploading ? (
+                                            <span className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                              <RefreshCw size={16} className="animate-spin text-white" />
+                                            </span>
+                                          ) : (
+                                            (url || field === "tabletImage") && (
+                                              <span className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                                                <span className="p-1 bg-white text-gray-800 rounded" title={url ? "Replace" : "Upload"}>
+                                                  <Upload size={12} />
+                                                </span>
+                                                {url && field !== "image" && (
+                                                  <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                      e.preventDefault();
+                                                      e.stopPropagation();
+                                                      setSlideField(page.pageKey, sIdx, field, "");
+                                                    }}
+                                                    className="p-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                                    title={`Remove ${label} image`}
+                                                  >
+                                                    <Trash2 size={12} />
+                                                  </button>
+                                                )}
+                                              </span>
+                                            )
+                                          )}
+                                        </label>
+
+                                        <p className="text-[9px] text-gray-400 truncate">{size} px</p>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             ))}
@@ -1092,13 +1279,49 @@ export default function BannerManagement() {
                           )}
                         </div>
 
+                        {/* Preview Device Toggle */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                          <div className="inline-flex p-0.5 bg-gray-100 rounded-lg border border-gray-200">
+                            {VIEW_SLOTS.map(({ device: d, label, Icon }) => (
+                              <button
+                                key={d}
+                                type="button"
+                                onClick={() =>
+                                  setPreviewDevice((prev) => ({ ...prev, [page.pageKey]: d }))
+                                }
+                                className={`px-2.5 py-1 rounded-md text-[11px] font-semibold flex items-center gap-1 transition-colors ${
+                                  device === d
+                                    ? "bg-white text-gray-900 shadow-xs"
+                                    : "text-gray-500 hover:text-gray-800"
+                                }`}
+                              >
+                                <Icon size={12} />
+                                {label}
+                              </button>
+                            ))}
+                          </div>
+                          {previewUsesFallback && (
+                            <span
+                              className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
+                                device === "mobile"
+                                  ? "bg-red-50 text-red-600"
+                                  : "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {device === "mobile"
+                                ? "No mobile image — upload one before saving"
+                                : "No tab image — showing large screen image"}
+                            </span>
+                          )}
+                        </div>
+
                         {/* Interactive Banner Mock Component */}
-                        <div className="relative w-full h-[190px] sm:h-[230px] rounded-2xl overflow-hidden shadow-inner border border-gray-300 bg-gray-950 select-none">
+                        <div className={`relative mx-auto ${PREVIEW_FRAME[device]} rounded-2xl overflow-hidden shadow-inner border border-gray-300 bg-gray-950 select-none transition-all duration-300`}>
                           {slides.length > 0 && currentPreviewSlide ? (
                             <div
                               className="absolute inset-0 transition-all duration-700 bg-cover bg-center"
                               style={{
-                                backgroundImage: `url(${currentPreviewSlide.image})`,
+                                backgroundImage: `url(${previewImage})`,
                               }}
                             />
                           ) : (

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { fadeUp, staggerContainer } from "@/animations/variants";
 import { ChefHat, Sparkles, Video, Flame, ArrowRight, Heart } from "lucide-react";
 import heroCheeseBoard from "@/assets/images/hero-cheese-board.webp";
-import bocconciniPkg from "@/assets/images/products/bocconcini-package.webp";
+import bocconciniPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BOCCONCINI/BOCCONCINI_Front_result.webp";
 
 export default function ChallengeOverview() {
   return (

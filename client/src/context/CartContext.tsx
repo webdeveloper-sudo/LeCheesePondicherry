@@ -12,6 +12,7 @@ import { blogs as staticBlogs, BlogPost } from "@/data/blogs";
 import { cartAPI } from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
+import { registerProductUrlSlugs } from "@/seo/seoConfig";
 import axios from "axios";
 import { trackAddToCart, trackRemoveFromCart } from "@/lib/gtm";
 
@@ -139,6 +140,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const productsRes = await axios.get(`${API_BASE_URL}/api/products`, { timeout: 15000 });
         if (productsRes.data) {
           const fetchedData = productsRes.data.data || productsRes.data;
+          registerProductUrlSlugs(Array.isArray(fetchedData) ? fetchedData : []);
           const mappedProducts = (Array.isArray(fetchedData) ? fetchedData : [])
             .filter((p: any) => p.onHold !== true)
             .map((p: any) => {

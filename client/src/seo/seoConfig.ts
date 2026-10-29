@@ -198,9 +198,60 @@ const SEO_SLUG_TO_DB_SLUG: Record<string, string> = Object.fromEntries(
   Object.entries(PRODUCT_SEO).map(([dbSlug, seo]) => [seo.seoSlug, dbSlug]),
 );
 
-/** Maps any URL slug (SEO slug, DB slug or legacy alias) to the DB slug. */
+// URL endpoints configured in the admin panel (stored as `urlSlug` on the product).
+// Filled from API product lists via registerProductUrlSlugs; they override the SEO slug.
+const CUSTOM_URL_SLUGS: Record<string, string> = {}; // DB slug -> URL slug
+const CUSTOM_URL_TO_DB_SLUG: Record<string, string> = {}; // URL slug -> DB slug
+
+export function registerProductUrlSlugs(products: { slug?: string; urlSlug?: string }[]) {
+  for (const p of products || []) {
+    if (!p?.slug) continue;
+    const previous = CUSTOM_URL_SLUGS[p.slug];
+    if (previous) delete CUSTOM_URL_TO_DB_SLUG[previous];
+    if (p.urlSlug) {
+      CUSTOM_URL_SLUGS[p.slug] = p.urlSlug;
+      CUSTOM_URL_TO_DB_SLUG[p.urlSlug] = p.slug;
+    } else {
+      delete CUSTOM_URL_SLUGS[p.slug];
+    }
+  }
+}
+
+/** Lowercase, hyphen-separated URL endpoint: "Buy Fresh Paneer!" -> "buy-fresh-paneer". */
+export function normalizeUrlSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/** Maps any URL slug (custom endpoint, SEO slug, DB slug or legacy alias) to the DB slug. */
 export function resolveDbSlug(urlSlug: string): string {
-  return SEO_SLUG_TO_DB_SLUG[urlSlug] || SLUG_ALIASES[urlSlug] || urlSlug;
+  return (
+    CUSTOM_URL_TO_DB_SLUG[urlSlug] || SEO_SLUG_TO_DB_SLUG[urlSlug] || SLUG_ALIASES[urlSlug] || urlSlug
+  );
+}
+
+/** Default URL endpoint for a product when no custom one is configured. */
+export function defaultUrlSlug(dbSlug: string): string {
+  return PRODUCT_SEO[resolveDbSlug(dbSlug)]?.seoSlug || dbSlug;
+}
+
+/**
+ * Every URL slug that already opens this product (SEO slug, DB slug, legacy aliases).
+ * These stay reserved for it even after a custom endpoint is set, since old links still resolve.
+ */
+export function reservedUrlSlugs(dbSlug: string): string[] {
+  const slugs = new Set<string>([dbSlug]);
+  const seo = PRODUCT_SEO[dbSlug];
+  if (seo) slugs.add(seo.seoSlug);
+  for (const [alias, target] of Object.entries(SLUG_ALIASES)) {
+    if (target === dbSlug) slugs.add(alias);
+  }
+  return [...slugs];
 }
 
 export function getProductSeo(slugOrId?: string | null): ProductSeo | null {
@@ -210,7 +261,7 @@ export function getProductSeo(slugOrId?: string | null): ProductSeo | null {
   if (!seo) return null;
   return {
     ...seo,
-    path: `/products/${seo.seoSlug}`,
+    path: `/products/${CUSTOM_URL_SLUGS[dbSlug] || seo.seoSlug}`,
     schema: (schemas as Record<string, object>)[dbSlug],
   };
 }
@@ -231,7 +282,7 @@ export function legacyProductSlugs(): Record<string, string> {
 /** Public URL path for a product; falls back to its own slug/id. */
 export function productPath(slugOrId: string): string {
   const seo = getProductSeo(slugOrId);
-  return seo ? seo.path : `/products/${slugOrId}`;
+  return seo ? seo.path : `/products/${CUSTOM_URL_SLUGS[resolveDbSlug(slugOrId)] || slugOrId}`;
 }
 
 /** Display name from seo.md, falling back to the stored name. */

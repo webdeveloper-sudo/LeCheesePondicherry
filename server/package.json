@@ -12,8 +12,6 @@
   "bin": {
     "zip-server": "scripts/zipServer.js"
   },
-
-
   "dependencies": {
     "axios": "^1.13.4",
     "bcryptjs": "^2.4.3",
@@ -27,7 +25,8 @@
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "multer": "^2.0.2",
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^6.9.7",
+    "sharp": "^0.34.5"
   },
   "keywords": [
     "express",

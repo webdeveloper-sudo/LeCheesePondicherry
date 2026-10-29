@@ -1,32 +1,57 @@
 // Mock product data for Le Pondicherry Cheese
 // This will be replaced with API data when backend is connected
 
-// Import all product images
-import babySwissPackage from "@/assets/images/products/baby-swiss-package.webp";
-import babySwissTexture from "@/assets/images/products/baby-swiss-texture.webp";
-import babySwissPairing from "@/assets/images/products/baby-swiss-pairing.webp";
-import daddySwissPackage from "@/assets/images/products/daddy-swiss-package.webp";
-import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.webp";
-import daddySwissPairing from "@/assets/images/products/daddy-swiss-pairing.webp";
-import pondyOrangePackage from "@/assets/images/products/pondy-orange-package.webp";
-import pondyOrangeTexture from "@/assets/images/products/pondy-orange-texture.webp";
-import pondyOrangePairing from "@/assets/images/products/pondy-orange-pairing.webp";
-import granaCherryPackage from "@/assets/images/products/grana-chery-package.webp";
-import granaCherryTexture from "@/assets/images/products/grana-chery-texture.webp";
-import granaCherryPairing from "@/assets/images/products/grana-chery-pairing.webp";
-import burrataPackage from "@/assets/images/products/burrata-package.webp";
-import mozzarellaPackage from "@/assets/images/products/mozzarella-package.webp";
-import mozzarellaTexture from "@/assets/images/products/mozzarella-texture.webp";
-import bocconciniPackage from "@/assets/images/products/bocconcini-package.webp";
-import ricottaPackage from "@/assets/images/products/ricotta-package.webp";
-import halloumiPackage from "@/assets/images/products/halloumi-package.webp";
-import fetaPackage from "@/assets/images/products/feta-package.webp";
-import pizzaellaPackage from "@/assets/images/products/pizzaella-package.webp";
-import cottageCheesePackage from "@/assets/images/products/cottage-cheese-package.webp";
-// import skyrPackage from "@/assets/images/products/skyr-package.webp";
-import agedPondyOrange from "@/assets/images/products/aged-cheddar.webp";
-import classicBrie from "@/assets/images/products/classic-brie.webp";
-import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
+// Import all product images (packaging shots — webp only)
+import babySwissFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Front_result.webp";
+import babySwissSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Side_result.webp";
+import babySwissBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Back_result.webp";
+import babySwissBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Bottom_result.webp";
+import daddySwissFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/DADDY SWISS/DADDY SWISS_Front_result.webp";
+import daddySwissSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/DADDY SWISS/DADDY SWISS_Side_result.webp";
+import daddySwissBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/DADDY SWISS/DADDY SWISS_Back_result.webp";
+import daddySwissBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/DADDY SWISS/DADDY SWISS_Bottom_result.webp";
+import cheddarFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Front_result.webp";
+import cheddarSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Side_result.webp";
+import cheddarBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Back_result.webp";
+import cheddarBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Bottom_result.webp";
+import granaCheryFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Front_result.webp";
+import granaCherySide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Side_result.webp";
+import granaCheryBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Back_result.webp";
+import granaCheryBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Bottom_result.webp";
+import burrataFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BURRATA/BURRATA_Front_result.webp";
+import burrataSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BURRATA/BURRATA_Side_result.webp";
+import burrataTop from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BURRATA/BURRATA_Top_result.webp";
+import burrataBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BURRATA/BURRATA_Back_result.webp";
+import mozzarellaFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/MOZZARELLA/MOZZARELLA_Front_result.webp";
+import mozzarellaSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/MOZZARELLA/MOZZARELLA_Side_result.webp";
+import mozzarellaTop from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/MOZZARELLA/MOZZARELLA_Top_result.webp";
+import mozzarellaBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/MOZZARELLA/MOZZARELLA_Back_result.webp";
+import bocconciniFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BOCCONCINI/BOCCONCINI_Front_result.webp";
+import bocconciniTop from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BOCCONCINI/BOCCONCINI_Top_result.webp";
+import bocconciniBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BOCCONCINI/BOCCONCINI_Back_result.webp";
+import ricottaFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/RICOTTA/RICOTTA_Front_result.webp";
+import ricottaSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/RICOTTA/RICOTTA_Side_result.webp";
+import ricottaTop from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/RICOTTA/RICOTTA_Top_result.webp";
+import ricottaBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/RICOTTA/RICOTTA_Back_result.webp";
+import halloumiFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/Hallomi/Hallomi_Front_result.webp";
+import halloumiSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/Hallomi/Hallomi_Side_result.webp";
+import halloumiBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/Hallomi/Hallomi_Back_result.webp";
+import fettaFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FETTA/FETTA_Front_result.webp";
+import fettaSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FETTA/FETTA_Side_result.webp";
+import fettaBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FETTA/FETTA_Back_result.webp";
+import fettaBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FETTA/FETTA_Bottom_result.webp";
+import pizzaellaFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PIZZAELLA/PIZZAELLA_Front_result.webp";
+import pizzaellaSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PIZZAELLA/PIZZAELLA_Side_result.webp";
+import pizzaellaBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PIZZAELLA/PIZZAELLA_Back_result.webp";
+import pizzaellaBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PIZZAELLA/PIZZAELLA_Bottom_result.webp";
+import paneerFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PANEER/PANEER_Front_result.webp";
+import paneerSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PANEER/PANEER_Side_result.webp";
+import paneerBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PANEER/PANEER_Back_result.webp";
+import paneerBottom from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PANEER/PANEER_Bottom_result.webp";
+import skyrFront from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FRESH SKYR/FRESH SKYR_Front_result.webp";
+import skyrSide from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FRESH SKYR/FRESH SKYR_Side_result.webp";
+import skyrTop from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FRESH SKYR/FRESH SKYR_Top_result.webp";
+import skyrBack from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/FRESH SKYR/FRESH SKYR_Back_result.webp";
 
 export interface Product {
   id: string;
@@ -86,8 +111,8 @@ export const products: Product[] = [
       "A young Swiss-style cheese with a delicate sweetness and mellow nuttiness. It has the classic Swiss characteristics but with a creamier, smoother texture.",
     price: 420,
     originalPrice: 550,
-    image: babySwissPackage,
-    images: [babySwissPackage, babySwissTexture, babySwissPairing],
+    image: babySwissFront,
+    images: [babySwissFront, babySwissSide, babySwissBack, babySwissBottom],
     category: "aged",
     rating: 5,
     reviewCount: 45,
@@ -164,8 +189,8 @@ export const products: Product[] = [
       "Daddy Swiss is aged for five to six months, giving it deeper flavour and firmer structure compared to Baby Swiss.",
     price: 450,
     originalPrice: 600,
-    image: daddySwissPackage,
-    images: [daddySwissPackage, daddySwissTexture, daddySwissPairing],
+    image: daddySwissFront,
+    images: [daddySwissFront, daddySwissSide, daddySwissBack, daddySwissBottom],
     category: "aged",
     rating: 5,
     reviewCount: 32,
@@ -191,8 +216,8 @@ export const products: Product[] = [
       "A Pondicherry-made Cheddar-style cheese inspired by classic English cheddar-making methods. Pondy Orange gets its name from its rich golden-orange hue and sharp, tangy flavour profile.",
     price: 420,
     originalPrice: 560,
-    image: pondyOrangePackage,
-    images: [pondyOrangePackage, pondyOrangeTexture, pondyOrangePairing],
+    image: cheddarFront,
+    images: [cheddarFront, cheddarSide, cheddarBack, cheddarBottom],
     category: "aged",
     rating: 4,
     reviewCount: 28,
@@ -217,8 +242,8 @@ export const products: Product[] = [
       "Grana Cherry is a hard, parmesan-style cheese aged for nine months. Aging develops a dense texture and concentrated flavour suited for finishing dishes.",
     price: 450,
     originalPrice: 590,
-    image: granaCherryPackage,
-    images: [granaCherryPackage, granaCherryTexture, granaCherryPairing],
+    image: granaCheryFront,
+    images: [granaCheryFront, granaCherySide, granaCheryBack, granaCheryBottom],
     category: "aged",
     rating: 5,
     reviewCount: 51,
@@ -243,8 +268,8 @@ export const products: Product[] = [
       "Burrata features a delicate outer shell filled with a rich, creamy centre. It is best consumed fresh and served simply to appreciate its texture and flavour.",
     price: 175,
     originalPrice: 240,
-    image: burrataPackage,
-    images: [burrataPackage],
+    image: burrataFront,
+    images: [burrataFront, burrataSide, burrataTop, burrataBack],
     category: "fresh",
     rating: 5,
     reviewCount: 64,
@@ -269,8 +294,8 @@ export const products: Product[] = [
       "Fresh mozzarella is a soft, moist cheese with a clean, milky flavour. It melts gently and is suited for fresh preparations as well as light cooking. Best enjoyed where texture and freshness are important.",
     price: 300,
     originalPrice: 390,
-    image: mozzarellaPackage,
-    images: [mozzarellaPackage, mozzarellaTexture],
+    image: mozzarellaFront,
+    images: [mozzarellaFront, mozzarellaSide, mozzarellaTop, mozzarellaBack],
     category: "fresh",
     rating: 5,
     reviewCount: 48,
@@ -295,8 +320,8 @@ export const products: Product[] = [
       "Bocconcini are small mozzarella balls with a soft texture and mild dairy flavour. Easy to portion and versatile in both fresh and lightly cooked dishes.",
     price: 300,
     originalPrice: 410,
-    image: bocconciniPackage,
-    images: [bocconciniPackage],
+    image: bocconciniFront,
+    images: [bocconciniFront, bocconciniTop, bocconciniBack],
     category: "fresh",
     rating: 4,
     reviewCount: 22,
@@ -320,8 +345,8 @@ export const products: Product[] = [
       "Ricotta is a fresh cheese made from whey, giving it a lighter texture than milk-based cheeses. It works well in both savoury and sweet dishes.",
     price: 275,
     originalPrice: 370,
-    image: ricottaPackage,
-    images: [ricottaPackage],
+    image: ricottaFront,
+    images: [ricottaFront, ricottaSide, ricottaTop, ricottaBack],
     category: "fresh",
     rating: 5,
     reviewCount: 36,
@@ -345,8 +370,8 @@ export const products: Product[] = [
       "A Mediterranean-style firm cheese known for its ability to hold shape under heat - the perfect grilling cheese.",
     price: 360,
     originalPrice: 480,
-    image: halloumiPackage,
-    images: [halloumiPackage],
+    image: halloumiFront,
+    images: [halloumiFront, halloumiSide, halloumiBack],
     category: "specialty",
     rating: 5,
     reviewCount: 42,
@@ -371,8 +396,8 @@ export const products: Product[] = [
       "Feta is a brined cheese with a crumbly texture and balanced saltiness. It adds brightness and contrast to salads and baked dishes.",
     price: 360,
     originalPrice: 490,
-    image: fetaPackage,
-    images: [fetaPackage],
+    image: fettaFront,
+    images: [fettaFront, fettaSide, fettaBack, fettaBottom],
     category: "specialty",
     rating: 4,
     reviewCount: 31,
@@ -397,8 +422,8 @@ export const products: Product[] = [
       "Pizzaella is a block-style mozzarella developed for high-temperature applications. It delivers controlled melt and stretch with minimal moisture release, making it suitable for pizzas and baked dishes.",
     price: 275,
     originalPrice: 360,
-    image: pizzaellaPackage,
-    images: [pizzaellaPackage],
+    image: pizzaellaFront,
+    images: [pizzaellaFront, pizzaellaSide, pizzaellaBack, pizzaellaBottom],
     category: "melting",
     rating: 5,
     reviewCount: 55,
@@ -422,8 +447,8 @@ export const products: Product[] = [
       "Paneer is a fresh, heat-stable cheese widely used in Indian cooking. It holds its shape during frying and gravies while absorbing flavours well.",
     price: 110,
     originalPrice: 150,
-    image: cottageCheesePackage,
-    images: [cottageCheesePackage],
+    image: paneerFront,
+    images: [paneerFront, paneerSide, paneerBack, paneerBottom],
     category: "fresh",
     rating: 5,
     reviewCount: 89,
@@ -447,8 +472,8 @@ export const products: Product[] = [
       "Skyr is a thick, cultured dairy product made using traditional fermentation methods. It has a smooth, dense texture with a mild tang and is commonly consumed fresh as a spoonable dairy product.",
     price: 250,
     originalPrice: 340,
-    image: ricottaPackage,
-    images: [ricottaPackage],
+    image: skyrFront,
+    images: [skyrFront, skyrSide, skyrTop, skyrBack],
     category: "fresh",
     rating: 5,
     reviewCount: 42,

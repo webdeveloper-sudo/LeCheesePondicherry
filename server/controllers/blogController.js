@@ -86,6 +86,8 @@ const createBlog = async (req, res) => {
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
+    const uploadFailures = [];
+
     // 1. Upload Main Image
     let mainImageUrl = "";
     if (mainImageBase64 && mainImageBase64.data) {
@@ -99,6 +101,7 @@ const createBlog = async (req, res) => {
         );
       } catch (uploadError) {
         console.error("❌ Main Blog Image upload failed:", uploadError.message);
+        uploadFailures.push(`Main image: ${uploadError.message}`);
       }
     }
 
@@ -115,6 +118,7 @@ const createBlog = async (req, res) => {
         );
       } catch (uploadError) {
         console.error("❌ Author Image upload failed:", uploadError.message);
+        uploadFailures.push(`Author image: ${uploadError.message}`);
       }
     }
 
@@ -136,9 +140,23 @@ const createBlog = async (req, res) => {
             `❌ Blog Gallery Image upload failed for ${img.name}:`,
             uploadError.message,
           );
+          uploadFailures.push(uploadError.message);
         }
       }
     }
+
+    if (uploadFailures.length > 0) {
+
+      return res.status(422).json({
+
+        success: false,
+
+        message: `Image upload failed, nothing was saved. ${uploadFailures.join("; ")}`,
+
+      });
+
+    }
+
 
     // 3. Save to MongoDB
     console.log("📝 Constructing blog data for MongoDB...");
@@ -227,6 +245,8 @@ const updateBlog = async (req, res) => {
 
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
+    const uploadFailures = [];
+
     // Handle Main Image Update
     if (mainImageBase64 && mainImageBase64.data) {
       try {
@@ -240,6 +260,7 @@ const updateBlog = async (req, res) => {
         updateData.image = url;
       } catch (uploadError) {
         console.error("❌ Main Blog Image upload failed:", uploadError.message);
+        uploadFailures.push(`Main image: ${uploadError.message}`);
       }
     }
 
@@ -256,6 +277,7 @@ const updateBlog = async (req, res) => {
         updateData.authorImage = url;
       } catch (uploadError) {
         console.error("❌ Author Image upload failed:", uploadError.message);
+        uploadFailures.push(`Author image: ${uploadError.message}`);
       }
     }
 
@@ -281,6 +303,7 @@ const updateBlog = async (req, res) => {
             `❌ Blog Gallery Image upload failed for ${img.name}:`,
             uploadError.message,
           );
+          uploadFailures.push(uploadError.message);
         }
       }
       // If we want to replace gallery, use newGalleryUrls. If append, concatenate.
@@ -294,6 +317,19 @@ const updateBlog = async (req, res) => {
       // Better: let's assume we handle new uploads and stick them in.
       updateData.gallery = [...(blog.gallery || []), ...newGalleryUrls];
     }
+
+    if (uploadFailures.length > 0) {
+
+      return res.status(422).json({
+
+        success: false,
+
+        message: `Image upload failed, nothing was saved. ${uploadFailures.join("; ")}`,
+
+      });
+
+    }
+
 
     if (tags) {
       updateData.tags = Array.isArray(tags)

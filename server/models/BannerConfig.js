@@ -2,9 +2,18 @@ const mongoose = require("mongoose");
 
 const slideSchema = new mongoose.Schema(
   {
+    // Large screen image — also used on tab when tabletImage is empty
     image: {
       type: String,
       required: true,
+    },
+    tabletImage: {
+      type: String,
+      default: "",
+    },
+    mobileImage: {
+      type: String,
+      default: "",
     },
     title: {
       type: String,

@@ -66,7 +66,8 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json({ limit: "10mb" }));
+// Product/blog saves carry several base64 images (each up to ~1.4MB after browser compression)
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Logging in development

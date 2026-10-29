@@ -3,6 +3,7 @@ import { X, Upload, Plus, Trash2, Save, Loader } from "lucide-react";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { useToastStore } from "@/store/useToastStore";
+import { prepareImageUpload } from "@/lib/imageUpload";
 
 interface BlogFormProps {
   existingBlog?: any;
@@ -111,13 +112,10 @@ export default function BlogForm({
     }
   };
 
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
+  // Compressed to ≤ 1 MB WebP before upload (the server enforces the same)
+  const toUploadPayload = async (file: File) => {
+    const { name, mimeType, data } = await prepareImageUpload(file);
+    return { name, mimeType, data };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -151,37 +149,17 @@ export default function BlogForm({
 
       // Handle Main Image
       if (mainImage) {
-        const base64 = await convertToBase64(mainImage);
-        payload.mainImageBase64 = {
-          name: mainImage.name,
-          mimeType: mainImage.type,
-          data: base64.split(",")[1], // Remove prefix
-        };
+        payload.mainImageBase64 = await toUploadPayload(mainImage);
       }
 
       // Handle Author Image
       if (authorImage) {
-        const base64 = await convertToBase64(authorImage);
-        payload.authorImageBase64 = {
-          name: authorImage.name,
-          mimeType: authorImage.type,
-          data: base64.split(",")[1], // Remove prefix
-        };
+        payload.authorImageBase64 = await toUploadPayload(authorImage);
       }
 
       // Handle Gallery Images
       if (galleryImages.length > 0) {
-        const galleryBase64List = await Promise.all(
-          galleryImages.map(async (file) => {
-            const base64 = await convertToBase64(file);
-            return {
-              name: file.name,
-              mimeType: file.type,
-              data: base64.split(",")[1],
-            };
-          }),
-        );
-        payload.galleryBase64 = galleryBase64List;
+        payload.galleryBase64 = await Promise.all(galleryImages.map(toUploadPayload));
       }
 
       if (existingBlog) {
@@ -199,9 +177,12 @@ export default function BlogForm({
       }
 
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving blog:", error);
-      addToast("Failed to save blog. Please try again.", "error");
+      addToast(
+        error?.response?.data?.message || error?.message || "Failed to save blog. Please try again.",
+        "error",
+      );
     } finally {
       setLoading(false);
     }

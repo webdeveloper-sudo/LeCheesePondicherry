@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAdminStore } from "@/store/useAdminStore";
-import { X, Upload, Trash2, Plus } from "lucide-react";
+import { X, Upload, Trash2, Plus, Link2 } from "lucide-react";
+import { defaultUrlSlug, normalizeUrlSlug, reservedUrlSlugs } from "@/seo/seoConfig";
+import { prepareImageUpload } from "@/lib/imageUpload";
+
+// Live clean-up while typing; keeps a trailing hyphen so words can still be added
+const cleanUrlSlugInput = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-");
 
 interface ProductFormProps {
   product?: any;
@@ -9,14 +19,18 @@ interface ProductFormProps {
 
 const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
   const {
+    products,
     createProduct,
     updateProduct,
     isLoading,
     error: storeError,
   } = useAdminStore();
   const [localError, setLocalError] = useState<string | null>(null);
+  // New products follow the name until the URL endpoint is edited by hand
+  const [urlSlugTouched, setUrlSlugTouched] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    urlSlug: "",
     description: "",
     shortDescription: "",
     price: 0,
@@ -48,6 +62,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     if (product) {
       setFormData({
         name: product.name || "",
+        urlSlug: product.urlSlug || (product.slug ? defaultUrlSlug(product.slug) : ""),
         description: product.description || "",
         shortDescription: product.shortDescription || "",
         price: product.price || 0,
@@ -87,8 +102,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     const { name, value, type } = e.target;
     const val =
       type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
-    setFormData((prev) => ({ ...prev, [name]: val }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: val,
+      ...(name === "name" && !product && !urlSlugTouched && { urlSlug: normalizeUrlSlug(value) }),
+    }));
   };
+
+  const handleUrlSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrlSlugTouched(true);
+    setFormData((prev) => ({ ...prev, urlSlug: cleanUrlSlugInput(e.target.value) }));
+  };
+
+  // Another product already reachable at this endpoint (its endpoint, slug, SEO slug or legacy alias)
+  const urlSlugConflict = useMemo(() => {
+    const value = normalizeUrlSlug(formData.urlSlug);
+    if (!value) return null;
+    return (
+      (products || []).find(
+        (p: any) =>
+          p._id !== product?._id &&
+          (p.urlSlug === value || (p.slug && reservedUrlSlugs(p.slug).includes(value))),
+      ) || null
+    );
+  }, [formData.urlSlug, products, product?._id]);
 
   const handleTastingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,23 +135,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      const newImages = await Promise.all(
-        files.map(async (file) => {
-          return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              resolve({
-                name: file.name,
-                mimeType: file.type,
-                data: (reader.result as string).split(",")[1], // Get base64 without prefix
-                preview: reader.result as string, // For UI preview
-              });
+      try {
+        // Compressed to ≤ 1 MB WebP before upload (the server enforces the same)
+        const newImages = await Promise.all(
+          files.map(async (file) => {
+            const prepared = await prepareImageUpload(file);
+            return {
+              name: prepared.name,
+              mimeType: prepared.mimeType,
+              data: prepared.data,
+              preview: prepared.dataUrl, // For UI preview
             };
-            reader.readAsDataURL(file);
-          });
-        }),
-      );
-      setImages((prev) => [...prev, ...newImages]);
+          }),
+        );
+        setImages((prev) => [...prev, ...newImages]);
+      } catch (err: any) {
+        setLocalError(err.message || "Could not read the selected image");
+      }
+      e.target.value = "";
     }
   };
 
@@ -131,9 +169,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
     console.log("🚀 Submitting product form...");
     setLocalError(null);
 
+    const urlSlug = normalizeUrlSlug(formData.urlSlug);
+    if (!urlSlug) {
+      setLocalError("Please enter a URL endpoint for this product.");
+      return;
+    }
+    if (urlSlugConflict) {
+      setLocalError(
+        `The URL endpoint "/products/${urlSlug}" is already used by "${urlSlugConflict.name}". Please choose a different one.`,
+      );
+      return;
+    }
+
     try {
       const submissionData = {
         ...formData,
+        urlSlug,
         rating: Number(formData.rating),
         reviewCount: Number(formData.reviewCount),
         pairings: formData.pairings || "",
@@ -191,8 +242,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
   };
 
   const loadTestData = () => {
+    const testName = "Gourmet Brie " + Math.floor(Math.random() * 1000);
+    setUrlSlugTouched(false);
     setFormData({
-      name: "Gourmet Brie " + Math.floor(Math.random() * 1000),
+      name: testName,
+      urlSlug: normalizeUrlSlug(testName),
       description:
         "A rich, creamy brie with a buttery flavor and a hint of mushroom. Perfect for any cheese board.",
       shortDescription: "Creamy, buttery French-style brie cheese.",
@@ -281,6 +335,46 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all outline-none"
                     placeholder="e.g., Baby Swiss"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                    <Link2 size={15} className="text-yellow-600" />
+                    Product URL Endpoint
+                  </label>
+                  <div
+                    className={`flex items-stretch rounded-xl border overflow-hidden transition-all focus-within:ring-2 ${
+                      urlSlugConflict
+                        ? "border-red-300 focus-within:ring-red-400"
+                        : "border-gray-200 focus-within:ring-yellow-500"
+                    }`}
+                  >
+                    <span className="px-3 flex items-center bg-gray-50 text-gray-500 text-sm border-r border-gray-200 whitespace-nowrap">
+                      /products/
+                    </span>
+                    <input
+                      type="text"
+                      name="urlSlug"
+                      value={formData.urlSlug}
+                      onChange={handleUrlSlugChange}
+                      onBlur={() =>
+                        setFormData((prev) => ({ ...prev, urlSlug: normalizeUrlSlug(prev.urlSlug) }))
+                      }
+                      required
+                      className="flex-1 min-w-0 px-4 py-3 outline-none"
+                      placeholder="e.g., buy-baby-swiss-cheese"
+                    />
+                  </div>
+                  {urlSlugConflict ? (
+                    <p className="text-xs font-semibold text-red-600">
+                      Already used by &ldquo;{urlSlugConflict.name}&rdquo;. Choose a different endpoint.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500">
+                      Lowercase letters, numbers and hyphens. Must be unique across all products. Old links to this
+                      product keep working and redirect here.
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -751,18 +845,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose }) => {
                               <input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => {
-                                  if (e.target.files?.[0]) {
-                                    const file = e.target.files[0];
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                      const newDishes = [...formData.bestPairingDishes];
-                                      newDishes[dishIdx].data = reader.result as string; 
-                                      newDishes[dishIdx].imageMimeType = file.type;
-                                      newDishes[dishIdx].imagePreview = reader.result as string;
-                                      setFormData(prev => ({ ...prev, bestPairingDishes: newDishes }));
-                                    };
-                                    reader.readAsDataURL(file);
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  try {
+                                    const prepared = await prepareImageUpload(file);
+                                    setFormData((prev) => {
+                                      const newDishes = [...prev.bestPairingDishes];
+                                      newDishes[dishIdx] = {
+                                        ...newDishes[dishIdx],
+                                        data: prepared.dataUrl,
+                                        imageMimeType: prepared.mimeType,
+                                        imagePreview: prepared.dataUrl,
+                                      };
+                                      return { ...prev, bestPairingDishes: newDishes };
+                                    });
+                                  } catch (err: any) {
+                                    setLocalError(err.message || "Could not read the selected image");
                                   }
                                 }}
                                 className="absolute inset-0 opacity-0 cursor-pointer"

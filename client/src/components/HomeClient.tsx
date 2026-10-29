@@ -28,6 +28,7 @@ import {
 import { fadeUp, staggerContainer, scaleIn } from "@/animations/variants";
 import { motion } from "framer-motion";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
+import { registerProductUrlSlugs } from "@/seo/seoConfig";
 import { products as staticProducts } from "@/data/products";
 import axios from "axios";
 import { HomeBlogsGrid } from "./HomeBlogsGrid";
@@ -177,6 +178,7 @@ Action: Item added to cart for checkout.
         );
         if (response.data) {
           const fetchedData = response.data.data || response.data;
+          registerProductUrlSlugs(Array.isArray(fetchedData) ? fetchedData : []);
           const mappedProducts = fetchedData.map((p: any) => {
             let hash = 0;
             const id = p._id || "";

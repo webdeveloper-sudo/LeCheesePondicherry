@@ -4,12 +4,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Sparkles, ArrowRight, Pizza, Utensils, Sandwich, Flame } from "lucide-react";
-import pizzaellaPkg from "@/assets/images/products/pizzaella-package.webp";
-import mozzarellaPkg from "@/assets/images/products/mozzarella-package.webp";
-import babySwissPkg from "@/assets/images/products/baby-swiss-package.webp";
-import agedCheddarPkg from "@/assets/images/products/aged-cheddar.webp";
-import burrataPkg from "@/assets/images/products/burrata-package.webp";
-import granaCherryPkg from "@/assets/images/products/grana-chery-package.webp";
+import pizzaellaPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/PIZZAELLA/PIZZAELLA_Front_result.webp";
+import mozzarellaPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/MOZZARELLA/MOZZARELLA_Front_result.webp";
+import babySwissPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Front_result.webp";
+import agedCheddarPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Front_result.webp";
+import burrataPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BURRATA/BURRATA_Front_result.webp";
+import granaCherryPkg from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Front_result.webp";
 
 export default function RecipeInspiration() {
   const recipes = [

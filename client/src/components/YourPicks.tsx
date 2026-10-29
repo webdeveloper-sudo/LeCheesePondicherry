@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { products as staticProducts, Product } from "@/data/products";
 import ProductCard from "./ProductCard";
 import { FETCH_MODE, API_BASE_URL } from "@/config";
+import { registerProductUrlSlugs } from "@/seo/seoConfig";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -39,6 +40,7 @@ export default function YourPicks({
         );
         if (response.data) {
           const fetchedData = response.data.data || response.data;
+          registerProductUrlSlugs(Array.isArray(fetchedData) ? fetchedData : []);
           const mappedProducts = fetchedData.map((p: any) => {
             let hash = 0;
             const id = p._id || "";

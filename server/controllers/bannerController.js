@@ -293,7 +293,16 @@ const updateBannerConfig = async (req, res) => {
     if (Array.isArray(slides) && slides.length > 0) {
       sanitizedSlides = slides
         .filter((s) => s && (typeof s === "string" || s.image))
-        .map((s) => (typeof s === "string" ? { image: s, title: "" } : { image: s.image, title: s.title || "" }))
+        .map((s) =>
+          typeof s === "string"
+            ? { image: s, tabletImage: "", mobileImage: "", title: "" }
+            : {
+                image: s.image,
+                tabletImage: s.tabletImage || "",
+                mobileImage: s.mobileImage || "",
+                title: s.title || "",
+              }
+        )
         .slice(0, maxAllowed);
       sanitizedImages = sanitizedSlides.map((s) => s.image);
     } else if (Array.isArray(images) && images.length > 0) {
@@ -364,7 +373,7 @@ const uploadBannerImage = async (req, res) => {
     console.error("Banner image upload failed:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to upload banner image",
+      message: `Failed to upload banner image: ${error.message}`,
       error: error.message,
     });
   }

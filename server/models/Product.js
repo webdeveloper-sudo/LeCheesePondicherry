@@ -12,6 +12,14 @@ const productSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    // Public URL endpoint: /products/<urlSlug>. Configured in the admin panel.
+    urlSlug: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      sparse: true,
+    },
     description: {
       type: String,
       required: [true, "Please provide product description"],

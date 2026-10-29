@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/images/hero-cheese-board.webp";
-import agedCheddar from "@/assets/images/products/aged-cheddar.webp";
+import agedCheddar from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Front_result.webp";
 import classicBrie from "@/assets/images/products/classic-brie.webp";
 import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
 

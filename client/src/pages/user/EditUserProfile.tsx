@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/useUserStore";
 import { userAPI } from "@/lib/api";
+import { prepareImageUpload } from "@/lib/imageUpload";
 import {
   User as UserIcon,
   Phone,
@@ -163,8 +164,9 @@ export default function EditUserProfile() {
       setErrors((prev) => ({ ...prev, photo: "Please select an image file" }));
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors((prev) => ({ ...prev, photo: "Image must be under 5MB" }));
+    // Photos are compressed to ≤ 1 MB WebP before upload; this only guards browser memory
+    if (file.size > 25 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, photo: "Image must be under 25MB" }));
       return;
     }
     setErrors((prev) => {
@@ -174,15 +176,10 @@ export default function EditUserProfile() {
 
     setPhotoUploading(true);
     try {
-      const data = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
+      const prepared = await prepareImageUpload(file);
 
       const result = await userAPI.updateProfile({
-        profilePhotoBase64: { name: file.name, mimeType: file.type, data },
+        profilePhotoBase64: { name: prepared.name, mimeType: prepared.mimeType, data: prepared.data },
       });
       if (result.success) {
         const data = result.data as { user?: { profilePhoto?: string } };
@@ -347,7 +344,7 @@ export default function EditUserProfile() {
                       />
                     </label>
                     <p className="text-xs text-gray-500 mt-2">
-                      JPG, PNG or WEBP, up to 5MB
+                      Any image format, up to 25MB (optimised automatically)
                     </p>
                     {errors.photo && (
                       <p className="text-xs text-red-500 mt-1">{errors.photo}</p>

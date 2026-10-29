@@ -84,7 +84,7 @@ const updateProfile = async (req, res) => {
         console.error("❌ Profile photo upload failed:", uploadError.message);
         return res.status(502).json({
           success: false,
-          message: "Failed to upload profile photo",
+          message: `Failed to upload profile photo: ${uploadError.message}`,
         });
       }
     }

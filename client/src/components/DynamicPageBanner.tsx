@@ -112,6 +112,8 @@ export default function DynamicPageBanner({
   return (
     <BannerAndBreadCrumb
       img={slides.length > 0 ? slides[0].image : fallbackImage}
+      tabletImg={slides[0]?.tabletImage}
+      mobileImg={slides[0]?.mobileImage}
       title={title}
       showTitle={Boolean(title && title.trim().length > 0)}
     />

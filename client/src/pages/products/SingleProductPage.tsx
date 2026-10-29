@@ -7,11 +7,16 @@ import axios from "axios";
 import { Loader } from "lucide-react";
 import { trackViewItem } from "@/lib/gtm";
 import Seo from "@/components/Seo";
-import { getProductSeo, resolveDbSlug } from "@/seo/seoConfig";
+import {
+  getProductSeo,
+  productPath,
+  registerProductUrlSlugs,
+  resolveDbSlug,
+} from "@/seo/seoConfig";
 
 export default function ProductPage() {
   const { slug: urlSlug } = useParams<{ slug: string }>();
-  // URLs use the SEO slug (e.g. buy-pizza-cheese); lookups use the DB slug.
+  // URLs use the admin-configured endpoint or SEO slug (e.g. buy-pizza-cheese); lookups use the DB slug.
   const slug = urlSlug ? resolveDbSlug(urlSlug) : urlSlug;
   const productSeo = getProductSeo(slug);
   const [product, setProduct] = useState<Product | null>(null);
@@ -19,22 +24,33 @@ export default function ProductPage() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
+    // Static catalogue ids (e.g. "mozzarella-cheese") differ from DB slugs ("mozzarella"),
+    // so compare both sides after resolving them to the DB slug.
+    const loadStatic = (dbSlug?: string) => {
+      const currentProduct = staticProducts.find(
+        (p) => p.id === dbSlug || resolveDbSlug(p.id) === dbSlug,
+      );
+      if (currentProduct) {
+        setProduct(currentProduct);
+        setRelatedProducts(
+          staticProducts.filter((p) => p.id !== currentProduct.id).slice(0, 4),
+        );
+      }
+    };
+
     const fetchProductData = async () => {
       setLoading(true);
       try {
         if (FETCH_MODE === "static") {
-          const currentProduct = staticProducts.find((p) => p.id === slug);
-          if (currentProduct) {
-            setProduct(currentProduct);
-            setRelatedProducts(
-              staticProducts.filter((p) => p.id !== slug).slice(0, 4),
-            );
-          }
+          loadStatic(resolveDbSlug(urlSlug!));
         } else {
           // Dynamic Mode - fetch from DB
           try {
             const allRes = await axios.get(`${API_BASE_URL}/api/products`);
             const allFetched = allRes.data?.data || allRes.data || [];
+            registerProductUrlSlugs(allFetched);
+            // Re-resolve now that custom endpoints are known
+            const slug = resolveDbSlug(urlSlug!);
 
             const mapProduct = (p: any) => {
               let hash = 0;
@@ -56,7 +72,8 @@ export default function ProductPage() {
 
             // Find current product in mapped dynamic products
             let matchedProduct = mappedAll.find(
-              (p: any) => p.slug === slug || p._id === slug || p.id === slug
+              (p: any) =>
+                p.urlSlug === urlSlug || p.slug === slug || p._id === slug || p.id === slug
             );
 
             // If not found yet and slug might be MongoDB ObjectId, try direct endpoint
@@ -80,23 +97,11 @@ export default function ProductPage() {
               );
             } else {
               // Fallback to static if not found in DB
-              const staticMatch = staticProducts.find((p) => p.id === slug);
-              if (staticMatch) {
-                setProduct(staticMatch);
-                setRelatedProducts(
-                  staticProducts.filter((p) => p.id !== slug).slice(0, 4)
-                );
-              }
+              loadStatic(slug);
             }
           } catch (apiError) {
             console.warn("Failed to fetch dynamic product details, falling back to static:", apiError);
-            const currentProduct = staticProducts.find((p) => p.id === slug);
-            if (currentProduct) {
-              setProduct(currentProduct);
-              setRelatedProducts(
-                staticProducts.filter((p) => p.id !== slug).slice(0, 4)
-              );
-            }
+            loadStatic(resolveDbSlug(urlSlug!));
           }
         }
       } catch (error) {
@@ -106,10 +111,10 @@ export default function ProductPage() {
       }
     };
 
-    if (slug) {
+    if (urlSlug) {
       fetchProductData();
     }
-  }, [slug]);
+  }, [urlSlug]);
 
   useEffect(() => {
     if (product) {
@@ -123,8 +128,10 @@ export default function ProductPage() {
     }
   }, [product?.id, product?.name]);
 
-  if (productSeo && urlSlug !== productSeo.seoSlug) {
-    return <Navigate to={productSeo.path} replace />;
+  // Send old/alias URLs to the product's current endpoint
+  const canonicalPath = slug ? productPath(slug) : "";
+  if ((productSeo || product) && canonicalPath && `/products/${urlSlug}` !== canonicalPath) {
+    return <Navigate to={canonicalPath} replace />;
   }
 
   if (loading) {
@@ -160,7 +167,7 @@ export default function ProductPage() {
     },
     offers: {
       "@type": "Offer",
-      url: `https://www.lepondicheese.com/products/${product.id}`,
+      url: `https://www.lepondicheese.com${canonicalPath}`,
       priceCurrency: "INR",
       price: product.price,
       availability: product.inStock
@@ -177,7 +184,7 @@ export default function ProductPage() {
         keywords={productSeo?.keywords}
         ogTitle={productSeo?.ogTitle}
         ogImage={displayProduct.image}
-        path={productSeo?.path || `/products/${product.id}`}
+        path={canonicalPath}
         schema={productSeo?.schema || fallbackSchema}
       />
       <ProductDetailClient

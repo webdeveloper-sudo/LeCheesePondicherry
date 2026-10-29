@@ -1,6 +1,37 @@
 const Product = require("../models/Product");
 const { uploadFile } = require("../utils/imageUpload");
 
+// Lowercase, hyphen-separated URL endpoint: "Buy Fresh Paneer!" -> "buy-fresh-paneer"
+const normalizeUrlSlug = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+// A URL endpoint is taken if another product uses it as its endpoint or its slug
+// (both resolve on /products/:slug).
+const findUrlConflict = (value, excludeId) => {
+  const filter = { $or: [{ urlSlug: value }, { slug: value }] };
+  if (excludeId) filter._id = { $ne: excludeId };
+  return Product.findOne(filter).select("name");
+};
+
+// Stop the save when any image failed, so a product is never stored with images silently missing
+const uploadFailureResponse = (res, failures) =>
+  res.status(422).json({
+    success: false,
+    message: `Image upload failed, nothing was saved. ${failures.join("; ")}`,
+  });
+
+const urlConflictResponse = (res, value, conflict) =>
+  res.status(409).json({
+    success: false,
+    message: `The URL endpoint "/products/${value}" is already used by "${conflict.name}". Please choose a different one.`,
+  });
+
 /**
  * @desc    Get all products
  * @route   GET /api/products
@@ -92,7 +123,21 @@ const createProduct = async (req, res) => {
       bestPairingDishes,
       reviews,
       imagesBase64, // Array of { name: string, mimeType: string, data: string }
+      urlSlug: rawUrlSlug,
     } = req.body;
+
+    // 0. Validate the URL endpoint before uploading anything
+    const urlSlug = normalizeUrlSlug(rawUrlSlug);
+    if (urlSlug) {
+      const conflict = await findUrlConflict(urlSlug);
+      if (conflict) return urlConflictResponse(res, urlSlug, conflict);
+    }
+    // The slug generated from the name also opens the product, so it must not clash with another endpoint
+    const generatedSlug = normalizeUrlSlug(name);
+    if (generatedSlug && generatedSlug !== urlSlug) {
+      const conflict = await findUrlConflict(generatedSlug);
+      if (conflict) return urlConflictResponse(res, generatedSlug, conflict);
+    }
 
     // 1. Target the Main Folder from .env
     const mainFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
@@ -100,6 +145,7 @@ const createProduct = async (req, res) => {
 
     // 2. Upload images if provided
     const imageUrls = [];
+    const uploadFailures = [];
     if (imagesBase64 && Array.isArray(imagesBase64)) {
       for (const img of imagesBase64) {
         try {
@@ -113,6 +159,7 @@ const createProduct = async (req, res) => {
           imageUrls.push(url);
         } catch (uploadError) {
           console.error(`❌ Image upload failed for ${img.name}:`, uploadError.message);
+          uploadFailures.push(uploadError.message);
         }
       }
     }
@@ -134,6 +181,7 @@ const createProduct = async (req, res) => {
             dish.image = url;
           } catch (uploadError) {
             console.error(`❌ Dish image upload failed for ${dish.dishName || i}:`, uploadError.message);
+            uploadFailures.push(`Dish "${dish.dishName || i + 1}": ${uploadError.message}`);
           } finally {
             // ALWAYS delete Base64 strings so we don't save them to MongoDB
             delete dish.data;
@@ -143,10 +191,13 @@ const createProduct = async (req, res) => {
       }
     }
 
+    if (uploadFailures.length > 0) return uploadFailureResponse(res, uploadFailures);
+
     // 3. Save product to MongoDB
     console.log("📝 Saving product to MongoDB...");
     const productData = {
       name,
+      ...(urlSlug && { urlSlug }),
       description,
       shortDescription: shortDescription || description?.substring(0, 100),
       price: Number(price),
@@ -182,6 +233,12 @@ const createProduct = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ CREATE PRODUCT ERROR:", error);
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "This URL endpoint or product name is already used by another product. Please choose a different one.",
+      });
+    }
     res.status(500).json({
       success: false,
       message: "Failed to create product",
@@ -208,7 +265,20 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    const { imagesBase64, images: existingImages, ...updateData } = req.body;
+    const { imagesBase64, images: existingImages, urlSlug: rawUrlSlug, ...updateData } = req.body;
+
+    // Validate the URL endpoint before uploading anything; empty clears it
+    let unsetFields;
+    if (rawUrlSlug !== undefined) {
+      const urlSlug = normalizeUrlSlug(rawUrlSlug);
+      if (urlSlug) {
+        const conflict = await findUrlConflict(urlSlug, product._id);
+        if (conflict) return urlConflictResponse(res, urlSlug, conflict);
+        updateData.urlSlug = urlSlug;
+      } else {
+        unsetFields = { urlSlug: "" };
+      }
+    }
 
     // Convert numeric fields if present
     if (updateData.price) updateData.price = Number(updateData.price);
@@ -233,6 +303,7 @@ const updateProduct = async (req, res) => {
       : product.images || [];
 
     const driveFolderId = product.googleDriveFolderId || process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const uploadFailures = [];
 
     if (imagesBase64 && Array.isArray(imagesBase64)) {
       const mainFolderId = driveFolderId;
@@ -253,6 +324,7 @@ const updateProduct = async (req, res) => {
             `❌ Image upload failed for ${img.name}:`,
             uploadError.message,
           );
+          uploadFailures.push(uploadError.message);
         }
       }
       finalImages = [...finalImages, ...newImageUrls];
@@ -275,6 +347,7 @@ const updateProduct = async (req, res) => {
             dish.image = url;
           } catch (uploadError) {
             console.error(`❌ Dish image upload failed for updated dish:`, uploadError.message);
+            uploadFailures.push(`Dish "${dish.dishName || i + 1}": ${uploadError.message}`);
           } finally {
             // ALWAYS delete Base64 strings regardless of success or failure
             delete dish.data;
@@ -283,6 +356,8 @@ const updateProduct = async (req, res) => {
         }
       }
     }
+
+    if (uploadFailures.length > 0) return uploadFailureResponse(res, uploadFailures);
 
     // Update main image to the first one in the list
     updateData.images = finalImages;
@@ -299,7 +374,7 @@ const updateProduct = async (req, res) => {
     // Use a slightly different approach to ensure fields like onHold are definitely updated
     product = await Product.findByIdAndUpdate(
       req.params.id, 
-      { $set: updateData }, 
+      { $set: updateData, ...(unsetFields && { $unset: unsetFields }) },
       {
         new: true,
         runValidators: true,
@@ -312,6 +387,12 @@ const updateProduct = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ UPDATE PRODUCT ERROR:", error);
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "This URL endpoint is already used by another product. Please choose a different one.",
+      });
+    }
     res.status(500).json({
       success: false,
       message: "Failed to update product",

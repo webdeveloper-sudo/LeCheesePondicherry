@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroCheeseBoard from "@/assets/images/hero-cheese-board.webp";
+import ResponsiveBannerImage from "./ResponsiveBannerImage";
 
 export interface CarouselSlide {
-  image: string;
+  image: string; // Large screen image
+  tabletImage?: string;
+  mobileImage?: string;
   title?: string;
   subtitle?: string;
 }
@@ -127,12 +130,15 @@ const BreadcrumbSlider: React.FC<BreadcrumbSliderProps> = ({
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               index === currentIndex ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
             }`}
-            style={{
-              backgroundImage: `url(${slide.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
           >
+            <ResponsiveBannerImage
+              image={slide.image}
+              tabletImage={slide.tabletImage}
+              mobileImage={slide.mobileImage}
+              alt={currentTitle}
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+
             {/* Black/35 overlay with slight gradient when title is applied, or subtle base overlay */}
             {slideHasTitle ? (
               <div

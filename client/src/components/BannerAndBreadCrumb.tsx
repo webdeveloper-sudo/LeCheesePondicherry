@@ -1,16 +1,21 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import defaultBanner from "../assets/images/process-hero-new.webp";
+import ResponsiveBannerImage from "./ResponsiveBannerImage";
 
 interface BannerAndBreadCrumbProps {
   title?: string;
-  img?: any;
+  img?: any; // Large screen image
+  tabletImg?: string;
+  mobileImg?: string;
   showTitle?: boolean;
 }
 
 const BannerAndBreadCrumb = ({
   title,
   img,
+  tabletImg,
+  mobileImg,
   showTitle = true,
 }: BannerAndBreadCrumbProps) => {
   const location = useLocation();
@@ -58,14 +63,17 @@ const BannerAndBreadCrumb = ({
       className="
         w-full 
         h-[300px] sm:h-[150px] md:h-[300px] lg:h-[400px] xl:h-[450px]
-        relative flex items-center justify-center text-white select-none
+        relative overflow-hidden flex items-center justify-center text-white select-none
       "
-      style={{
-        backgroundImage: `url(${safeImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
     >
+      {/* Only use the device-specific images alongside a configured large image */}
+      <ResponsiveBannerImage
+        image={safeImage}
+        tabletImage={img ? tabletImg : undefined}
+        mobileImage={img ? mobileImg : undefined}
+        alt={title || ""}
+      />
+
       {/* Black/35 overlay with slight gradient when title is applied, or base dark overlay */}
       {hasTitle ? (
         <div

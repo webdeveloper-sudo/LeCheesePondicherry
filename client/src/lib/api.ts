@@ -767,7 +767,9 @@ export const reviewAPI = {
 
 // ============ BANNER & BREADCRUMB API ============
 export interface BannerSlideItem {
-  image: string;
+  image: string; // Large screen image (also used on tab when tabletImage is empty)
+  tabletImage?: string;
+  mobileImage?: string;
   title?: string;
 }
 

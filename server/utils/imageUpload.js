@@ -1,6 +1,7 @@
 const axios = require("axios");
 const crypto = require("crypto");
 const googleDrive = require("./googleDrive");
+const { processImage } = require("./imageProcessor");
 
 /**
  * Unified image upload service.
@@ -11,6 +12,9 @@ const googleDrive = require("./googleDrive");
  *
  * If the primary provider fails, the other configured provider is used as a backup,
  * so an outage on one side never drops an upload.
+ *
+ * Before any provider is called, the image goes through utils/imageProcessor:
+ * compressed to ≤ 1 MB and converted to WebP.
  */
 
 const PROVIDERS = ["drive", "cloudinary"];
@@ -128,8 +132,8 @@ const uploadToDrive = (fileName, mimeType, base64Data, driveFolderId) =>
  *
  * Signature is compatible with googleDrive.uploadFile so callers can switch directly.
  *
- * @param {string} fileName - Original file name
- * @param {string} mimeType - Mime type (defaults to image/jpeg)
+ * @param {string} fileName - Original file name (uploaded as <name>.webp)
+ * @param {string} mimeType - Original mime type (ignored; the format is detected from the bytes)
  * @param {string} base64Data - Base64 data, with or without data URL prefix
  * @param {string} [driveFolderId] - Google Drive folder (Drive provider only)
  * @param {Object} [options]
@@ -141,8 +145,15 @@ const uploadFile = async (fileName, mimeType, base64Data, driveFolderId, options
     throw new Error("Missing image base64 data");
   }
 
-  const name = fileName || `image_${Date.now()}.jpg`;
-  const type = mimeType || "image/jpeg";
+  // Every image is compressed to ≤ 1 MB and converted to WebP before it leaves the server.
+  // If processing fails nothing is uploaded.
+  const processed = await processImage(
+    Buffer.from(stripBase64Prefix(base64Data), "base64"),
+    fileName || `image_${Date.now()}`,
+  );
+  const name = processed.fileName;
+  const type = processed.mimeType;
+  base64Data = processed.buffer.toString("base64");
 
   const uploaders = {
     cloudinary: {

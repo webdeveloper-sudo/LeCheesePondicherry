@@ -1,10 +1,10 @@
 // Import images
-import agedPondyOrange from "@/assets/images/products/aged-cheddar.webp";
+import agedPondyOrange from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/CHEDDAR CHEESE/CHEDDAR CHEESE_Front_result.webp";
 import classicBrie from "@/assets/images/products/classic-brie.webp";
 import kombuchaRind from "@/assets/images/products/kombucha-rind.webp";
-import babySwissTexture from "@/assets/images/products/baby-swiss-texture.webp";
-import daddySwissTexture from "@/assets/images/products/daddy-swiss-texture.webp";
-import granaCherryTexture from "@/assets/images/products/grana-chery-texture.webp";
+import babySwissTexture from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/BABY SWISS/BABY SWISS_Side_result.webp";
+import daddySwissTexture from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/DADDY SWISS/DADDY SWISS_Side_result.webp";
+import granaCherryTexture from "@/assets/images/products/LE PONDICHERRY CHEESE_PACKEGING/GRANA CHERY/GRANA CHERY_Side_result.webp";
 
 export interface BlogPost {
   id: string;

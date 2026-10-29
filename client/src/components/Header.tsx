@@ -36,7 +36,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
   const { totalItems, allProducts } = useCart();
-  const { name, photoURL, isAuthenticated, wishlistCount, role } = useUserStore();
+  const { name, photoURL, isAuthenticated, wishlistCount, role, syncProfile } = useUserStore();
   const userName = name ? name.split(" ")[0] : "User"; // Get first name
   const [avatarError, setAvatarError] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -44,6 +44,13 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
   useEffect(() => {
     setAvatarError(false);
   }, [photoURL]);
+
+  // Refresh name & photo (manual upload or Google picture) once per visit, so the navbar
+  // reflects changes made on other devices or after the session was stored
+  useEffect(() => {
+    if (isAuthenticated() && role === "user") syncProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const location = useLocation(); // Add this import
   const isHomeRoute = location.pathname ;
   const logoVariants = {
@@ -224,6 +231,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
               {/* Search */}
               <div className="relative" ref={searchRef}>
                 <button
+                  aria-label="Search"
                   onClick={() => setSearchOpen(!searchOpen)}
                   className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
                 >
@@ -309,6 +317,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
               {/* Wishlist */}
               <Link
                 to="/wishlist"
+                aria-label="Wishlist"
                 className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
               >
                 <Heart
@@ -368,7 +377,9 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                       <span>{userName.charAt(0).toUpperCase()}</span>
                     )}
                   </div>
-                  <span className="hidden lg:inline">{userName}</span>
+                  <span className="max-w-[7rem] truncate" title={name || userName}>
+                    {userName}
+                  </span>
                 </Link>
               ) : (
                 <Link
@@ -467,6 +478,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
           {/* Wishlist */}
           <Link
             to="/wishlist"
+            aria-label="Wishlist"
             className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
           >
             <Heart
@@ -484,6 +496,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
           {/* Search */}
           <div className="relative" ref={mobileSearchRef}>
             <button
+              aria-label="Search"
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors"
             >
@@ -608,7 +621,9 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
                   <span>{userName.charAt(0).toUpperCase()}</span>
                 )}
               </div>
-              <span className="hidden lg:inline">{userName}</span>
+              <span className="max-w-[6rem] truncate" title={name || userName}>
+                {userName}
+              </span>
             </Link>
           ) : (
             <Link

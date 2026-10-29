@@ -12,7 +12,7 @@ import axios from "axios";
 import { MotionContainer } from "@/components/ui/MotionPrimitives";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/animations/variants";
-import { productDisplayName, productPath } from "@/seo/seoConfig";
+import { productDisplayName, productPath, registerProductUrlSlugs } from "@/seo/seoConfig";
 
 interface WishlistItem {
   productId: string;
@@ -54,6 +54,7 @@ export default function WishlistPage() {
           );
           if (response.data) {
             const fetchedData = response.data.data || response.data;
+            registerProductUrlSlugs(Array.isArray(fetchedData) ? fetchedData : []);
             productsToUse = fetchedData.map((p: any) => {
               let hash = 0;
               const id = p.slug || p._id || "";
