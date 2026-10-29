@@ -336,6 +336,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
               {/* Cart */}
               <Link
                 to="/cart"
+                aria-label="Cart"
                 className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
               >
                 <svg
@@ -393,6 +394,8 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
 
               {/* Mobile Menu Button */}
               <button
+                type="button"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 className="lg:hidden p-1.5 sm:p-2 focus:outline-none"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
@@ -581,6 +584,7 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
           {/* Cart */}
           <Link
             to="/cart"
+            aria-label="Cart"
             className="p-1.5 sm:p-2 hover:text-brand-gold transition-colors relative"
           >
             <svg
@@ -657,6 +661,8 @@ export default function Header({ settings, isFlashSaleActive }: HeaderProps) {
             Menu
           </span>
           <button
+            type="button"
+            aria-label="Close"
             className="p-2 focus:outline-none hover:bg-gray-100 rounded-full transition-colors"
             onClick={() => setMobileMenuOpen(false)}
           >
