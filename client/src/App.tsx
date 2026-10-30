@@ -110,15 +110,18 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/gifts" element={<GiftsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/return" element={<ReturnPolicyPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPage />} />
+          <Route path="/privacy" element={<Navigate to="/privacy-policy" replace />} />
+          <Route path="/return-policy" element={<ReturnPolicyPage />} />
+          <Route path="/return" element={<Navigate to="/return-policy" replace />} />
           <Route path="/process" element={<ProcessPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
           <Route path="/refund-policy" element={<RefundPolicyPage />} />
           <Route path="/shipping-policy" element={<ShippingPolicyPage />} />
           <Route path="/stories" element={<AllBlogs />} />
           <Route path="/stories/:slug" element={<SingleBlogDetails />} />
-          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/terms-of-service" element={<TermsPage />} />
+          <Route path="/terms" element={<Navigate to="/terms-of-service" replace />} />
           <Route path="/portfolio/facility" element={<OurFacilityPage />} />
           <Route path="/portfolio/gallery" element={<GalleryPage />} />
           <Route path="/portfolio/testimonials" element={<TestimonialsPage />} />

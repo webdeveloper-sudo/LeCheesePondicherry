@@ -274,7 +274,7 @@ export default function Footer() {
               Refund Policy
             </Link>
             <Link
-              to="/return"
+              to="/return-policy"
               className="hover:text-brand-gold-subtle transition-colors"
             >
               Return Policy
@@ -286,13 +286,13 @@ export default function Footer() {
               Shipping Policy
             </Link>
             <Link
-              to="/privacy"
+              to="/privacy-policy"
               className="hover:text-brand-gold-subtle transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              to="/terms"
+              to="/terms-of-service"
               className="hover:text-brand-gold-subtle transition-colors"
             >
               Terms of Service

@@ -32,11 +32,11 @@ const OTHER_PUBLIC_ROUTES = [
   "/portfolio/facility",
   "/portfolio/gallery",
   "/portfolio/testimonials",
-  "/privacy",
-  "/terms",
+  "/privacy-policy",
+  "/terms-of-service",
   "/refund-policy",
   "/shipping-policy",
-  "/return",
+  "/return-policy",
 ];
 
 const DISALLOWED = ["/admin", "/cart", "/checkout", "/user", "/orders", "/wishlist", "/thank-you", "/dummy"];
@@ -94,6 +94,9 @@ DirectoryIndex index.html
 
   # Old URLs -> SEO URLs (query strings are kept)
   RewriteRule ^shop/?$ /buy-cheese-online [R=301,L]
+  RewriteRule ^privacy/?$ /privacy-policy [R=301,L]
+  RewriteRule ^terms/?$ /terms-of-service [R=301,L]
+  RewriteRule ^return/?$ /return-policy [R=301,L]
 ${legacy}
 
   # Prerendered SEO pages (${prerenderedPaths.length}): /buy-cheese-online -> /buy-cheese-online.html
